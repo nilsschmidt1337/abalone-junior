@@ -3,6 +3,7 @@ package org.nschmidt.abalone;
 public class Main {
 
     private static final long[] fieldDiv = initFieldDiv();
+    private static final int[][] adjacency = initAdjacency();
     private static final long INITIAL_FIELD = initField();
     
     public static void main(String[] args) {
@@ -22,7 +23,82 @@ public class Main {
         }
         
         printField(state);
+        System.out.println(state);
         return state;
+    }
+    
+    private static int[][] initAdjacency() {
+        final int[][] indexArray = new int[9][17];
+        final int[][] adjacencyArray = new int[37][6];
+        int i = 0;
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 17; x++) {
+                i = setIndexArrayUpperHalf(x, y, indexArray, i);
+                i = setIndexArrayLowerHalf(x, y, indexArray, i);
+            }
+        }
+        
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 17; x++) {
+                final int index = indexArray[y][x];
+                if (index != -1) {
+                    adjacencyArray[index][0] = indexArray[y - 1][x - 1];
+                    adjacencyArray[index][1] = indexArray[y + 1][x + 1];
+                    adjacencyArray[index][2] = indexArray[y - 1][x + 1];
+                    adjacencyArray[index][3] = indexArray[y + 1][x - 1];
+                    adjacencyArray[index][4] = indexArray[y][x - 2];
+                    adjacencyArray[index][5] = indexArray[y][x + 2];
+                }
+            }
+        }
+        
+        
+        return adjacencyArray;
+    }
+
+    private static int setIndexArrayUpperHalf(int x, int y, int[][] indexArray, int i) {
+        indexArray[y][x] = -1;
+        
+        if (y == 1 && x > 4 && x < 12 && x % 2 == 1) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        if (y == 2 && x > 3 && x < 13 && x % 2 == 0) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        if (y == 3 && x > 2 && x < 14 && x % 2 == 1) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        if (y == 4 && x > 1 && x < 15 && x % 2 == 0) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        return i;
+    }
+    
+    private static int setIndexArrayLowerHalf(int x, int y, int[][] indexArray, int i) {
+        if (y == 5 && x > 2 && x < 14 && x % 2 == 1) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        if (y == 6 && x > 3 && x < 13 && x % 2 == 0) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        if (y == 7 && x > 4 && x < 12 && x % 2 == 1) {
+            indexArray[y][x] = i;
+            i++;
+        }
+        
+        return i;
     }
 
     private static long[] initFieldDiv() {
@@ -45,6 +121,11 @@ public class Main {
         return state - oldValue * factor + value * factor;
     }
     
+    public static long lookAtField(long state, int fieldIndex) {
+        long factor = fieldDiv[fieldIndex];
+        return Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L);
+    }
+    
     public static void printField(long state) {
         long nextValue = state;
         printSpaces(3);
@@ -56,6 +137,7 @@ public class Main {
             printSpaces(1);
         }
         
+        System.out.println();
         System.out.println();
     }
 
