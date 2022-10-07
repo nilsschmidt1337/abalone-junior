@@ -7,6 +7,7 @@ import static org.nschmidt.abalone.WinningChecker.wins;
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.Attacker.performAttack;
+import static org.nschmidt.abalone.MoveDetector.allMoves;
 
 public class Main {
     
@@ -36,5 +37,7 @@ public class Main {
         
         state = performAttack(state, 2)[0];
         printField(state);
+        
+        System.out.println("Moves for player 2 : " + allMoves(state, 2).length);
     }
 }
