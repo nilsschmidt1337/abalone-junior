@@ -14,6 +14,7 @@ import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.Attacker.performAttack;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
+import static org.nschmidt.abalone.Backtracker.backtrack;
 
 public class Main {
     
@@ -61,8 +62,8 @@ public class Main {
             long[] moves = allMoves(state, currentPlayer);
             long randomMove = moves[rnd.nextInt(moves.length)];
             
-            if (currentPlayer == 3) {
-                state = randomMove;
+            if (currentPlayer == 1) {
+                state = backtrack(state, currentPlayer, 10);
             } else {
                 long maxScore = Long.MIN_VALUE;
                 long maxMove = randomMove;
@@ -97,22 +98,25 @@ public class Main {
         System.out.println("Player " + currentPlayer + " wins!");
         
         int[] wins = new int[3];
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             wins[(int) playRound(1L, rnd)] += 1;
         }
         
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             wins[(int) playRound(2L, rnd)] += 1;
         }
         
         System.out.println("Player 1 " + wins[1] + " wins.");
         System.out.println("Player 2 " + wins[2] + " wins.");
+        System.out.println(" draw    " + wins[0]);
     }
 
     private static long playRound(long currentPlayer, Random rnd) {
         long state;
         state = INITIAL_FIELD;
-        while (true) {
+        int moveCount = 0;
+        while (moveCount < 100) {
+            moveCount += 1;
             long currentScore = score(state, currentPlayer);
             long[] moves = allMoves(state, currentPlayer);
             long randomMove = moves[rnd.nextInt(moves.length)];
@@ -120,7 +124,9 @@ public class Main {
             long maxScore = Long.MIN_VALUE;
             long maxMove = randomMove;
             
-            if (currentScore == Long.MIN_VALUE) {
+            if (currentPlayer == 1) {
+                maxMove = backtrack(state, currentPlayer, 10);
+            } else if (currentScore == Long.MIN_VALUE) {
                 for (long move : moves) {
                     long score = score(move, currentPlayer);
                     if (score > maxScore) {
@@ -143,6 +149,10 @@ public class Main {
             
             currentPlayer = 1 + currentPlayer % 2;
             if (wins(state, currentPlayer)) break;
+        }
+        
+        if (moveCount == 100) {
+            return 0;
         }
         
         return currentPlayer;
