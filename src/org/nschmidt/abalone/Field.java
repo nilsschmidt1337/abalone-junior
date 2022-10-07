@@ -1,7 +1,5 @@
 package org.nschmidt.abalone;
 
-import static org.nschmidt.abalone.FieldPrinter.printField;
-
 public enum Field {
     INSTANCE;
     
@@ -30,8 +28,6 @@ public enum Field {
             state = populateField(state, i + 28, 2);
         }
         
-        printField(state);
-        System.out.println(state);
         return state;
     }
     

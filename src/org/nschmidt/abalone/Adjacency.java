@@ -33,12 +33,12 @@ public enum Adjacency {
             for (int x = 0; x < 17; x++) {
                 final int index = indexArray[y][x];
                 if (index != -1) {
-                    adjacencyArray[index][0] = indexArray[y - 1][x - 1];
-                    adjacencyArray[index][1] = indexArray[y + 1][x + 1];
-                    adjacencyArray[index][2] = indexArray[y - 1][x + 1];
-                    adjacencyArray[index][3] = indexArray[y + 1][x - 1];
-                    adjacencyArray[index][4] = indexArray[y][x - 2];
-                    adjacencyArray[index][5] = indexArray[y][x + 2];
+                    adjacencyArray[index][TOP_LEFT]     = indexArray[y - 1][x - 1];
+                    adjacencyArray[index][BOTTOM_RIGHT] = indexArray[y + 1][x + 1];
+                    adjacencyArray[index][TOP_RIGHT]    = indexArray[y - 1][x + 1];
+                    adjacencyArray[index][BOTTOM_LEFT]  = indexArray[y + 1][x - 1];
+                    adjacencyArray[index][LEFT]         = indexArray[y][x - 2];
+                    adjacencyArray[index][RIGHT]        = indexArray[y][x + 2];
                 }
             }
         }
