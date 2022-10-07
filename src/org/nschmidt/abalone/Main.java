@@ -2,8 +2,12 @@ package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.FieldPrinter.printField;
 import static org.nschmidt.abalone.Field.populateField;
+import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.WinningChecker.wins;
+
+import java.util.Random;
+
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.Attacker.performAttack;
@@ -39,5 +43,24 @@ public class Main {
         printField(state);
         
         System.out.println("Moves for player 2 : " + allMoves(state, 2).length);
+        
+        state = INITIAL_FIELD;
+        System.out.println("Moves for player 2 : " + allMoves(state, 2).length);
+        
+        long currentPlayer = 1;
+        
+        Random rnd = new Random();
+        while (true) {
+            printField(state);
+            System.out.println("Player " + currentPlayer + " moves:");
+            long[] moves = allMoves(state, currentPlayer);
+            long randomMove = moves[rnd.nextInt(moves.length)];
+            state = randomMove;
+            currentPlayer = 1 + currentPlayer % 2;
+            if (wins(state, currentPlayer)) break;
+        }
+        
+        printField(state);
+        System.out.println("Player " + currentPlayer + " wins!");
     }
 }
