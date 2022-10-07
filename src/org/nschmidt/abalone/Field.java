@@ -41,6 +41,12 @@ public enum Field {
         return state - oldValue * factor + player * factor;
     }
     
+    public static long move(long state, long player, int from, int to) {
+        long factorFrom = fieldDiv[from];
+        long factorTo = fieldDiv[to];
+        return state - player * factorFrom + player * factorTo;
+    }
+    
     public static long lookAtField(long state, int fieldIndex) {
         long factor = fieldDiv[fieldIndex];
         return Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L);
