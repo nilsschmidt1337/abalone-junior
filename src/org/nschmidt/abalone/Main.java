@@ -5,6 +5,7 @@ import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
+import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 
 public class Main {
     
@@ -27,6 +28,9 @@ public class Main {
         
         
         state = moveSingleMarble(state, 1)[0];
+        printField(state);
+        state = moveTwoMarbles(state, 2)[0];
+        
         printField(state);
     }
 }
