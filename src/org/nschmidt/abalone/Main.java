@@ -6,6 +6,7 @@ import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
+import static org.nschmidt.abalone.Attacker.performAttack;
 
 public class Main {
     
@@ -29,8 +30,11 @@ public class Main {
         
         state = moveSingleMarble(state, 1)[0];
         printField(state);
-        state = moveTwoMarbles(state, 2)[0];
         
+        state = moveTwoMarbles(state, 2)[0];
+        printField(state);
+        
+        state = performAttack(state, 2)[0];
         printField(state);
     }
 }
