@@ -1,6 +1,8 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.FieldPrinter.printField;
+import static org.nschmidt.abalone.FieldPrinter.printFieldDelta;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
@@ -49,18 +51,100 @@ public class Main {
         
         long currentPlayer = 1;
         
-        Random rnd = new Random();
+        Random rnd = new Random(1337L);
+        long previousState = state;
         while (true) {
-            printField(state);
-            System.out.println("Player " + currentPlayer + " moves:");
+            printFieldDelta(state, previousState);
+            previousState = state;
+            long currentScore = score(state, currentPlayer);
+            System.out.println("Player " + currentPlayer + " moves (Score " + currentScore +  "):");
             long[] moves = allMoves(state, currentPlayer);
             long randomMove = moves[rnd.nextInt(moves.length)];
-            state = randomMove;
+            
+            if (currentPlayer == 3) {
+                state = randomMove;
+            } else {
+                long maxScore = Long.MIN_VALUE;
+                long maxMove = randomMove;
+                
+                if (currentScore == Long.MIN_VALUE) {
+                    for (long move : moves) {
+                        long score = score(move, currentPlayer);
+                        if (score > maxScore) {
+                            maxScore = score;
+                            maxMove = move;
+                        }
+                    }
+                }
+                
+                for (int i = 0; i < 100; i++) {
+                    randomMove = moves[rnd.nextInt(moves.length)];
+                    long score = score(randomMove, currentPlayer);
+                    if (score > maxScore) {
+                        maxScore = score;
+                        maxMove = randomMove;
+                    }
+                }
+                
+                state = maxMove;
+            }
+            
             currentPlayer = 1 + currentPlayer % 2;
             if (wins(state, currentPlayer)) break;
         }
         
         printField(state);
         System.out.println("Player " + currentPlayer + " wins!");
+        
+        int[] wins = new int[3];
+        for (int i = 0; i < 50; i++) {
+            wins[(int) playRound(1L, rnd)] += 1;
+        }
+        
+        for (int i = 0; i < 50; i++) {
+            wins[(int) playRound(2L, rnd)] += 1;
+        }
+        
+        System.out.println("Player 1 " + wins[1] + " wins.");
+        System.out.println("Player 2 " + wins[2] + " wins.");
+    }
+
+    private static long playRound(long currentPlayer, Random rnd) {
+        long state;
+        state = INITIAL_FIELD;
+        while (true) {
+            long currentScore = score(state, currentPlayer);
+            long[] moves = allMoves(state, currentPlayer);
+            long randomMove = moves[rnd.nextInt(moves.length)];
+            
+            long maxScore = Long.MIN_VALUE;
+            long maxMove = randomMove;
+            
+            if (currentScore == Long.MIN_VALUE) {
+                for (long move : moves) {
+                    long score = score(move, currentPlayer);
+                    if (score > maxScore) {
+                        maxScore = score;
+                        maxMove = move;
+                    }
+                }
+            } else {
+                for (int i = 0; i < 100; i++) {
+                    randomMove = moves[rnd.nextInt(moves.length)];
+                    long score = score(randomMove, currentPlayer);
+                    if (score > maxScore) {
+                        maxScore = score;
+                        maxMove = randomMove;
+                    }
+                }
+            }
+            
+            state = maxMove;
+            
+            currentPlayer = 1 + currentPlayer % 2;
+            if (wins(state, currentPlayer)) break;
+        }
+        
+        return currentPlayer;
     }
 }
