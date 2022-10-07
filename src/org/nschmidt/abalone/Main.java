@@ -4,6 +4,7 @@ import static org.nschmidt.abalone.FieldPrinter.printField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.WinningChecker.wins;
+import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 
 public class Main {
     
@@ -23,5 +24,9 @@ public class Main {
         state = populateField(state, 5, 1);
         state = populateField(state, 6, 1);
         System.out.println(wins(state, 1));
+        
+        
+        state = moveSingleMarble(state, 1)[0];
+        printField(state);
     }
 }
