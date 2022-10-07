@@ -93,7 +93,7 @@ public class Main {
             if (wins(state, currentPlayer)) break;
         }
         
-        printField(state);
+        printFieldDelta(state, previousState);
         System.out.println("Player " + currentPlayer + " wins!");
         
         int[] wins = new int[3];
