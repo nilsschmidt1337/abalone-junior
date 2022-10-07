@@ -5,7 +5,14 @@ public enum Adjacency {
     
     private static final int[][] adjacencyMatrix = initAdjacency();
     
-    static final int[] BORDER_INDICIES = initBorderIndicies();
+    public static final int[] BORDER_INDICIES = initBorderIndicies();
+    
+    public static final int TOP_LEFT = 0;
+    public static final int BOTTOM_RIGHT = 1;
+    public static final int TOP_RIGHT = 2;
+    public static final int BOTTOM_LEFT = 3;
+    public static final int LEFT = 4;
+    public static final int RIGHT = 5;
     
     public static int[] adjacency(int i) {
         return adjacencyMatrix[i];
