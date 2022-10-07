@@ -42,9 +42,7 @@ public enum Field {
     }
     
     public static long move(long state, long player, int from, int to) {
-        long factorFrom = fieldDiv[from];
-        long factorTo = fieldDiv[to];
-        return state - player * factorFrom + player * factorTo;
+        return populateField(populateField(state, to, player), from, 0);
     }
     
     public static long lookAtField(long state, int fieldIndex) {
