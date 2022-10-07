@@ -19,6 +19,28 @@ public enum FieldPrinter {
         out.println();
         out.println();
     }
+    
+    public static void printFieldDelta(long state, long previousState) {
+        long previousValue = previousState;
+        long nextValue = state;
+        printSpaces(3);
+        for (int i = 0; i < 37; i++) {
+            long fieldValue = Long.remainderUnsigned(nextValue, 3L);
+            long previousFieldValue = Long.remainderUnsigned(previousValue, 3L);
+            nextValue = Long.divideUnsigned(nextValue, 3L);
+            previousValue = Long.divideUnsigned(previousValue, 3L);
+            breakLine(i);
+            out.print(fieldValue);
+            if (fieldValue == previousFieldValue) {
+                printSpaces(1);
+            } else {
+                out.print('_');
+            }
+        }
+        
+        out.println();
+        out.println();
+    }
 
     private static void printSpaces(int count) {
         for (int i = 0; i < count; i++) {
