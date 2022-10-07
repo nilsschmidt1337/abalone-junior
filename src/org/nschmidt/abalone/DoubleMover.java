@@ -15,9 +15,9 @@ public enum DoubleMover {
             if (player == lookAtField(state, from)) {
                 final int[] neighbourIndicies = adjacency(from);
                 for (int d = 0; d < 6; d++) {
-                    moveCount += tryMove(state, player, from, d, 1, moveCount, neighbourIndicies, tempResult);
-                    moveCount += tryMove(state, player, from, d, 3, moveCount, neighbourIndicies, tempResult);
-                    moveCount += tryMove(state, player, from, d, 5, moveCount, neighbourIndicies, tempResult);
+                    for (int d2 = 0; d2 < 6; d2++) {
+                        moveCount += tryMove(state, player, from, d, d2, moveCount, neighbourIndicies, tempResult);
+                    }
                 }
             }
         }
@@ -49,7 +49,7 @@ public enum DoubleMover {
         if (emptyPlaceForSecondMarbleIndex == -1) return 0;
         final long emptyPlaceForSecondMarble = lookAtField(state, emptyPlaceForSecondMarbleIndex);
         // Das Feld ist nicht leer
-        if (emptyPlaceForSecondMarble != 0) return 0;
+        if (emptyPlaceForSecondMarble != 0 && emptyPlaceForSecondMarbleIndex != from) return 0;
         
         state = move(state, player, from, emptyPlaceIndex);
         state = move(state, player, secondMarbleIndex, emptyPlaceForSecondMarbleIndex);
