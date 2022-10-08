@@ -1,9 +1,11 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Backtracker.backtrack;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
+import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.awt.Button;
 import java.awt.Color;
@@ -24,8 +26,8 @@ public class AbaloneUIFrame extends Frame {
     private GridBagLayout grid = new GridBagLayout();
     private GridBagConstraints straints = new GridBagConstraints();
     
-    private final long previousState;
-    private final long[] validMoves;
+    private long previousState;
+    private long[] validMoves;
     private long currentState;
     private long lastColor = -1;
     
@@ -34,15 +36,16 @@ public class AbaloneUIFrame extends Frame {
     private final List<Button> fieldButtons = new ArrayList<>();
     
     public AbaloneUIFrame(long state, long currentPlayer) {
-        this.previousState = state;
-        this.currentState = state;
-        this.validMoves = allMoves(state, currentPlayer);
-        setTitle("Abalone Junior");
+        init(state, currentPlayer);
+        
         setLayout(grid);
         addWindowListener(new UIFrameWindowListener());
        
         // Reset button
-        addButton(0, 0, true, Color.RED, -1);
+        if (currentPlayer == 1L)
+            addButton(0, 0, true, Color.WHITE, -1);
+        if (currentPlayer == 2L)
+            addButton(0, 0, true, Color.BLACK, -1);
         
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 13; x++) {
@@ -55,6 +58,17 @@ public class AbaloneUIFrame extends Frame {
            
         pack();
         setVisible(true);
+    }
+
+    private void init(long state, long currentPlayer) {
+        this.previousState = state;
+        this.currentState = state;
+        this.validMoves = allMoves(state, currentPlayer);
+        if (wins(state, currentPlayer)) {
+            setTitle(String.format("Abalone Junior - Player %d wins!", currentPlayer));
+        } else {
+            setTitle("Abalone Junior");
+        }
     }
 
     private void fillGrid(int x, int y) {
@@ -135,6 +149,7 @@ public class AbaloneUIFrame extends Frame {
             
             if (index == -2) {
                 close();
+                return;
             }
             
             long player = lookAtField(currentState, index);
@@ -179,12 +194,31 @@ public class AbaloneUIFrame extends Frame {
     
     public static void main(String[] args) 
     {
-      AbaloneUIFrame frame = new AbaloneUIFrame(INITIAL_FIELD, 1L);
+      long state = INITIAL_FIELD;
+      long currentPlayer = 1L;
+      while (true) {
+        AbaloneUIFrame frame = new AbaloneUIFrame(state, currentPlayer);
+        frame.waitOnResult();
+        state = frame.getCurrentState();
+        currentPlayer = currentPlayer % 2 + 1;
+        if (wins(state, currentPlayer)) break;
+        state = backtrack(state, currentPlayer, 10);
+        currentPlayer = currentPlayer % 2 + 1;
+        if (wins(state, currentPlayer)) break;
+      }
+      
+      System.out.println(String.format("Player %d wins!", currentPlayer));
+      
+      AbaloneUIFrame frame = new AbaloneUIFrame(state, currentPlayer);
       frame.waitOnResult();
     }
 
     public void resetField() {
         currentState = previousState;
+        redraw();
+    }
+
+    private void redraw() {
         for (Button button : fieldButtons) {
             if (button.getActionListeners()[0] instanceof ButtonActionListener listener) {
                 listener.paint(button);
