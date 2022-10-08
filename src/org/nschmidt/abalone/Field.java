@@ -24,8 +24,8 @@ public enum Field {
     private static long initField() {
         long state = 0L;
         for (int i = 0; i < 9; i++) {
-            state = populateField(state, i, 1);
-            state = populateField(state, i + 28, 2);
+            state = populateField(state, i, 2);
+            state = populateField(state, i + 28, 1);
         }
         
         return state;
