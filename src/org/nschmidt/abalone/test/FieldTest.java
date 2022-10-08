@@ -9,7 +9,7 @@ class FieldTest {
 
     @Test
     void testInitialize() {
-        assertEquals(450261029098552243L, INITIAL_FIELD);
+        assertEquals(225130514549290883L, INITIAL_FIELD);
     }
     
     @Test
@@ -31,8 +31,8 @@ class FieldTest {
 
     @Test
     void testLookAtField() {
-        assertEquals(1L, lookAtField(INITIAL_FIELD, 0));
-        assertEquals(2L, lookAtField(INITIAL_FIELD, 36));
+        assertEquals(2L, lookAtField(INITIAL_FIELD, 0));
+        assertEquals(1L, lookAtField(INITIAL_FIELD, 36));
     }
     
     @Test
