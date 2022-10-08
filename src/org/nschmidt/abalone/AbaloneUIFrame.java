@@ -213,6 +213,7 @@ public class AbaloneUIFrame extends Frame {
         
         private void resetField() {
             currentState = previousState;
+            lastColor = -1;
             redraw();
         }
         
@@ -247,7 +248,7 @@ public class AbaloneUIFrame extends Frame {
     public static void main(String[] args) 
     {
       AbaloneUIFrame frame = new AbaloneUIFrame(INITIAL_FIELD, 1L);
-      frame.setArtificicalIntelligence((state, player) -> backtrack(state, player, 10));
+      frame.setArtificialIntelligence((state, player) -> backtrack(state, player, 10));
       frame.waitOnResult();
     }
 
@@ -266,7 +267,7 @@ public class AbaloneUIFrame extends Frame {
         return currentState;
     }
 
-    public void setArtificicalIntelligence(LongBinaryOperator artificicalIntelligence) {
+    public void setArtificialIntelligence(LongBinaryOperator artificicalIntelligence) {
         this.artificicalIntelligence = artificicalIntelligence;
     }
 }

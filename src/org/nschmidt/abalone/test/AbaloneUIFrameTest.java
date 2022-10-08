@@ -10,7 +10,8 @@ class AbaloneUIFrameTest {
 
     @Test
     void testAbaloneUIFrame() {
-        new AbaloneUIFrame(INITIAL_FIELD, 1L);
+        AbaloneUIFrame frame = new AbaloneUIFrame(INITIAL_FIELD, 1L);
+        assertEquals(INITIAL_FIELD, frame.getCurrentState());
     }
 
 }
