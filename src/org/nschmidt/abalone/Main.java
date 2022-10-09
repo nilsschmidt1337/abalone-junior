@@ -12,7 +12,7 @@ import java.util.Random;
 
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
-import static org.nschmidt.abalone.Attacker.performAttack;
+import static org.nschmidt.abalone.DoubleAttacker.performDoubleAttack;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.Backtracker.backtrack;
 
@@ -42,7 +42,7 @@ public class Main {
         state = moveTwoMarbles(state, 2)[0];
         printField(state);
         
-        state = performAttack(state, 2)[0];
+        state = performDoubleAttack(state, 2)[0];
         printField(state);
         
         System.out.println("Moves for player 2 : " + allMoves(state, 2).length);

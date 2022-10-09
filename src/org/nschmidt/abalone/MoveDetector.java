@@ -1,6 +1,6 @@
 package org.nschmidt.abalone;
 
-import static org.nschmidt.abalone.Attacker.performAttack;
+import static org.nschmidt.abalone.DoubleAttacker.performDoubleAttack;
 import static org.nschmidt.abalone.TripleMover.moveThreeMarbles;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
@@ -12,7 +12,7 @@ public enum MoveDetector {
         final long[] singleMoves = moveSingleMarble(state, player);
         final long[] doubleMoves = moveTwoMarbles(state, player);
         final long[] tripleMoves = moveThreeMarbles(state, player);
-        final long[] attacks = performAttack(state, player);
+        final long[] attacks = performDoubleAttack(state, player);
         
         final int singleMoveCount = singleMoves.length;
         final int doubleMoveCount = doubleMoves.length;
