@@ -11,7 +11,7 @@ class BacktrackerTest {
     @Test
     void testBacktrack() {
         long result = backtrack(INITIAL_FIELD, 1L, 10);
-        assertEquals(225039383952186347L, result);
+        assertEquals(224834340108701141L, result);
     }
 
 }
