@@ -37,7 +37,6 @@ public enum Backtracker {
             
             for (long move : moves) {
                 long score = score(move, currentPlayer);
-                if (maxScore == Long.MAX_VALUE) break;
                 if (score > maxScore) {
                     maxScore = score;
                     maxMove = move;
