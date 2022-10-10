@@ -28,7 +28,16 @@ public enum WinningChecker {
         int[] nextNeighbourIndicies;
         return borderPiece == opponent 
                 && neighbourIndicies[corner1] == -1 
-                && neighbourIndicies[corner2] != -1 && player == lookAtField(state, neighbourIndicies[corner2])
-                && (nextNeighbourIndicies = adjacency(neighbourIndicies[corner2]))[corner2] != -1 && player == lookAtField(state, nextNeighbourIndicies[corner2]);
+                && neighbourIndicies[corner2] != -1
+                && ((player == lookAtField(state, neighbourIndicies[corner2])
+                && (nextNeighbourIndicies = adjacency(neighbourIndicies[corner2]))[corner2] != -1 
+                && player == lookAtField(state, nextNeighbourIndicies[corner2]))
+                || (opponent == lookAtField(state, neighbourIndicies[corner2])
+                && (nextNeighbourIndicies = adjacency(neighbourIndicies[corner2]))[corner2] != -1 
+                && player == lookAtField(state, nextNeighbourIndicies[corner2])
+                && (nextNeighbourIndicies = adjacency(nextNeighbourIndicies[corner2]))[corner2] != -1 
+                && player == lookAtField(state, nextNeighbourIndicies[corner2])
+                && (nextNeighbourIndicies = adjacency(nextNeighbourIndicies[corner2]))[corner2] != -1 
+                && player == lookAtField(state, nextNeighbourIndicies[corner2])));
     }
 }
