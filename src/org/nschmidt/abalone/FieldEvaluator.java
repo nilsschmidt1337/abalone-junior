@@ -16,9 +16,8 @@ public enum FieldEvaluator {
     public static long score(long state, long player) {
         final long opponent = 1 + player % 2;
         if (WinningChecker.wins(state, opponent)) return Long.MIN_VALUE;
-        if (WinningChecker.wins(state, player)) return Long.MAX_VALUE;
-        
         long score = 0;
+        if (WinningChecker.wins(state, player)) score += 1_000_000;
         
         for (int i : BORDER_INDICIES) {
             if (lookAtField(state, i) == player) score -= 1000;
