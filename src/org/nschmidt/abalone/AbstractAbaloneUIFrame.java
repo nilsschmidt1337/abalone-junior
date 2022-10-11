@@ -3,9 +3,7 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
-import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.EMPTY;
-import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.awt.Button;
@@ -48,7 +46,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     
     protected transient BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence = (state, player) -> state;
     
-    public AbstractAbaloneUIFrame(BigInteger state, Player currentPlayer) {
+    protected AbstractAbaloneUIFrame(BigInteger state, Player currentPlayer) {
         init(state, currentPlayer);
         
         setLayout(grid);
