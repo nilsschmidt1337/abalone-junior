@@ -5,6 +5,9 @@ import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
+import static org.nschmidt.abalone.Player.BLACK;
+import static org.nschmidt.abalone.Player.EMPTY;
+import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.awt.Color;
@@ -18,7 +21,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.LongBinaryOperator;
+import java.util.function.BiFunction;
 
 public class AbaloneUIMacOSXFrame extends Frame {
 
@@ -32,24 +35,24 @@ public class AbaloneUIMacOSXFrame extends Frame {
     private long previousState;
     private long[] validMoves;
     private long currentState;
-    private long currentPlayer;
-    private long lastColor = -1;
+    private Player currentPlayer;
+    private Player lastColor = null;
     
     private final Label confirmLabel;
     private final Label resetLabel;
     
     private final List<Label> fieldLabels = new ArrayList<>();
     
-    private transient LongBinaryOperator artificicalIntelligence = (state, player) -> state;
+    private transient BiFunction<Long, Player, Long> artificicalIntelligence = (state, player) -> state;
     
-    public AbaloneUIMacOSXFrame(long state, long currentPlayer) {
+    public AbaloneUIMacOSXFrame(long state, Player currentPlayer) {
         init(state, currentPlayer);
         
         setLayout(grid);
         addWindowListener(new UIFrameWindowListener());
        
         // Reset label
-        if (currentPlayer == 1L) {
+        if (currentPlayer == WHITE) {
             resetLabel = addLabel(0, 0, true, Color.WHITE, -1);
         } else {
             resetLabel = addLabel(0, 0, true, Color.BLACK, -1);
@@ -68,7 +71,7 @@ public class AbaloneUIMacOSXFrame extends Frame {
         setVisible(true);
     }
 
-    private void init(long state, long currentPlayer) {
+    private void init(long state, Player currentPlayer) {
         this.currentPlayer = currentPlayer;
         this.previousState = state;
         this.currentState = state;
@@ -88,10 +91,10 @@ public class AbaloneUIMacOSXFrame extends Frame {
         Color color = Color.LIGHT_GRAY;
         
         if (index > -1) {
-            long player = lookAtField(currentState, index);
-            if (player == 0L) color = Color.BLUE;
-            if (player == 1L) color = Color.WHITE;
-            if (player == 2L) color = Color.BLACK;
+            Player player = lookAtField(currentState, index);
+            if (player == EMPTY) color = Color.BLUE;
+            if (player == WHITE) color = Color.WHITE;
+            if (player == BLACK) color = Color.BLACK;
         }
         
         fieldLabels.add(addLabel(x, y, index != -1, color, index));
@@ -159,7 +162,7 @@ public class AbaloneUIMacOSXFrame extends Frame {
             
             if (index == -2) {
                 
-                currentPlayer = currentPlayer % 2 + 1;
+                currentPlayer = currentPlayer.switchPlayer();
                 
                 // Prüfe, ob Computer gewonnen hat (bevor er gezogen hat)
                 if (wins(currentState, currentPlayer)) {
@@ -168,8 +171,8 @@ public class AbaloneUIMacOSXFrame extends Frame {
                     return;
                 }
                 
-                currentState = artificicalIntelligence.applyAsLong(currentState, currentPlayer);
-                currentPlayer = currentPlayer % 2 + 1;
+                currentState = artificicalIntelligence.apply(currentState, currentPlayer);
+                currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);
                 
                 // Prüfe, ob Spieler gewonnen hat (bevor er gezogen hat)
@@ -180,20 +183,20 @@ public class AbaloneUIMacOSXFrame extends Frame {
                 return;
             }
             
-            long player = lookAtField(currentState, index);
-            if (lastColor > 0 && player == 0) {
+            Player player = lookAtField(currentState, index);
+            if (lastColor != null && player == EMPTY) {
                 player = lastColor;
-                lastColor = -1;
+                lastColor = null;
                 currentState = populateField(currentState, index, player);
-            } else if (lastColor == -1 && player != 0) {
+            } else if (lastColor == null && player != EMPTY) {
                 lastColor = player;
-                player = 0;
-                currentState = populateField(currentState, index, 0);
+                player = EMPTY;
+                currentState = populateField(currentState, index, EMPTY);
             }
             
-            if (player == 0L) ((Label) e.getSource()).setBackground(Color.BLUE);
-            if (player == 1L) ((Label) e.getSource()).setBackground(Color.WHITE);
-            if (player == 2L) ((Label) e.getSource()).setBackground(Color.BLACK);
+            if (player == EMPTY) ((Label) e.getSource()).setBackground(Color.BLUE);
+            if (player == WHITE) ((Label) e.getSource()).setBackground(Color.WHITE);
+            if (player == BLACK) ((Label) e.getSource()).setBackground(Color.BLACK);
             
             confirmLabel.setEnabled(validMoves.length == 0 && previousState == currentState);
             for (long move : validMoves) {
@@ -206,19 +209,19 @@ public class AbaloneUIMacOSXFrame extends Frame {
         
         public void paint(Label label) {
             if (index < 0) return;
-            long player = lookAtField(currentState, index);
-            if (player == 0L) label.setBackground(Color.BLUE);
-            if (player == 1L) label.setBackground(Color.WHITE);
-            if (player == 2L) label.setBackground(Color.BLACK);
+            Player player = lookAtField(currentState, index);
+            if (player == EMPTY) label.setBackground(Color.BLUE);
+            if (player == WHITE) label.setBackground(Color.WHITE);
+            if (player == BLACK) label.setBackground(Color.BLACK);
         }
         
         private void resetField() {
             currentState = previousState;
-            lastColor = -1;
+            lastColor = null;
             redraw();
         }
         
-        private void update(long state, long player) {
+        private void update(long state, Player player) {
             init(state, player);
             redraw();
         }
@@ -231,7 +234,7 @@ public class AbaloneUIMacOSXFrame extends Frame {
             }
             
             confirmLabel.setEnabled(validMoves.length == 0);
-            if (currentPlayer == 1L) {
+            if (currentPlayer == WHITE) {
                 resetLabel.setBackground(Color.WHITE);
             } else {
                 resetLabel.setBackground(Color.BLACK);
@@ -264,7 +267,7 @@ public class AbaloneUIMacOSXFrame extends Frame {
     
     public static void main(String[] args) 
     {
-      AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, 1L);
+      AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, WHITE);
       frame.setArtificialIntelligence((state, player) -> backtrack(state, player, 10));
       frame.waitOnResult();
     }
@@ -284,7 +287,7 @@ public class AbaloneUIMacOSXFrame extends Frame {
         return currentState;
     }
 
-    public void setArtificialIntelligence(LongBinaryOperator artificicalIntelligence) {
+    public void setArtificialIntelligence(BiFunction<Long, Player, Long> artificicalIntelligence) {
         this.artificicalIntelligence = artificicalIntelligence;
     }
 }

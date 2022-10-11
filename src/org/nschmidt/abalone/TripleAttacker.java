@@ -3,12 +3,13 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
+import static org.nschmidt.abalone.Player.EMPTY;
 
 public enum TripleAttacker {
     INSTANCE;
     
-    public static long[] performTripleAttack(long state, long player) {
-        final long opponent = player % 2 + 1;
+    public static long[] performTripleAttack(long state, Player player) {
+        final Player opponent = player.switchPlayer();
         final long[] tempResult = new long[54];
         int attackCount = 0;
         
@@ -26,11 +27,11 @@ public enum TripleAttacker {
         return result;
     }
     
-    private static int tryTripleAttack(long state, long player, long opponent, int from, int dir, int moveCount, int[] neighbourIndicies, long[] tempResult) {
+    private static int tryTripleAttack(long state, Player player, Player opponent, int from, int dir, int moveCount, int[] neighbourIndicies, long[] tempResult) {
         final int secondMarbleIndex = neighbourIndicies[dir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;
-        final long secondMarble = lookAtField(state, secondMarbleIndex);
+        final Player secondMarble = lookAtField(state, secondMarbleIndex);
         // Die zweite Murmel ist nicht vom selben Spieler
         if (secondMarble != player) return 0;
         
@@ -38,7 +39,7 @@ public enum TripleAttacker {
         final int thirdMarbleIndex = secondMarbleNeighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (thirdMarbleIndex == -1) return 0;
-        final long targetForSecondMarble = lookAtField(state, thirdMarbleIndex);
+        final Player targetForSecondMarble = lookAtField(state, thirdMarbleIndex);
         // Die dritte Murmel ist nicht vom selben Spieler
         if (targetForSecondMarble != player) return 0;
         
@@ -46,7 +47,7 @@ public enum TripleAttacker {
         final int targetForThirdMarbleIndex = thirdMarbleNeighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (targetForThirdMarbleIndex == -1) return 0;
-        final long targetForThirdMarble = lookAtField(state, targetForThirdMarbleIndex);
+        final Player targetForThirdMarble = lookAtField(state, targetForThirdMarbleIndex);
         // Das Feld hat keinen Gegner
         if (targetForThirdMarble != opponent) return 0;
         
@@ -54,9 +55,9 @@ public enum TripleAttacker {
         final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das der Gegner gezogen werden kann:
         if (emptyPlaceForOpponentMarbleIndex == -1) return 0;
-        final long emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);
+        final Player emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);
         // Das Feld ist nicht leer
-        if (emptyPlaceForOpponentMarble != 0) return 0;
+        if (emptyPlaceForOpponentMarble != EMPTY) return 0;
         
         state = move(state, opponent, targetForThirdMarbleIndex, emptyPlaceForOpponentMarbleIndex);
         state = move(state, player, thirdMarbleIndex, targetForThirdMarbleIndex);

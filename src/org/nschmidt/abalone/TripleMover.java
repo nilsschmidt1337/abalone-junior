@@ -3,11 +3,12 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
+import static org.nschmidt.abalone.Player.EMPTY;
 
 public enum TripleMover {
     INSTANCE;
     
-    public static long[] moveThreeMarbles(long state, long player) {
+    public static long[] moveThreeMarbles(long state, Player player) {
         final long[] tempResult = new long[54];
         int moveCount = 0;
         
@@ -27,19 +28,19 @@ public enum TripleMover {
         return result;
     }
 
-    private static int tryMove(long state, long player, int from, int dir, int nextPieceDir, int moveCount, int[] neighbourIndicies, long[] tempResult) {
+    private static int tryMove(long state, Player player, int from, int dir, int nextPieceDir, int moveCount, int[] neighbourIndicies, long[] tempResult) {
 
         final int emptyPlaceIndex = neighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das gezogen werden kann:
         if (emptyPlaceIndex == -1) return 0;
-        final long emptyPlace = lookAtField(state, emptyPlaceIndex);
+        final Player emptyPlace = lookAtField(state, emptyPlaceIndex);
         // Das Feld ist nicht leer
-        if (emptyPlace != 0) return 0;
+        if (emptyPlace != EMPTY) return 0;
         
         final int secondMarbleIndex = neighbourIndicies[nextPieceDir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;
-        final long secondMarble = lookAtField(state, secondMarbleIndex);
+        final Player secondMarble = lookAtField(state, secondMarbleIndex);
         // Die zweite Murmel ist nicht vom selben Spieler
         if (secondMarble != player) return 0;
         
@@ -47,14 +48,14 @@ public enum TripleMover {
         final int emptyPlaceForSecondMarbleIndex = secondMarbleNeighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (emptyPlaceForSecondMarbleIndex == -1) return 0;
-        final long emptyPlaceForSecondMarble = lookAtField(state, emptyPlaceForSecondMarbleIndex);
+        final Player emptyPlaceForSecondMarble = lookAtField(state, emptyPlaceForSecondMarbleIndex);
         // Das Feld ist nicht leer
-        if (emptyPlaceForSecondMarble != 0 && emptyPlaceForSecondMarbleIndex != from) return 0;
+        if (emptyPlaceForSecondMarble != EMPTY && emptyPlaceForSecondMarbleIndex != from) return 0;
         
         final int thirdMarbleIndex = secondMarbleNeighbourIndicies[nextPieceDir];
         // Es ist keine Murmel an dieser Stelle
         if (thirdMarbleIndex == -1) return 0;
-        final long thirdMarble = lookAtField(state, thirdMarbleIndex);
+        final Player thirdMarble = lookAtField(state, thirdMarbleIndex);
         // Die dritte Murmel ist nicht vom selben Spieler
         if (thirdMarble != player) return 0;
         
@@ -62,9 +63,9 @@ public enum TripleMover {
         final int emptyPlaceForThirdMarbleIndex = thirdMarbleNeighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (emptyPlaceForThirdMarbleIndex == -1) return 0;
-        final long emptyPlaceForThirdMarble = lookAtField(state, emptyPlaceForThirdMarbleIndex);
+        final Player emptyPlaceForThirdMarble = lookAtField(state, emptyPlaceForThirdMarbleIndex);
         // Das Feld ist nicht leer
-        if (emptyPlaceForThirdMarble != 0 && emptyPlaceForThirdMarbleIndex != secondMarbleIndex) return 0;
+        if (emptyPlaceForThirdMarble != EMPTY && emptyPlaceForThirdMarbleIndex != secondMarbleIndex) return 0;
         
         state = move(state, player, from, emptyPlaceIndex);
         state = move(state, player, secondMarbleIndex, emptyPlaceForSecondMarbleIndex);

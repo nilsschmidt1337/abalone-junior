@@ -1,5 +1,9 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Player.BLACK;
+import static org.nschmidt.abalone.Player.EMPTY;
+import static org.nschmidt.abalone.Player.WHITE;
+
 public enum Field {
     INSTANCE;
     
@@ -24,25 +28,25 @@ public enum Field {
     private static long initField() {
         long state = 0L;
         for (int i = 0; i < 9; i++) {
-            state = populateField(state, i, 2);
-            state = populateField(state, i + 28, 1);
+            state = populateField(state, i, BLACK);
+            state = populateField(state, i + 28, WHITE);
         }
         
         return state;
     }
     
-    public static long populateField(long state, int fieldIndex, long player) {
+    public static long populateField(long state, int fieldIndex, Player player) {
         long factor = fieldDiv[fieldIndex];
         long oldValue = Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L);
-        return state - oldValue * factor + player * factor;
+        return state - oldValue * factor + player.getNumber() * factor;
     }
     
-    public static long move(long state, long player, int from, int to) {
-        return populateField(populateField(state, to, player), from, 0);
+    public static long move(long state, Player player, int from, int to) {
+        return populateField(populateField(state, to, player), from, EMPTY);
     }
     
-    public static long lookAtField(long state, int fieldIndex) {
+    public static Player lookAtField(long state, int fieldIndex) {
         long factor = fieldDiv[fieldIndex];
-        return Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L);
+        return Player.valueOf(Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L));
     }
 }

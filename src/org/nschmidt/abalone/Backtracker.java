@@ -7,12 +7,12 @@ import static org.nschmidt.abalone.WinningChecker.wins;
 public enum Backtracker {
     INSTANCE;
     
-    public static long backtrack(long state, long player, int depth) {
+    public static long backtrack(long state, Player player, int depth) {
         long[] moves = allMoves(state, player);
         long maxScore = Long.MIN_VALUE;
         long maxMove = moves[0];
         
-        final long opponent = 1 + player % 2;
+        final Player opponent = player.switchPlayer();
         for (long move : moves) {
             long initialScore = score(move, player);
             long result = playRound(move, opponent, depth);
@@ -27,7 +27,7 @@ public enum Backtracker {
     }
     
     
-    private static long playRound(long state, long currentPlayer, int maxDepth) {
+    private static long playRound(long state, Player currentPlayer, int maxDepth) {
         int depth = 0;
         while (depth < maxDepth) {
             long[] moves = allMoves(state, currentPlayer);
@@ -45,7 +45,7 @@ public enum Backtracker {
             
             state = maxMove;
             
-            currentPlayer = 1 + currentPlayer % 2;
+            currentPlayer = currentPlayer.switchPlayer();
             if (wins(state, currentPlayer)) break;
             depth++;
         }

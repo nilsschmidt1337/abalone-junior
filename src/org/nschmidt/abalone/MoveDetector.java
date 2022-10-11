@@ -11,7 +11,7 @@ import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 public enum MoveDetector {
     INSTANCE;
     
-    public static long[] allMoves(long state, long player) {
+    public static long[] allMoves(long state, Player player) {
         return join(moveSingleMarble(state, player), moveTwoMarbles(state, player), 
                     moveThreeMarbles(state, player), performDoubleAttack(state, player),
                     performTripleAttack(state, player), performTripleToDoubleAttack(state, player));

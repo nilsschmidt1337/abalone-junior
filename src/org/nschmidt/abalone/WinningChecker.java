@@ -7,11 +7,11 @@ import static org.nschmidt.abalone.Field.lookAtField;
 public enum WinningChecker {
     INSTANCE;
     
-    public static boolean wins(long state, long player) {
-        final long opponent = player % 2 + 1;
+    public static boolean wins(long state, Player player) {
+        final Player opponent = player.switchPlayer();
         
         for (int i : BORDER_INDICIES) {
-            final long borderPiece = lookAtField(state, i);
+            final Player borderPiece = lookAtField(state, i);
             final int[] neighbourIndicies = adjacency(i);
             if (check(state, player, opponent, borderPiece, neighbourIndicies, 0, 1)) return true;
             if (check(state, player, opponent, borderPiece, neighbourIndicies, 1, 0)) return true;
@@ -24,7 +24,7 @@ public enum WinningChecker {
         return false;
     }
 
-    private static boolean check(long state, long player, long opponent, long borderPiece, int[] neighbourIndicies, int corner1, int corner2) {
+    private static boolean check(long state, Player player, Player opponent, Player borderPiece, int[] neighbourIndicies, int corner1, int corner2) {
         int[] nextNeighbourIndicies;
         return borderPiece == opponent 
                 && neighbourIndicies[corner1] == -1 

@@ -13,8 +13,8 @@ public enum FieldEvaluator {
     private static final int[] MIDDLE_INDICIES = initMiddle();
     private static final int[] CENTER_INDICIES = {11, 12, 17, 19, 24, 25};
     
-    public static long score(long state, long player) {
-        final long opponent = 1 + player % 2;
+    public static long score(long state, Player player) {
+        final Player opponent = player.switchPlayer();
         if (WinningChecker.wins(state, opponent)) return Long.MIN_VALUE;
         long score = 0;
         if (WinningChecker.wins(state, player)) score += 1_000_000;

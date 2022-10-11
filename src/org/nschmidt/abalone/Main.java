@@ -14,43 +14,45 @@ import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.DoubleAttacker.performDoubleAttack;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
+import static org.nschmidt.abalone.Player.BLACK;
+import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.Backtracker.backtrack;
 
 public class Main {
     
     public static void main(String[] args) {
         long state = 0L;
-        state = populateField(state, 0, 2);
-        state = populateField(state, 1, 1);
-        state = populateField(state, 2, 2);
-        state = populateField(state, 36, 2);
+        state = populateField(state, 0, BLACK);
+        state = populateField(state, 1, WHITE);
+        state = populateField(state, 2, BLACK);
+        state = populateField(state, 36, BLACK);
         
         for (int i : BORDER_INDICIES) {
-            state = populateField(state, i, 2);
+            state = populateField(state, i, BLACK);
         }
         
         printField(state);
         
-        state = populateField(state, 5, 1);
-        state = populateField(state, 6, 1);
-        System.out.println(wins(state, 1));
+        state = populateField(state, 5, WHITE);
+        state = populateField(state, 6, WHITE);
+        System.out.println(wins(state, WHITE));
         
         
-        state = moveSingleMarble(state, 1)[0];
+        state = moveSingleMarble(state, WHITE)[0];
         printField(state);
         
-        state = moveTwoMarbles(state, 2)[0];
+        state = moveTwoMarbles(state, BLACK)[0];
         printField(state);
         
-        state = performDoubleAttack(state, 2)[0];
+        state = performDoubleAttack(state, BLACK)[0];
         printField(state);
         
-        System.out.println("Moves for player 2 : " + allMoves(state, 2).length);
+        System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
         
         state = INITIAL_FIELD;
-        System.out.println("Moves for player 2 : " + allMoves(state, 2).length);
+        System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
         
-        long currentPlayer = 1;
+        Player currentPlayer = WHITE;
         
         Random rnd = new Random(1337L);
         long previousState = state;
@@ -62,7 +64,7 @@ public class Main {
             long[] moves = allMoves(state, currentPlayer);
             long randomMove = moves[rnd.nextInt(moves.length)];
             
-            if (currentPlayer == 1) {
+            if (currentPlayer == WHITE) {
                 state = backtrack(state, currentPlayer, 10);
             } else {
                 long maxScore = Long.MIN_VALUE;
@@ -90,7 +92,7 @@ public class Main {
                 state = maxMove;
             }
             
-            currentPlayer = 1 + currentPlayer % 2;
+            currentPlayer = currentPlayer.switchPlayer();
             if (wins(state, currentPlayer)) break;
         }
         
@@ -99,11 +101,11 @@ public class Main {
         
         int[] wins = new int[3];
         for (int i = 0; i < 100; i++) {
-            wins[(int) playRound(1L, rnd)] += 1;
+            wins[(int) playRound(Player.WHITE, rnd)] += 1;
         }
         
         for (int i = 0; i < 100; i++) {
-            wins[(int) playRound(2L, rnd)] += 1;
+            wins[(int) playRound(Player.BLACK, rnd)] += 1;
         }
         
         System.out.println("Player 1 " + wins[1] + " wins.");
@@ -111,7 +113,7 @@ public class Main {
         System.out.println(" draw    " + wins[0]);
     }
 
-    private static long playRound(long currentPlayer, Random rnd) {
+    private static long playRound(Player currentPlayer, Random rnd) {
         long state;
         state = INITIAL_FIELD;
         int moveCount = 0;
@@ -124,7 +126,7 @@ public class Main {
             long maxScore = Long.MIN_VALUE;
             long maxMove = randomMove;
             
-            if (currentPlayer == 1) {
+            if (currentPlayer == WHITE) {
                 maxMove = backtrack(state, currentPlayer, 10);
             } else if (currentScore == Long.MIN_VALUE) {
                 for (long move : moves) {
@@ -147,7 +149,7 @@ public class Main {
             
             state = maxMove;
             
-            currentPlayer = 1 + currentPlayer % 2;
+            currentPlayer = currentPlayer.switchPlayer();
             if (wins(state, currentPlayer)) break;
         }
         
@@ -155,6 +157,6 @@ public class Main {
             return 0;
         }
         
-        return currentPlayer;
+        return currentPlayer.getNumber();
     }
 }
