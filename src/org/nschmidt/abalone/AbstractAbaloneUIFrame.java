@@ -1,7 +1,5 @@
 package org.nschmidt.abalone;
 
-import static org.nschmidt.abalone.Backtracker.backtrack;
-import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
@@ -12,11 +10,15 @@ import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigInteger;
@@ -24,14 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public class AbaloneUIFrame extends Frame {
+abstract class AbstractAbaloneUIFrame extends Frame {
 
-    private static final String ABALONE_JUNIOR_PLAYER_WINS = "Abalone Junior - Player %d wins!";
+    private static final String ABALONE_JUNIOR_PLAYER_WINS = "Abalone Junior - Player %s wins!";
 
     private static final long serialVersionUID = 1L;
 
-    private GridBagLayout grid = new GridBagLayout();
-    private GridBagConstraints straints = new GridBagConstraints();
+    protected GridBagLayout grid = new GridBagLayout();
+    protected GridBagConstraints straints = new GridBagConstraints();
     
     private BigInteger previousState;
     private BigInteger[] validMoves;
@@ -39,24 +41,24 @@ public class AbaloneUIFrame extends Frame {
     private Player currentPlayer;
     private Player lastColor = null;
     
-    private final Button confirmButton;
-    private final Button resetButton;
+    private final Component confirmComponent;
+    private final Component resetComponent;
     
-    private final List<Button> fieldButtons = new ArrayList<>();
+    private final List<Component> fieldComponents = new ArrayList<>();
     
-    private transient BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence = (state, player) -> state;
+    protected transient BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence = (state, player) -> state;
     
-    public AbaloneUIFrame(BigInteger state, Player currentPlayer) {
+    public AbstractAbaloneUIFrame(BigInteger state, Player currentPlayer) {
         init(state, currentPlayer);
         
         setLayout(grid);
         addWindowListener(new UIFrameWindowListener());
        
-        // Reset button
+        // Reset label
         if (currentPlayer == WHITE) {
-            resetButton = addButton(0, 0, true, Color.WHITE, -1);
+            resetComponent = addComponent(0, 0, true, Color.WHITE, -1);
         } else {
-            resetButton = addButton(0, 0, true, Color.BLACK, -1);
+            resetComponent = addComponent(0, 0, true, Color.BLACK, -1);
         }
         
         for (int y = 0; y < 7; y++) {
@@ -66,7 +68,7 @@ public class AbaloneUIFrame extends Frame {
             }
         }
         
-        confirmButton = addConfirmButton();
+        confirmComponent = addConfirmComponent();
            
         pack();
         setVisible(true);
@@ -98,7 +100,7 @@ public class AbaloneUIFrame extends Frame {
             if (player == BLACK) color = Color.BLACK;
         }
         
-        fieldButtons.add(addButton(x, y, index != -1, color, index));
+        fieldComponents.add(addComponent(x, y, index != -1, color, index));
     }
 
     private int calculateIndex(int x, int y, int index) {
@@ -112,49 +114,43 @@ public class AbaloneUIFrame extends Frame {
         return index;
     }
 
-    private Button addButton(int x, int y, boolean enabled, Color color, int index) {
-        straints.gridx = x;
-        straints.gridy = y;
-        straints.gridheight = 1;
-        straints.gridwidth = 1;
-        straints.fill = GridBagConstraints.BOTH;
-        straints.ipadx = 19;
-        straints.ipady = 14;
-        Button button = new Button();
-        button.setEnabled(enabled);
-        button.setBackground(color);
-        button.addActionListener(new ButtonActionListener(index));
-        
-        grid.setConstraints(button, straints);
-        add(button);
-        return button;
-    }
+    protected abstract Component addComponent(int x, int y, boolean enabled, Color color, int index);
     
-    private Button addConfirmButton() {
-        straints.gridx = 0;
-        straints.gridy = 7;
-        straints.gridheight = 1;
-        straints.gridwidth = 13;
-        straints.fill = GridBagConstraints.BOTH;
-        straints.ipadx = 19;
-        straints.ipady = 14;
-        Button button = new Button("Confirm");
-        button.setEnabled(false);
-        button.addActionListener(new ButtonActionListener(-2));
-        
-        grid.setConstraints(button, straints);
-        add(button);
-        return button;
-    }
+    protected abstract Component addConfirmComponent();
     
-    private class ButtonActionListener implements ActionListener {
-        final int index;
-        public ButtonActionListener(int index) {
-            super();
+    protected class ButtonActionListener implements ActionListener {
+        private final LabelMouseListener listener;
+        private final int index;
+        private final Component source;
+        public ButtonActionListener(int index, Component source) {
+            this.source = source;
             this.index = index;
+            listener = new LabelMouseListener(index, source);
         }
+        
         @Override
         public void actionPerformed(ActionEvent e) {
+            listener.mouseClicked(new MouseEvent(confirmComponent, index, index, index, index, index, index, getFocusTraversalKeysEnabled()));
+        }
+        
+        public void paint() {
+            if (index < 0) return;
+            Player player = lookAtField(currentState, index);
+            if (player == EMPTY) source.setBackground(Color.BLUE);
+            if (player == WHITE) source.setBackground(Color.WHITE);
+            if (player == BLACK) source.setBackground(Color.BLACK);
+        }
+    }
+    
+    protected class LabelMouseListener implements MouseListener {
+        private final int index;
+        private final Component source;
+        public LabelMouseListener(int index, Component source) {
+            this.index = index;
+            this.source = source;
+        }
+        @Override
+        public void mouseClicked(MouseEvent e) {
             if (index == -1) {
                 resetField();
                 return;
@@ -194,25 +190,25 @@ public class AbaloneUIFrame extends Frame {
                 currentState = populateField(currentState, index, EMPTY);
             }
             
-            if (player == EMPTY) ((Button) e.getSource()).setBackground(Color.BLUE);
-            if (player == WHITE) ((Button) e.getSource()).setBackground(Color.WHITE);
-            if (player == BLACK) ((Button) e.getSource()).setBackground(Color.BLACK);
+            if (player == EMPTY) source.setBackground(Color.BLUE);
+            if (player == WHITE) source.setBackground(Color.WHITE);
+            if (player == BLACK) source.setBackground(Color.BLACK);
             
-            confirmButton.setEnabled(validMoves.length == 0 && previousState == currentState);
+            confirmComponent.setEnabled(validMoves.length == 0 && previousState == currentState);
             for (BigInteger move : validMoves) {
                 if (currentState.equals(move)) {
-                    confirmButton.setEnabled(true);
+                    confirmComponent.setEnabled(true);
                     break;
                 }
             }
         }
         
-        public void paint(Button button) {
+        public void paint() {
             if (index < 0) return;
             Player player = lookAtField(currentState, index);
-            if (player == EMPTY) button.setBackground(Color.BLUE);
-            if (player == WHITE) button.setBackground(Color.WHITE);
-            if (player == BLACK) button.setBackground(Color.BLACK);
+            if (player == EMPTY) source.setBackground(Color.BLUE);
+            if (player == WHITE) source.setBackground(Color.WHITE);
+            if (player == BLACK) source.setBackground(Color.BLACK);
         }
         
         private void resetField() {
@@ -227,18 +223,40 @@ public class AbaloneUIFrame extends Frame {
         }
         
         private void redraw() {
-            for (Button button : fieldButtons) {
-                if (button.getActionListeners()[0] instanceof ButtonActionListener listener) {
-                    listener.paint(button);
+            for (Component component : fieldComponents) {
+                if (component instanceof Label label && 
+                        label.getMouseListeners()[0] instanceof LabelMouseListener listener) {
+                    listener.paint();
+                }
+                
+                if (component instanceof Button button && 
+                    button.getActionListeners()[0] instanceof ButtonActionListener listener) {
+                    listener.paint();
                 }
             }
             
-            confirmButton.setEnabled(validMoves.length == 0);
+            confirmComponent.setEnabled(validMoves.length == 0);
             if (currentPlayer == WHITE) {
-                resetButton.setBackground(Color.WHITE);
+                resetComponent.setBackground(Color.WHITE);
             } else {
-                resetButton.setBackground(Color.BLACK);
+                resetComponent.setBackground(Color.BLACK);
             }
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {
+            // not needed
+        }
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            // not needed
+        }
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            // not needed
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+            // not needed
         }
     }
 
@@ -249,13 +267,6 @@ public class AbaloneUIFrame extends Frame {
         }
     }
     
-    public static void main(String[] args) 
-    {
-      AbaloneUIFrame frame = new AbaloneUIFrame(INITIAL_FIELD, WHITE);
-      frame.setArtificialIntelligence((state, player) -> backtrack(state, player, 10));
-      frame.waitOnResult();
-    }
-
     public void waitOnResult() {
         while(this.isShowing()) {
             try {

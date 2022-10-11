@@ -3,17 +3,17 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.Backtracker.backtrack;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Player.WHITE;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
-import java.awt.Label;
 import java.math.BigInteger;
 
-public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
+public class AbaloneUIWindowsFrame extends AbstractAbaloneUIFrame {
 
     private static final long serialVersionUID = 1L;
-
-    public AbaloneUIMacOSXFrame(BigInteger state, Player currentPlayer) {
+    
+    public AbaloneUIWindowsFrame(BigInteger state, Player currentPlayer) {
         super(state, currentPlayer);
     }
 
@@ -26,14 +26,14 @@ public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
         straints.fill = GridBagConstraints.BOTH;
         straints.ipadx = 19;
         straints.ipady = 14;
-        Label label = new Label();
-        label.setEnabled(enabled);
-        label.setBackground(color);
-        label.addMouseListener(new LabelMouseListener(index, label));
+        Button button = new Button();
+        button.setEnabled(enabled);
+        button.setBackground(color);
+        button.addActionListener(new ButtonActionListener(index, button));
         
-        grid.setConstraints(label, straints);
-        add(label);
-        return label;
+        grid.setConstraints(button, straints);
+        add(button);
+        return button;
     }
     
     @Override
@@ -45,19 +45,18 @@ public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
         straints.fill = GridBagConstraints.BOTH;
         straints.ipadx = 19;
         straints.ipady = 14;
-        Label label = new Label("Confirm");
-        label.setEnabled(false);
+        Button button = new Button("Confirm");
+        button.setEnabled(false);
+        button.addActionListener(new ButtonActionListener(-2, button));
         
-        label.addMouseListener(new LabelMouseListener(-2, label));
-        
-        grid.setConstraints(label, straints);
-        add(label);
-        return label;
+        grid.setConstraints(button, straints);
+        add(button);
+        return button;
     }
     
     public static void main(String[] args) 
     {
-      AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, WHITE);
+      AbaloneUIWindowsFrame frame = new AbaloneUIWindowsFrame(INITIAL_FIELD, WHITE);
       frame.setArtificialIntelligence((state, player) -> backtrack(state, player, 10));
       frame.waitOnResult();
     }
