@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -32,9 +33,9 @@ public class AbaloneUIFrame extends Frame {
     private GridBagLayout grid = new GridBagLayout();
     private GridBagConstraints straints = new GridBagConstraints();
     
-    private long previousState;
-    private long[] validMoves;
-    private long currentState;
+    private BigInteger previousState;
+    private BigInteger[] validMoves;
+    private BigInteger currentState;
     private Player currentPlayer;
     private Player lastColor = null;
     
@@ -43,9 +44,9 @@ public class AbaloneUIFrame extends Frame {
     
     private final List<Button> fieldButtons = new ArrayList<>();
     
-    private transient BiFunction<Long, Player, Long> artificicalIntelligence = (state, player) -> state;
+    private transient BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence = (state, player) -> state;
     
-    public AbaloneUIFrame(long state, Player currentPlayer) {
+    public AbaloneUIFrame(BigInteger state, Player currentPlayer) {
         init(state, currentPlayer);
         
         setLayout(grid);
@@ -71,7 +72,7 @@ public class AbaloneUIFrame extends Frame {
         setVisible(true);
     }
 
-    private void init(long state, Player currentPlayer) {
+    private void init(BigInteger state, Player currentPlayer) {
         this.currentPlayer = currentPlayer;
         this.previousState = state;
         this.currentState = state;
@@ -198,8 +199,8 @@ public class AbaloneUIFrame extends Frame {
             if (player == BLACK) ((Button) e.getSource()).setBackground(Color.BLACK);
             
             confirmButton.setEnabled(validMoves.length == 0 && previousState == currentState);
-            for (long move : validMoves) {
-                if (move == currentState) {
+            for (BigInteger move : validMoves) {
+                if (currentState.equals(move)) {
                     confirmButton.setEnabled(true);
                     break;
                 }
@@ -220,7 +221,7 @@ public class AbaloneUIFrame extends Frame {
             redraw();
         }
         
-        private void update(long state, Player player) {
+        private void update(BigInteger state, Player player) {
             init(state, player);
             redraw();
         }
@@ -266,11 +267,11 @@ public class AbaloneUIFrame extends Frame {
         }
     }
     
-    public long getCurrentState() {
+    public BigInteger getCurrentState() {
         return currentState;
     }
 
-    public void setArtificialIntelligence(BiFunction<Long, Player, Long> artificicalIntelligence) {
+    public void setArtificialIntelligence(BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence) {
         this.artificicalIntelligence = artificicalIntelligence;
     }
 }

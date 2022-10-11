@@ -5,14 +5,16 @@ import static org.nschmidt.abalone.Backtracker.backtrack;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Player.WHITE;
 
+import java.math.BigInteger;
+
 import org.junit.jupiter.api.Test;
 
 class BacktrackerTest {
 
     @Test
     void testBacktrack() {
-        long result = backtrack(INITIAL_FIELD, WHITE, 10);
-        assertEquals(224834340108701141L, result);
+        BigInteger result = backtrack(INITIAL_FIELD, WHITE, 10);
+        assertEquals(BigInteger.valueOf(224834340108701141L), result);
     }
 
 }

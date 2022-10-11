@@ -2,15 +2,19 @@ package org.nschmidt.abalone;
 
 import static java.lang.System.out;
 
+import java.math.BigInteger;
+
 public enum FieldPrinter {
     INSTANCE;
     
-    public static void printField(long state) {
-        long nextValue = state;
+    private static final BigInteger THREE = BigInteger.valueOf(3L);
+    
+    public static void printField(BigInteger state) {
+        BigInteger nextValue = state;
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            long fieldValue = Long.remainderUnsigned(nextValue, 3L);
-            nextValue = Long.divideUnsigned(nextValue, 3L);
+            BigInteger fieldValue = nextValue.remainder(THREE);
+            nextValue = nextValue.divide(THREE);
             breakLine(i);
             out.print(fieldValue);
             printSpaces(1);
@@ -20,15 +24,15 @@ public enum FieldPrinter {
         out.println();
     }
     
-    public static void printFieldDelta(long state, long previousState) {
-        long previousValue = previousState;
-        long nextValue = state;
+    public static void printFieldDelta(BigInteger state, BigInteger previousState) {
+        BigInteger previousValue = previousState;
+        BigInteger nextValue = state;
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            long fieldValue = Long.remainderUnsigned(nextValue, 3L);
-            long previousFieldValue = Long.remainderUnsigned(previousValue, 3L);
-            nextValue = Long.divideUnsigned(nextValue, 3L);
-            previousValue = Long.divideUnsigned(previousValue, 3L);
+            BigInteger fieldValue = nextValue.remainder(THREE);
+            BigInteger previousFieldValue = previousValue.remainder(THREE);
+            nextValue = nextValue.divide(THREE);
+            previousValue = previousValue.divide(THREE);
             breakLine(i);
             out.print(fieldValue);
             if (fieldValue == previousFieldValue) {

@@ -4,10 +4,12 @@ import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
 
+import java.math.BigInteger;
+
 public enum WinningChecker {
     INSTANCE;
     
-    public static boolean wins(long state, Player player) {
+    public static boolean wins(BigInteger state, Player player) {
         final Player opponent = player.switchPlayer();
         
         for (int i : BORDER_INDICIES) {
@@ -24,7 +26,7 @@ public enum WinningChecker {
         return false;
     }
 
-    private static boolean check(long state, Player player, Player opponent, Player borderPiece, int[] neighbourIndicies, int corner1, int corner2) {
+    private static boolean check(BigInteger state, Player player, Player opponent, Player borderPiece, int[] neighbourIndicies, int corner1, int corner2) {
         int[] nextNeighbourIndicies;
         return borderPiece == opponent 
                 && neighbourIndicies[corner1] == -1 

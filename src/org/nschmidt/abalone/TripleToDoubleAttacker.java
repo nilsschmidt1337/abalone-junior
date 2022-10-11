@@ -5,12 +5,14 @@ import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
 import static org.nschmidt.abalone.Player.EMPTY;
 
+import java.math.BigInteger;
+
 public enum TripleToDoubleAttacker {
     INSTANCE;
     
-    public static long[] performTripleToDoubleAttack(long state, Player player) {
+    public static BigInteger[] performTripleToDoubleAttack(BigInteger state, Player player) {
         final Player opponent = player.switchPlayer();
-        final long[] tempResult = new long[54];
+        final BigInteger[] tempResult = new BigInteger[54];
         int attackCount = 0;
         
         for (int from = 0; from < 37; from++) {
@@ -22,12 +24,12 @@ public enum TripleToDoubleAttacker {
             }
         }
         
-        final long[] result = new long[attackCount];
+        final BigInteger[] result = new BigInteger[attackCount];
         System.arraycopy(tempResult, 0, result, 0, attackCount);
         return result;
     }
     
-    private static int tryTripleToDoubleAttack(long state, Player player, Player opponent, int from, int dir, int moveCount, int[] neighbourIndicies, long[] tempResult) {
+    private static int tryTripleToDoubleAttack(BigInteger state, Player player, Player opponent, int from, int dir, int moveCount, int[] neighbourIndicies, BigInteger[] tempResult) {
         final int secondMarbleIndex = neighbourIndicies[dir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;

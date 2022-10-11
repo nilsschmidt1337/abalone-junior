@@ -4,6 +4,7 @@ import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
 
+import java.math.BigInteger;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,7 +14,7 @@ public enum FieldEvaluator {
     private static final int[] MIDDLE_INDICIES = initMiddle();
     private static final int[] CENTER_INDICIES = {11, 12, 17, 19, 24, 25};
     
-    public static long score(long state, Player player) {
+    public static long score(BigInteger state, Player player) {
         final Player opponent = player.switchPlayer();
         if (WinningChecker.wins(state, opponent)) return Long.MIN_VALUE;
         long score = 0;

@@ -8,6 +8,7 @@ import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
+import java.math.BigInteger;
 import java.util.Random;
 
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
@@ -21,7 +22,7 @@ import static org.nschmidt.abalone.Backtracker.backtrack;
 public class Main {
     
     public static void main(String[] args) {
-        long state = 0L;
+        BigInteger state = BigInteger.ZERO;
         state = populateField(state, 0, BLACK);
         state = populateField(state, 1, WHITE);
         state = populateField(state, 2, BLACK);
@@ -55,23 +56,23 @@ public class Main {
         Player currentPlayer = WHITE;
         
         Random rnd = new Random(1337L);
-        long previousState = state;
+        BigInteger previousState = state;
         while (true) {
             printFieldDelta(state, previousState);
             previousState = state;
             long currentScore = score(state, currentPlayer);
             System.out.println("Player " + currentPlayer + " moves (Score " + currentScore +  "):");
-            long[] moves = allMoves(state, currentPlayer);
-            long randomMove = moves[rnd.nextInt(moves.length)];
+            BigInteger[] moves = allMoves(state, currentPlayer);
+            BigInteger randomMove = moves[rnd.nextInt(moves.length)];
             
             if (currentPlayer == WHITE) {
                 state = backtrack(state, currentPlayer, 10);
             } else {
                 long maxScore = Long.MIN_VALUE;
-                long maxMove = randomMove;
+                BigInteger maxMove = randomMove;
                 
                 if (currentScore == Long.MIN_VALUE) {
-                    for (long move : moves) {
+                    for (BigInteger move : moves) {
                         long score = score(move, currentPlayer);
                         if (score > maxScore) {
                             maxScore = score;
@@ -113,23 +114,23 @@ public class Main {
         System.out.println(" draw    " + wins[0]);
     }
 
-    private static long playRound(Player currentPlayer, Random rnd) {
-        long state;
+    private static int playRound(Player currentPlayer, Random rnd) {
+        BigInteger state;
         state = INITIAL_FIELD;
         int moveCount = 0;
         while (moveCount < 100) {
             moveCount += 1;
             long currentScore = score(state, currentPlayer);
-            long[] moves = allMoves(state, currentPlayer);
-            long randomMove = moves[rnd.nextInt(moves.length)];
+            BigInteger[] moves = allMoves(state, currentPlayer);
+            BigInteger randomMove = moves[rnd.nextInt(moves.length)];
             
             long maxScore = Long.MIN_VALUE;
-            long maxMove = randomMove;
+            BigInteger maxMove = randomMove;
             
             if (currentPlayer == WHITE) {
                 maxMove = backtrack(state, currentPlayer, 10);
             } else if (currentScore == Long.MIN_VALUE) {
-                for (long move : moves) {
+                for (BigInteger move : moves) {
                     long score = score(move, currentPlayer);
                     if (score > maxScore) {
                         maxScore = score;
@@ -157,6 +158,6 @@ public class Main {
             return 0;
         }
         
-        return currentPlayer.getNumber();
+        return currentPlayer.getNumber().intValue();
     }
 }

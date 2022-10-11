@@ -5,11 +5,13 @@ import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
 import static org.nschmidt.abalone.Player.EMPTY;
 
+import java.math.BigInteger;
+
 public enum SingleMover {
     INSTANCE;
     
-    public static long[] moveSingleMarble(long state, Player player) {
-        final long[] tempResult = new long[54];
+    public static BigInteger[] moveSingleMarble(BigInteger state, Player player) {
+        final BigInteger[] tempResult = new BigInteger[54];
         int moveCount = 0;
         
         for (int from = 0; from < 37; from++) {
@@ -23,7 +25,7 @@ public enum SingleMover {
             }
         }
         
-        final long[] result = new long[moveCount];
+        final BigInteger[] result = new BigInteger[moveCount];
         System.arraycopy(tempResult, 0, result, 0, moveCount);
         return result;
     }

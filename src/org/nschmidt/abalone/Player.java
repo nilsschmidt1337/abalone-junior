@@ -1,5 +1,7 @@
 package org.nschmidt.abalone;
 
+import java.math.BigInteger;
+
 public enum Player implements PlayerLogic{
     BLACK {
         @Override
@@ -8,8 +10,8 @@ public enum Player implements PlayerLogic{
         }
 
         @Override
-        public long getNumber() {
-            return 2;
+        public BigInteger getNumber() {
+            return BigInteger.TWO;
         }
     },
     WHITE {
@@ -19,8 +21,8 @@ public enum Player implements PlayerLogic{
         }
 
         @Override
-        public long getNumber() {
-            return 1;
+        public BigInteger getNumber() {
+            return BigInteger.ONE;
         }
     },
     EMPTY {
@@ -30,13 +32,13 @@ public enum Player implements PlayerLogic{
         }
 
         @Override
-        public long getNumber() {
-            return 0;
+        public BigInteger getNumber() {
+            return BigInteger.ZERO;
         }
     };
 
-    static Player valueOf(long remainderUnsigned) {
-        return switch ((int) remainderUnsigned) {
+    static Player valueOf(BigInteger bigInteger) {
+        return switch (bigInteger.intValue()) {
         case 1 -> WHITE;
         case 2 -> BLACK;
         default -> EMPTY;

@@ -4,19 +4,22 @@ import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.EMPTY;
 import static org.nschmidt.abalone.Player.WHITE;
 
+import java.math.BigInteger;
+
 public enum Field {
     INSTANCE;
     
-    private static final long[] fieldDiv = initFieldDiv();
+    private static final BigInteger THREE = BigInteger.valueOf(3L);
+    private static final BigInteger[] fieldDiv = initFieldDiv();
     
-    public static final long INITIAL_FIELD = initField();
+    public static final BigInteger INITIAL_FIELD = initField();
     
-    private static long[] initFieldDiv() {
-        final long[] fieldDiv = new long[37];
+    private static BigInteger[] initFieldDiv() {
+        final BigInteger[] fieldDiv = new BigInteger[37];
         for (int i = 0; i < 37; i++) {
-            long index = 1L;
+            BigInteger index = BigInteger.ONE;
             for (int j = 0; j < i; j++) {
-                index = index * 3L;
+                index = index.multiply(THREE);
             }
             
             fieldDiv[i] = index;
@@ -25,8 +28,8 @@ public enum Field {
         return fieldDiv;
     }
     
-    private static long initField() {
-        long state = 0L;
+    private static BigInteger initField() {
+        BigInteger state = BigInteger.ZERO;
         for (int i = 0; i < 9; i++) {
             state = populateField(state, i, BLACK);
             state = populateField(state, i + 28, WHITE);
@@ -35,18 +38,18 @@ public enum Field {
         return state;
     }
     
-    public static long populateField(long state, int fieldIndex, Player player) {
-        long factor = fieldDiv[fieldIndex];
-        long oldValue = Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L);
-        return state - oldValue * factor + player.getNumber() * factor;
+    public static BigInteger populateField(BigInteger state, int fieldIndex, Player player) {
+        BigInteger factor = fieldDiv[fieldIndex];
+        BigInteger oldValue = state.divide(factor).remainder(THREE);
+        return state.subtract(oldValue.multiply(factor)).add(player.getNumber().multiply(factor));
     }
     
-    public static long move(long state, Player player, int from, int to) {
+    public static BigInteger move(BigInteger state, Player player, int from, int to) {
         return populateField(populateField(state, to, player), from, EMPTY);
     }
     
-    public static Player lookAtField(long state, int fieldIndex) {
-        long factor = fieldDiv[fieldIndex];
-        return Player.valueOf(Long.remainderUnsigned(Long.divideUnsigned(state, factor), 3L));
+    public static Player lookAtField(BigInteger state, int fieldIndex) {
+        BigInteger factor = fieldDiv[fieldIndex];
+        return Player.valueOf(state.divide(factor).remainder(THREE));
     }
 }

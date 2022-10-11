@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Field.*;
 import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.WHITE;
+
+import java.math.BigInteger;
+
 import static org.nschmidt.abalone.Player.EMPTY;
 
 import org.junit.jupiter.api.Test;
@@ -13,12 +16,12 @@ class FieldTest {
 
     @Test
     void testInitialize() {
-        assertEquals(225130514549290883L, INITIAL_FIELD);
+        assertEquals(BigInteger.valueOf(225130514549290883L), INITIAL_FIELD);
     }
     
     @Test
     void testPopulateField() {
-        final long state = populateField(INITIAL_FIELD, 0, BLACK);
+        final BigInteger state = populateField(INITIAL_FIELD, 0, BLACK);
         final Player target = lookAtField(state, 0);
         
         assertEquals(BLACK, target);
@@ -27,7 +30,7 @@ class FieldTest {
     @Test
     void testMove() {
         final Player origin = lookAtField(INITIAL_FIELD, 0);
-        final long state = move(INITIAL_FIELD, origin, 0, 21);
+        final BigInteger state = move(INITIAL_FIELD, origin, 0, 21);
         
         assertEquals(origin, lookAtField(state, 21));
         assertEquals(EMPTY, lookAtField(state, 0));
@@ -56,5 +59,4 @@ class FieldTest {
        
         assertEquals("Index 38 out of bounds for length 37", ex.getMessage());
     }
-
 }
