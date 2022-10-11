@@ -1,5 +1,6 @@
 package org.nschmidt.abalone;
 
+import java.awt.Color;
 import java.math.BigInteger;
 
 public enum Player implements PlayerLogic{
@@ -13,6 +14,11 @@ public enum Player implements PlayerLogic{
         public BigInteger getNumber() {
             return BigInteger.TWO;
         }
+
+        @Override
+        public Color getColor() {
+            return Color.BLACK;
+        }
     },
     WHITE {
         @Override
@@ -24,6 +30,11 @@ public enum Player implements PlayerLogic{
         public BigInteger getNumber() {
             return BigInteger.ONE;
         }
+
+        @Override
+        public Color getColor() {
+            return Color.WHITE;
+        }
     },
     EMPTY {
         @Override
@@ -34,6 +45,11 @@ public enum Player implements PlayerLogic{
         @Override
         public BigInteger getNumber() {
             return BigInteger.ZERO;
+        }
+
+        @Override
+        public Color getColor() {
+            return Color.BLUE;
         }
     };
 

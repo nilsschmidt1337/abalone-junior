@@ -55,11 +55,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         addWindowListener(new UIFrameWindowListener());
        
         // Reset label
-        if (currentPlayer == WHITE) {
-            resetComponent = addComponent(0, 0, true, Color.WHITE, -1);
-        } else {
-            resetComponent = addComponent(0, 0, true, Color.BLACK, -1);
-        }
+        resetComponent = addComponent(0, 0, true, currentPlayer.getColor(), -1);
         
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 13; x++) {
@@ -95,9 +91,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         
         if (index > -1) {
             Player player = lookAtField(currentState, index);
-            if (player == EMPTY) color = Color.BLUE;
-            if (player == WHITE) color = Color.WHITE;
-            if (player == BLACK) color = Color.BLACK;
+            color = player.getColor();
         }
         
         fieldComponents.add(addComponent(x, y, index != -1, color, index));
@@ -120,25 +114,17 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     
     protected class ButtonActionListener implements ActionListener {
         private final LabelMouseListener listener;
-        private final int index;
-        private final Component source;
         public ButtonActionListener(int index, Component source) {
-            this.source = source;
-            this.index = index;
             listener = new LabelMouseListener(index, source);
         }
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            listener.mouseClicked(new MouseEvent(confirmComponent, index, index, index, index, index, index, getFocusTraversalKeysEnabled()));
+            listener.mouseClicked(new MouseEvent(confirmComponent, 0, 0, 0, 0, 0, 0, getFocusTraversalKeysEnabled()));
         }
         
         public void paint() {
-            if (index < 0) return;
-            Player player = lookAtField(currentState, index);
-            if (player == EMPTY) source.setBackground(Color.BLUE);
-            if (player == WHITE) source.setBackground(Color.WHITE);
-            if (player == BLACK) source.setBackground(Color.BLACK);
+            listener.paint();
         }
     }
     
@@ -190,9 +176,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 currentState = populateField(currentState, index, EMPTY);
             }
             
-            if (player == EMPTY) source.setBackground(Color.BLUE);
-            if (player == WHITE) source.setBackground(Color.WHITE);
-            if (player == BLACK) source.setBackground(Color.BLACK);
+            source.setBackground(player.getColor());
             
             confirmComponent.setEnabled(validMoves.length == 0 && previousState == currentState);
             for (BigInteger move : validMoves) {
@@ -206,9 +190,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         public void paint() {
             if (index < 0) return;
             Player player = lookAtField(currentState, index);
-            if (player == EMPTY) source.setBackground(Color.BLUE);
-            if (player == WHITE) source.setBackground(Color.WHITE);
-            if (player == BLACK) source.setBackground(Color.BLACK);
+            source.setBackground(player.getColor());
         }
         
         private void resetField() {
@@ -236,11 +218,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
             }
             
             confirmComponent.setEnabled(validMoves.length == 0);
-            if (currentPlayer == WHITE) {
-                resetComponent.setBackground(Color.WHITE);
-            } else {
-                resetComponent.setBackground(Color.BLACK);
-            }
+            resetComponent.setBackground(currentPlayer.getColor());
         }
         @Override
         public void mousePressed(MouseEvent e) {
