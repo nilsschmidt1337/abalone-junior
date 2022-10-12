@@ -14,7 +14,7 @@ class BacktrackerTest {
     @Test
     void testBacktrack() {
         BigInteger result = backtrack(INITIAL_FIELD, WHITE, 10);
-        assertEquals(BigInteger.valueOf(224834340108701141L), result);
+        assertEquals(BigInteger.valueOf(70366655414272L), result);
     }
 
 }

@@ -9,24 +9,7 @@ import java.math.BigInteger;
 public enum Field {
     INSTANCE;
     
-    private static final BigInteger THREE = BigInteger.valueOf(3L);
-    private static final BigInteger[] fieldDiv = initFieldDiv();
-    
     public static final BigInteger INITIAL_FIELD = initField();
-    
-    private static BigInteger[] initFieldDiv() {
-        final BigInteger[] fieldDiv = new BigInteger[37];
-        for (int i = 0; i < 37; i++) {
-            BigInteger index = BigInteger.ONE;
-            for (int j = 0; j < i; j++) {
-                index = index.multiply(THREE);
-            }
-            
-            fieldDiv[i] = index;
-        }
-        
-        return fieldDiv;
-    }
     
     private static BigInteger initField() {
         BigInteger state = BigInteger.ZERO;
@@ -39,9 +22,9 @@ public enum Field {
     }
     
     public static BigInteger populateField(BigInteger state, int fieldIndex, Player player) {
-        BigInteger factor = fieldDiv[fieldIndex];
-        BigInteger oldValue = state.divide(factor).remainder(THREE);
-        return state.subtract(oldValue.multiply(factor)).add(player.getNumber().multiply(factor));
+        if (state.testBit(fieldIndex)) state = state.clearBit(fieldIndex);
+        if (state.testBit(fieldIndex + 37)) state = state.clearBit(fieldIndex + 37);
+        return Player.EMPTY == player ? state : state.setBit(fieldIndex + 37 * (player.getNumber() - 1));
     }
     
     public static BigInteger move(BigInteger state, Player player, int from, int to) {
@@ -49,7 +32,6 @@ public enum Field {
     }
     
     public static Player lookAtField(BigInteger state, int fieldIndex) {
-        BigInteger factor = fieldDiv[fieldIndex];
-        return Player.valueOf(state.divide(factor).remainder(THREE));
+        return Player.valueOf((state.testBit(fieldIndex) ? 1 : 0) + (state.testBit(fieldIndex + 37) ? 2 : 0));
     }
 }

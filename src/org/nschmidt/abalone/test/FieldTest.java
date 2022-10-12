@@ -16,7 +16,7 @@ class FieldTest {
 
     @Test
     void testInitialize() {
-        assertEquals(BigInteger.valueOf(225130514549290883L), INITIAL_FIELD);
+        assertEquals(BigInteger.valueOf(70368475742208L), INITIAL_FIELD);
     }
     
     @Test
@@ -44,19 +44,16 @@ class FieldTest {
     
     @Test
     void testLookAtFieldForNegativeIndex() {
-        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
+        Throwable ex = assertThrows(ArithmeticException.class, () -> 
             lookAtField(INITIAL_FIELD, -1)
         );
         
-        assertEquals("Index -1 out of bounds for length 37", ex.getMessage());
+        assertEquals("Negative bit address", ex.getMessage());
     }
 
     @Test
     void testLookAtFieldForOffByOneIndex() {
-        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
-            lookAtField(INITIAL_FIELD, 38)
-        );
-       
-        assertEquals("Index 38 out of bounds for length 37", ex.getMessage());
+        final Player playerOutOfBounds = lookAtField(INITIAL_FIELD, 74);
+        assertEquals(EMPTY, playerOutOfBounds);
     }
 }

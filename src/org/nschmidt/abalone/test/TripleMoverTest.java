@@ -1,7 +1,9 @@
 package org.nschmidt.abalone.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Player.BLACK;
+import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.TripleMover.moveThreeMarbles;
 
 import java.math.BigInteger;
@@ -12,15 +14,15 @@ class TripleMoverTest {
 
     @Test
     void testMoveThreeMarbles1() {
-        final BigInteger state = BigInteger.valueOf(104340773383259005L);
-        BigInteger[] moves = moveThreeMarbles(state, BLACK);
-        assertEquals(6, moves.length);
+        final BigInteger state = INITIAL_FIELD;
+        BigInteger[] moves = moveThreeMarbles(state, WHITE);
+        assertEquals(12, moves.length);
     }
     
     @Test
     void testMoveThreeMarbles2() {
-        final BigInteger state = BigInteger.valueOf(1804882274845767L);
+        final BigInteger state = INITIAL_FIELD;
         BigInteger[] moves = moveThreeMarbles(state, BLACK);
-        assertEquals(6, moves.length);
+        assertEquals(12, moves.length);
     }
 }

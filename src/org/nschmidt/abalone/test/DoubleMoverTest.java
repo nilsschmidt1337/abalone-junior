@@ -14,13 +14,13 @@ class DoubleMoverTest {
     void testMoveTwoMarbles1() {
         final BigInteger state = BigInteger.valueOf(104340773383259005L);
         BigInteger[] moves = moveTwoMarbles(state, BLACK);
-        assertEquals(22, moves.length);
+        assertEquals(10, moves.length);
     }
     
     @Test
     void testMoveTwoMarbles2() {
         final BigInteger state = BigInteger.valueOf(1804882274845767L);
         BigInteger[] moves = moveTwoMarbles(state, BLACK);
-        assertEquals(26, moves.length);
+        assertEquals(7, moves.length);
     }
 }

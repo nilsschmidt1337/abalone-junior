@@ -7,14 +7,10 @@ import java.math.BigInteger;
 public enum FieldPrinter {
     INSTANCE;
     
-    private static final BigInteger THREE = BigInteger.valueOf(3L);
-    
     public static void printField(BigInteger state) {
-        BigInteger nextValue = state;
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            BigInteger fieldValue = nextValue.remainder(THREE);
-            nextValue = nextValue.divide(THREE);
+            int fieldValue = (state.testBit(i) ? 1 : 0) + (state.testBit(i + 37) ? 2 : 0);
             breakLine(i);
             out.print(fieldValue);
             printSpaces(1);
@@ -25,14 +21,10 @@ public enum FieldPrinter {
     }
     
     public static void printFieldDelta(BigInteger state, BigInteger previousState) {
-        BigInteger previousValue = previousState;
-        BigInteger nextValue = state;
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            BigInteger fieldValue = nextValue.remainder(THREE);
-            BigInteger previousFieldValue = previousValue.remainder(THREE);
-            nextValue = nextValue.divide(THREE);
-            previousValue = previousValue.divide(THREE);
+            int fieldValue = (state.testBit(i) ? 1 : 0) + (state.testBit(i + 37) ? 2 : 0);
+            int previousFieldValue = (previousState.testBit(i) ? 1 : 0) + (previousState.testBit(i + 37) ? 2 : 0);
             breakLine(i);
             out.print(fieldValue);
             if (fieldValue == previousFieldValue) {

@@ -158,6 +158,6 @@ public class Main {
             return 0;
         }
         
-        return currentPlayer.getNumber().intValue();
+        return currentPlayer.getNumber();
     }
 }
