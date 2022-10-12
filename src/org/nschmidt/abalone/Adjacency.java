@@ -96,9 +96,7 @@ public enum Adjacency {
         final int[] borderIndicies = new int[18];
         int i = 0;
         for (int j = 0; j < 37; j++) {
-            int[] neighbours = adjacencyMatrix[j];
-            for (int k = 0; k < 6; k++) {
-                int neighbourIndex = neighbours[k];
+            for (int neighbourIndex : adjacencyMatrix[j]) {
                 if (neighbourIndex == -1) {
                     borderIndicies[i] = j;
                     i++;

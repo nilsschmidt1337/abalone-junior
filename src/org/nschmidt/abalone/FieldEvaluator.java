@@ -3,6 +3,7 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
+import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.math.BigInteger;
 import java.util.Set;
@@ -11,14 +12,15 @@ import java.util.TreeSet;
 public enum FieldEvaluator {
     INSTANCE;
     
-    private static final int[] MIDDLE_INDICIES = initMiddle();
-    private static final int[] CENTER_INDICIES = {11, 12, 17, 19, 24, 25};
+    private static final int[] MIDDLE_INDICIES = ring(1);
+    private static final int[] CENTER_INDICIES = ring(2);
+    private static final int CENTRAL_INDEX = ring(3)[0];
     
     public static long score(BigInteger state, Player player) {
         final Player opponent = player.switchPlayer();
-        if (WinningChecker.wins(state, opponent)) return Long.MIN_VALUE;
+        if (wins(state, opponent)) return Long.MIN_VALUE;
         long score = 0;
-        if (WinningChecker.wins(state, player)) score += 1_000_000;
+        if (wins(state, player)) score += 1_000_000;
         
         for (int i : BORDER_INDICIES) {
             if (lookAtField(state, i) == player) score -= 1000;
@@ -32,31 +34,31 @@ public enum FieldEvaluator {
             if (lookAtField(state, i) == player) score += 70;
         }
         
-        if (lookAtField(state, 18) == player) score += 100;
+        if (lookAtField(state, CENTRAL_INDEX) == player) score += 100;
 
         return score;
     }
     
-    private static int[] initMiddle() {
-        Set<Integer> border = new TreeSet<>();
+    public static int[] ring(int n) {
+        final Set<Integer> newRing = new TreeSet<>();
+        final Set<Integer> allPrevousRings = new TreeSet<>();
         for (int i : BORDER_INDICIES) {
-            border.add(i);
+            newRing.add(i);
         }
         
-        int[] result = new int[12];
-        int index = 0;
-        for (int i = 0; i < 37; i++) {
-            if (border.contains(i)) continue;
-            int[] neighbours = adjacency(i);
-            for (int d = 0; d < 6; d++) {
-                if (border.contains(neighbours[d])) {
-                    result[index] = i;
-                    index++;
-                    break;
+        for (int i = 0; i < n; i++) {
+            allPrevousRings.addAll(newRing);
+            newRing.clear();
+            
+            for (int p : allPrevousRings) {
+                for (int neighbour : adjacency(p)) {
+                    if (neighbour != -1 && !allPrevousRings.contains(neighbour)) {
+                        newRing.add(neighbour);
+                    }
                 }
             }
         }
         
-        return result;
+        return newRing.stream().mapToInt(i -> i).toArray();
     }
 }
