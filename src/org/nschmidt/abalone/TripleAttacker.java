@@ -9,7 +9,6 @@ public enum TripleAttacker {
     INSTANCE;
     
     public static Field[] performTripleAttack(Field state, Player player) {
-        final Player opponent = player.switchPlayer();
         final Field[] tempResult = new Field[54];
         int attackCount = 0;
         
@@ -17,7 +16,7 @@ public enum TripleAttacker {
             if (player == lookAtField(state, from)) {
                 final int[] neighbourIndicies = adjacency(from);
                 for (int d = 0; d < 6; d++) {
-                    attackCount += tryTripleAttack(state, player, opponent, from, d, attackCount, neighbourIndicies, tempResult);
+                    attackCount += tryTripleAttack(state, player, from, d, attackCount, neighbourIndicies, tempResult);
                 }
             }
         }
@@ -27,7 +26,7 @@ public enum TripleAttacker {
         return result;
     }
     
-    private static int tryTripleAttack(Field state, Player player, Player opponent, int from, int dir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
+    private static int tryTripleAttack(Field state, Player player, int from, int dir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
         final int secondMarbleIndex = neighbourIndicies[dir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;
@@ -49,7 +48,7 @@ public enum TripleAttacker {
         if (targetForThirdMarbleIndex == -1) return 0;
         final Player targetForThirdMarble = lookAtField(state, targetForThirdMarbleIndex);
         // Das Feld hat keinen Gegner
-        if (targetForThirdMarble != opponent) return 0;
+        if (targetForThirdMarble == EMPTY || targetForThirdMarble == player) return 0;
         
         final int[] opponentNeighbourIndicies = adjacency(targetForThirdMarbleIndex);
         final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndicies[dir];
@@ -59,7 +58,7 @@ public enum TripleAttacker {
         // Das Feld ist nicht leer
         if (emptyPlaceForOpponentMarble != EMPTY) return 0;
         
-        state = move(state, opponent, targetForThirdMarbleIndex, emptyPlaceForOpponentMarbleIndex);
+        state = move(state, targetForThirdMarble, targetForThirdMarbleIndex, emptyPlaceForOpponentMarbleIndex);
         state = move(state, player, thirdMarbleIndex, targetForThirdMarbleIndex);
         state = move(state, player, secondMarbleIndex, thirdMarbleIndex);
         state = move(state, player, from, secondMarbleIndex);

@@ -9,7 +9,6 @@ public enum TripleToDoubleAttacker {
     INSTANCE;
     
     public static Field[] performTripleToDoubleAttack(Field state, Player player) {
-        final Player opponent = player.switchPlayer();
         final Field[] tempResult = new Field[54];
         int attackCount = 0;
         
@@ -17,7 +16,7 @@ public enum TripleToDoubleAttacker {
             if (player == lookAtField(state, from)) {
                 final int[] neighbourIndicies = adjacency(from);
                 for (int d = 0; d < 6; d++) {
-                    attackCount += tryTripleToDoubleAttack(state, player, opponent, from, d, attackCount, neighbourIndicies, tempResult);
+                    attackCount += tryTripleToDoubleAttack(state, player, from, d, attackCount, neighbourIndicies, tempResult);
                 }
             }
         }
@@ -27,7 +26,7 @@ public enum TripleToDoubleAttacker {
         return result;
     }
     
-    private static int tryTripleToDoubleAttack(Field state, Player player, Player opponent, int from, int dir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
+    private static int tryTripleToDoubleAttack(Field state, Player player, int from, int dir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
         final int secondMarbleIndex = neighbourIndicies[dir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;
@@ -49,7 +48,7 @@ public enum TripleToDoubleAttacker {
         if (fourthMarbleIndex == -1) return 0;
         final Player targetForThirdMarble = lookAtField(state, fourthMarbleIndex);
         // Das Feld hat keinen Gegner
-        if (targetForThirdMarble != opponent) return 0;
+        if (targetForThirdMarble == EMPTY || targetForThirdMarble == player) return 0;
         
         final int[] fourthMarbleNeighbourIndicies = adjacency(fourthMarbleIndex);
         final int targetForFourthMarbleIndex = fourthMarbleNeighbourIndicies[dir];
@@ -57,7 +56,7 @@ public enum TripleToDoubleAttacker {
         if (targetForFourthMarbleIndex == -1) return 0;
         final Player targetForForthMarble = lookAtField(state, targetForFourthMarbleIndex);
         // Das Feld hat keinen Gegner
-        if (targetForForthMarble != opponent) return 0;
+        if (targetForForthMarble == EMPTY || targetForForthMarble == player) return 0;
         
         final int[] opponentNeighbourIndicies = adjacency(targetForFourthMarbleIndex);
         final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndicies[dir];
@@ -67,8 +66,8 @@ public enum TripleToDoubleAttacker {
         // Das Feld ist nicht leer
         if (emptyPlaceForOpponentMarble != EMPTY) return 0;
         
-        state = move(state, opponent, targetForFourthMarbleIndex, emptyPlaceForOpponentMarbleIndex);
-        state = move(state, opponent, fourthMarbleIndex, targetForFourthMarbleIndex);
+        state = move(state, targetForForthMarble, targetForFourthMarbleIndex, emptyPlaceForOpponentMarbleIndex);
+        state = move(state, targetForThirdMarble, fourthMarbleIndex, targetForFourthMarbleIndex);
         state = move(state, player, thirdMarbleIndex, fourthMarbleIndex);
         state = move(state, player, secondMarbleIndex, thirdMarbleIndex);
         state = move(state, player, from, secondMarbleIndex);
