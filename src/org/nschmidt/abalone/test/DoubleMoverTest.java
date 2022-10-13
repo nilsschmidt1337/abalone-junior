@@ -2,25 +2,26 @@ package org.nschmidt.abalone.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
+import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Player.BLACK;
-
-import java.math.BigInteger;
+import static org.nschmidt.abalone.Player.WHITE;
 
 import org.junit.jupiter.api.Test;
+import org.nschmidt.abalone.Field;
 
 class DoubleMoverTest {
 
     @Test
     void testMoveTwoMarbles1() {
-        final BigInteger state = BigInteger.valueOf(104340773383259005L);
-        BigInteger[] moves = moveTwoMarbles(state, BLACK);
-        assertEquals(10, moves.length);
+        final Field state = INITIAL_FIELD;
+        Field[] moves = moveTwoMarbles(state, BLACK);
+        assertEquals(24, moves.length);
     }
     
     @Test
     void testMoveTwoMarbles2() {
-        final BigInteger state = BigInteger.valueOf(1804882274845767L);
-        BigInteger[] moves = moveTwoMarbles(state, BLACK);
-        assertEquals(7, moves.length);
+        final Field state = INITIAL_FIELD;
+        Field[] moves = moveTwoMarbles(state, WHITE);
+        assertEquals(24, moves.length);
     }
 }

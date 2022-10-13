@@ -2,15 +2,13 @@ package org.nschmidt.abalone;
 
 import static java.lang.System.out;
 
-import java.math.BigInteger;
-
 public enum FieldPrinter {
     INSTANCE;
     
-    public static void printField(BigInteger state) {
+    public static void printField(Field state) {
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            int fieldValue = (state.testBit(i) ? 1 : 0) + (state.testBit(i + 37) ? 2 : 0);
+            int fieldValue = Field.lookAtField(state, i).getNumber();
             breakLine(i);
             out.print(fieldValue);
             printSpaces(1);
@@ -20,11 +18,11 @@ public enum FieldPrinter {
         out.println();
     }
     
-    public static void printFieldDelta(BigInteger state, BigInteger previousState) {
+    public static void printFieldDelta(Field state, Field previousState) {
         printSpaces(3);
         for (int i = 0; i < 37; i++) {
-            int fieldValue = (state.testBit(i) ? 1 : 0) + (state.testBit(i + 37) ? 2 : 0);
-            int previousFieldValue = (previousState.testBit(i) ? 1 : 0) + (previousState.testBit(i + 37) ? 2 : 0);
+            int fieldValue = Field.lookAtField(state, i).getNumber();
+            int previousFieldValue = Field.lookAtField(previousState, i).getNumber();
             breakLine(i);
             out.print(fieldValue);
             if (fieldValue == previousFieldValue) {

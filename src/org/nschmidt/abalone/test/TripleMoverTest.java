@@ -6,23 +6,22 @@ import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.TripleMover.moveThreeMarbles;
 
-import java.math.BigInteger;
-
 import org.junit.jupiter.api.Test;
+import org.nschmidt.abalone.Field;
 
 class TripleMoverTest {
 
     @Test
     void testMoveThreeMarbles1() {
-        final BigInteger state = INITIAL_FIELD;
-        BigInteger[] moves = moveThreeMarbles(state, WHITE);
+        final Field state = INITIAL_FIELD;
+        Field[] moves = moveThreeMarbles(state, WHITE);
         assertEquals(12, moves.length);
     }
     
     @Test
     void testMoveThreeMarbles2() {
-        final BigInteger state = INITIAL_FIELD;
-        BigInteger[] moves = moveThreeMarbles(state, BLACK);
+        final Field state = INITIAL_FIELD;
+        Field[] moves = moveThreeMarbles(state, BLACK);
         assertEquals(12, moves.length);
     }
 }

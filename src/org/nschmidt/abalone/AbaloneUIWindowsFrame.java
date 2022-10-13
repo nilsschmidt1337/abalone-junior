@@ -7,13 +7,12 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
-import java.math.BigInteger;
 
 public class AbaloneUIWindowsFrame extends AbstractAbaloneUIFrame {
 
     private static final long serialVersionUID = 1L;
     
-    public AbaloneUIWindowsFrame(BigInteger state, Player currentPlayer) {
+    public AbaloneUIWindowsFrame(Field state, Player currentPlayer) {
         super(state, currentPlayer);
     }
 

@@ -7,13 +7,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.Label;
-import java.math.BigInteger;
 
 public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
 
     private static final long serialVersionUID = 1L;
 
-    public AbaloneUIMacOSXFrame(BigInteger state, Player currentPlayer) {
+    public AbaloneUIMacOSXFrame(Field state, Player currentPlayer) {
         super(state, currentPlayer);
     }
 

@@ -5,23 +5,22 @@ import static org.nschmidt.abalone.Field.*;
 import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.WHITE;
 
-import java.math.BigInteger;
-
 import static org.nschmidt.abalone.Player.EMPTY;
 
 import org.junit.jupiter.api.Test;
+import org.nschmidt.abalone.Field;
 import org.nschmidt.abalone.Player;
 
 class FieldTest {
 
     @Test
     void testInitialize() {
-        assertEquals(BigInteger.valueOf(70368475742208L), INITIAL_FIELD);
+        assertEquals(Field.of(new Player[] {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE}), INITIAL_FIELD);
     }
     
     @Test
     void testPopulateField() {
-        final BigInteger state = populateField(INITIAL_FIELD, 0, BLACK);
+        final Field state = populateField(INITIAL_FIELD, 0, BLACK);
         final Player target = lookAtField(state, 0);
         
         assertEquals(BLACK, target);
@@ -30,7 +29,7 @@ class FieldTest {
     @Test
     void testMove() {
         final Player origin = lookAtField(INITIAL_FIELD, 0);
-        final BigInteger state = move(INITIAL_FIELD, origin, 0, 21);
+        final Field state = move(INITIAL_FIELD, origin, 0, 21);
         
         assertEquals(origin, lookAtField(state, 21));
         assertEquals(EMPTY, lookAtField(state, 0));
@@ -44,16 +43,16 @@ class FieldTest {
     
     @Test
     void testLookAtFieldForNegativeIndex() {
-        Throwable ex = assertThrows(ArithmeticException.class, () -> 
+        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
             lookAtField(INITIAL_FIELD, -1)
         );
         
-        assertEquals("Negative bit address", ex.getMessage());
+        assertEquals("Index -1 out of bounds for length 37", ex.getMessage());
     }
 
     @Test
     void testLookAtFieldForOffByOneIndex() {
-        final Player playerOutOfBounds = lookAtField(INITIAL_FIELD, 74);
+        final Player playerOutOfBounds = lookAtField(INITIAL_FIELD, 37);
         assertEquals(EMPTY, playerOutOfBounds);
     }
 }

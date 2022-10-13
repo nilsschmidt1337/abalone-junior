@@ -4,20 +4,18 @@ import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
-import java.math.BigInteger;
-
 public enum Backtracker {
     INSTANCE;
     
-    public static BigInteger backtrack(BigInteger state, Player player, int depth) {
-        BigInteger[] moves = allMoves(state, player);
+    public static Field backtrack(Field state, Player player, int depth) {
+        Field[] moves = allMoves(state, player);
         long maxScore = Long.MIN_VALUE;
-        BigInteger maxMove = moves[0];
+        Field maxMove = moves[0];
         
         final Player opponent = player.switchPlayer();
-        for (BigInteger move : moves) {
+        for (Field move : moves) {
             long initialScore = score(move, player);
-            BigInteger result = playRound(move, opponent, depth);
+            Field result = playRound(move, opponent, depth);
             long score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
                 maxScore = initialScore;
@@ -29,15 +27,15 @@ public enum Backtracker {
     }
     
     
-    private static BigInteger playRound(BigInteger state, Player currentPlayer, int maxDepth) {
+    private static Field playRound(Field state, Player currentPlayer, int maxDepth) {
         int depth = 0;
         while (depth < maxDepth) {
-            BigInteger[] moves = allMoves(state, currentPlayer);
+            Field[] moves = allMoves(state, currentPlayer);
             
             long maxScore = Long.MIN_VALUE;
-            BigInteger maxMove = moves[0];
+            Field maxMove = moves[0];
             
-            for (BigInteger move : moves) {
+            for (Field move : moves) {
                 long score = score(move, currentPlayer);
                 if (score > maxScore) {
                     maxScore = score;

@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -33,9 +32,9 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     protected GridBagLayout grid = new GridBagLayout();
     protected GridBagConstraints straints = new GridBagConstraints();
     
-    private BigInteger previousState;
-    private BigInteger[] validMoves;
-    private BigInteger currentState;
+    private Field previousState;
+    private Field[] validMoves;
+    private Field currentState;
     private Player currentPlayer;
     private Player lastColor = null;
     
@@ -44,9 +43,9 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     
     private final List<Component> fieldComponents = new ArrayList<>();
     
-    protected transient BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence = (state, player) -> state;
+    protected transient BiFunction<Field, Player, Field> artificicalIntelligence = (state, player) -> state;
     
-    protected AbstractAbaloneUIFrame(BigInteger state, Player currentPlayer) {
+    protected AbstractAbaloneUIFrame(Field state, Player currentPlayer) {
         init(state, currentPlayer);
         
         setLayout(grid);
@@ -68,7 +67,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         setVisible(true);
     }
 
-    private void init(BigInteger state, Player currentPlayer) {
+    private void init(Field state, Player currentPlayer) {
         this.currentPlayer = currentPlayer;
         this.previousState = state;
         this.currentState = state;
@@ -177,7 +176,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
             source.setBackground(player.getColor());
             
             confirmComponent.setEnabled(validMoves.length == 0 && previousState == currentState);
-            for (BigInteger move : validMoves) {
+            for (Field move : validMoves) {
                 if (currentState.equals(move)) {
                     confirmComponent.setEnabled(true);
                     break;
@@ -197,7 +196,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
             redraw();
         }
         
-        private void update(BigInteger state, Player player) {
+        private void update(Field state, Player player) {
             init(state, player);
             redraw();
         }
@@ -254,11 +253,11 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         }
     }
     
-    public BigInteger getCurrentState() {
+    public Field getCurrentState() {
         return currentState;
     }
 
-    public void setArtificialIntelligence(BiFunction<BigInteger, Player, BigInteger> artificicalIntelligence) {
+    public void setArtificialIntelligence(BiFunction<Field, Player, Field> artificicalIntelligence) {
         this.artificicalIntelligence = artificicalIntelligence;
     }
 }

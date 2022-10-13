@@ -5,13 +5,11 @@ import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
 import static org.nschmidt.abalone.Player.EMPTY;
 
-import java.math.BigInteger;
-
 public enum TripleMover {
     INSTANCE;
     
-    public static BigInteger[] moveThreeMarbles(BigInteger state, Player player) {
-        final BigInteger[] tempResult = new BigInteger[54];
+    public static Field[] moveThreeMarbles(Field state, Player player) {
+        final Field[] tempResult = new Field[54];
         int moveCount = 0;
         
         for (int from = 0; from < 37; from++) {
@@ -25,12 +23,12 @@ public enum TripleMover {
             }
         }
         
-        final BigInteger[] result = new BigInteger[moveCount];
+        final Field[] result = new Field[moveCount];
         System.arraycopy(tempResult, 0, result, 0, moveCount);
         return result;
     }
 
-    private static int tryMove(BigInteger state, Player player, int from, int dir, int nextPieceDir, int moveCount, int[] neighbourIndicies, BigInteger[] tempResult) {
+    private static int tryMove(Field state, Player player, int from, int dir, int nextPieceDir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
 
         final int emptyPlaceIndex = neighbourIndicies[dir];
         // Die Richtung hat kein Feld, auf das gezogen werden kann:
