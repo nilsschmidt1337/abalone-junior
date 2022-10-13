@@ -18,6 +18,11 @@ public enum Player implements PlayerLogic{
         public Color getColor() {
             return Color.BLACK;
         }
+
+        @Override
+        public char getChar() {
+            return 'X';
+        }
     },
     WHITE {
         @Override
@@ -34,6 +39,11 @@ public enum Player implements PlayerLogic{
         public Color getColor() {
             return Color.WHITE;
         }
+
+        @Override
+        public char getChar() {
+            return 'O';
+        }
     },
     EMPTY {
         @Override
@@ -49,6 +59,11 @@ public enum Player implements PlayerLogic{
         @Override
         public Color getColor() {
             return Color.BLUE;
+        }
+
+        @Override
+        public char getChar() {
+            return '·';
         }
     };
 

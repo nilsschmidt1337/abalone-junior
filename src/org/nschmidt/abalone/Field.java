@@ -73,4 +73,20 @@ public class Field {
     public int hashCode() {
         return Arrays.hashCode(playerPiecesOnField);
     }
+    
+    public void printField() {
+        if (playerPiecesOnField.length < 38) {
+            FieldPrinter.printJuniorFieldDelta(this, this);
+        } else {
+            FieldPrinter.printStandardFieldDelta(this, this);
+        }
+    }
+    
+    public void printFieldDelta(Field previousState) {
+        if (playerPiecesOnField.length < 38) {
+            FieldPrinter.printJuniorFieldDelta(this, previousState);
+        } else {
+            FieldPrinter.printStandardFieldDelta(this, previousState);
+        }
+    }
 }

@@ -1,8 +1,6 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.FieldEvaluator.score;
-import static org.nschmidt.abalone.FieldPrinter.printField;
-import static org.nschmidt.abalone.FieldPrinter.printFieldDelta;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
@@ -31,7 +29,7 @@ public class Main {
             state = populateField(state, i, BLACK);
         }
         
-        printField(state);
+        state.printField();
         
         state = populateField(state, 5, WHITE);
         state = populateField(state, 6, WHITE);
@@ -39,13 +37,13 @@ public class Main {
         
         
         state = moveSingleMarble(state, WHITE)[0];
-        printField(state);
+        state.printField();
         
         state = moveTwoMarbles(state, BLACK)[0];
-        printField(state);
+        state.printField();
         
         state = performDoubleAttack(state, BLACK)[0];
-        printField(state);
+        state.printField();
         
         System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
         
@@ -57,7 +55,7 @@ public class Main {
         Random rnd = new Random(1337L);
         Field previousState = state;
         while (true) {
-            printFieldDelta(state, previousState);
+            state.printFieldDelta(previousState);
             previousState = state;
             long currentScore = score(state, currentPlayer);
             System.out.println("Player " + currentPlayer + " moves (Score " + currentScore +  "):");
@@ -96,7 +94,7 @@ public class Main {
             if (wins(state, currentPlayer)) break;
         }
         
-        printFieldDelta(state, previousState);
+        state.printFieldDelta(previousState);
         System.out.println("Player " + currentPlayer + " wins!");
         
         int[] wins = new int[3];
