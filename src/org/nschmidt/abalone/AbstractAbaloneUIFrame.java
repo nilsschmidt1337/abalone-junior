@@ -150,7 +150,10 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                     return;
                 }
                 
+                currentState.printFieldDelta(previousState);
+                Field previous = currentState;
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
+                currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);
                 

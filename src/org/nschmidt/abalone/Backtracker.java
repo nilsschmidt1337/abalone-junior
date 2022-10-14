@@ -3,14 +3,33 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
+import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
 
 public enum Backtracker {
     INSTANCE;
     
     public static Field backtrack(Field state, Player player, int depth) {
+        final Player opponent = player.switchPlayer();
+        Field[] winsInTwo = winsInTwoMoves(state, player);
+        if (winsInTwo.length == 2) {
+            return winsInTwo[0];
+        }
+        
         Field[] moves = allMoves(state, player);
         long maxScore = Long.MIN_VALUE;
-        Field maxMove = moves[0];
+        Field maxMove = null;
+        for (Field move : moves) {
+            // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
+            Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
+            if (oppenentWinsInTwo.length == 0) {
+                maxMove = move;
+                break;
+            }
+        }
+        
+        if (maxMove == null) {
+            maxMove = moves[0];
+        }
         
         if (score(state, player) == Long.MIN_VALUE) {
             for (Field move : moves) {
@@ -23,13 +42,18 @@ public enum Backtracker {
             
             return maxMove;
         }
+
         
-        final Player opponent = player.switchPlayer();
         for (Field move : moves) {
             long initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
             long score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
+                // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
+                Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
+                if (oppenentWinsInTwo.length == 2) {
+                    continue;
+                }
                 maxScore = initialScore;
                 maxMove = move;
             }
