@@ -12,6 +12,18 @@ public enum Backtracker {
         long maxScore = Long.MIN_VALUE;
         Field maxMove = moves[0];
         
+        if (score(state, player) == Long.MIN_VALUE) {
+            for (Field move : moves) {
+                long score = score(move, player);
+                if (score > maxScore) {
+                    maxScore = score;
+                    maxMove = move;
+                }
+            }
+            
+            return maxMove;
+        }
+        
         final Player opponent = player.switchPlayer();
         for (Field move : moves) {
             long initialScore = score(move, player);
