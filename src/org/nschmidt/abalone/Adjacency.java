@@ -5,7 +5,7 @@ public enum Adjacency {
     
     private static final int[][] adjacencyMatrix = initAdjacency();
     
-    public static final int[] BORDER_INDICIES = initBorderIndicies();
+    public static final int[] BORDER_INDICES = initBorderIndices();
     
     public static final int TOP_LEFT = 0;
     public static final int BOTTOM_RIGHT = 1;
@@ -92,19 +92,19 @@ public enum Adjacency {
         return i;
     }
     
-    private static int[] initBorderIndicies() {
-        final int[] borderIndicies = new int[18];
+    private static int[] initBorderIndices() {
+        final int[] borderIndices = new int[18];
         int i = 0;
         for (int j = 0; j < 37; j++) {
             for (int neighbourIndex : adjacencyMatrix[j]) {
                 if (neighbourIndex == -1) {
-                    borderIndicies[i] = j;
+                    borderIndices[i] = j;
                     i++;
                     break;
                 }
             }
         }
         
-        return borderIndicies;
+        return borderIndices;
     }
 }

@@ -14,9 +14,9 @@ public enum TripleToDoubleAttacker {
         
         for (int from = 0; from < 37; from++) {
             if (player == lookAtField(state, from)) {
-                final int[] neighbourIndicies = adjacency(from);
+                final int[] neighbourIndices = adjacency(from);
                 for (int d = 0; d < 6; d++) {
-                    attackCount += tryTripleToDoubleAttack(state, player, from, d, attackCount, neighbourIndicies, tempResult);
+                    attackCount += tryTripleToDoubleAttack(state, player, from, d, attackCount, neighbourIndices, tempResult);
                 }
             }
         }
@@ -26,40 +26,40 @@ public enum TripleToDoubleAttacker {
         return result;
     }
     
-    private static int tryTripleToDoubleAttack(Field state, Player player, int from, int dir, int moveCount, int[] neighbourIndicies, Field[] tempResult) {
-        final int secondMarbleIndex = neighbourIndicies[dir];
+    private static int tryTripleToDoubleAttack(Field state, Player player, int from, int dir, int moveCount, int[] neighbourIndices, Field[] tempResult) {
+        final int secondMarbleIndex = neighbourIndices[dir];
         // Es ist keine Murmel an dieser Stelle
         if (secondMarbleIndex == -1) return 0;
         final Player secondMarble = lookAtField(state, secondMarbleIndex);
         // Die zweite Murmel ist nicht vom selben Spieler
         if (secondMarble != player) return 0;
         
-        final int[] secondMarbleNeighbourIndicies = adjacency(secondMarbleIndex);
-        final int thirdMarbleIndex = secondMarbleNeighbourIndicies[dir];
+        final int[] secondMarbleNeighbourIndices = adjacency(secondMarbleIndex);
+        final int thirdMarbleIndex = secondMarbleNeighbourIndices[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (thirdMarbleIndex == -1) return 0;
         final Player targetForSecondMarble = lookAtField(state, thirdMarbleIndex);
         // Die dritte Murmel ist nicht vom selben Spieler
         if (targetForSecondMarble != player) return 0;
         
-        final int[] thirdMarbleNeighbourIndicies = adjacency(thirdMarbleIndex);
-        final int fourthMarbleIndex = thirdMarbleNeighbourIndicies[dir];
+        final int[] thirdMarbleNeighbourIndices = adjacency(thirdMarbleIndex);
+        final int fourthMarbleIndex = thirdMarbleNeighbourIndices[dir];
         // Die Richtung hat kein Feld, auf das die zweite Murmel gezogen werden kann:
         if (fourthMarbleIndex == -1) return 0;
         final Player targetForThirdMarble = lookAtField(state, fourthMarbleIndex);
         // Das Feld hat keinen Gegner
         if (targetForThirdMarble == EMPTY || targetForThirdMarble == player) return 0;
         
-        final int[] fourthMarbleNeighbourIndicies = adjacency(fourthMarbleIndex);
-        final int targetForFourthMarbleIndex = fourthMarbleNeighbourIndicies[dir];
+        final int[] fourthMarbleNeighbourIndices = adjacency(fourthMarbleIndex);
+        final int targetForFourthMarbleIndex = fourthMarbleNeighbourIndices[dir];
         // Die Richtung hat kein Feld, auf das die vierte Murmel gezogen werden kann:
         if (targetForFourthMarbleIndex == -1) return 0;
         final Player targetForForthMarble = lookAtField(state, targetForFourthMarbleIndex);
         // Das Feld hat keinen Gegner
         if (targetForForthMarble == EMPTY || targetForForthMarble == player) return 0;
         
-        final int[] opponentNeighbourIndicies = adjacency(targetForFourthMarbleIndex);
-        final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndicies[dir];
+        final int[] opponentNeighbourIndices = adjacency(targetForFourthMarbleIndex);
+        final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndices[dir];
         // Die Richtung hat kein Feld, auf das der Gegner gezogen werden kann:
         if (emptyPlaceForOpponentMarbleIndex == -1) return 0;
         final Player emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);

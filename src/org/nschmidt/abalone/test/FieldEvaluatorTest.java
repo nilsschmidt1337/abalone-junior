@@ -1,7 +1,7 @@
 package org.nschmidt.abalone.test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
+import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.FieldEvaluator.*;
@@ -32,7 +32,7 @@ class FieldEvaluatorTest {
     }
     
     private static int[] ring2(int n) {
-        if (n <= 0) return BORDER_INDICIES;
+        if (n <= 0) return BORDER_INDICES;
         if (n == 1) return initMiddle();
         if (n == 2) return new int[] {11, 12, 17, 19, 24, 25};
         if (n == 3) return new int[] {18};
@@ -41,7 +41,7 @@ class FieldEvaluatorTest {
     
     private static int[] initMiddle() {
         Set<Integer> border = new TreeSet<>();
-        for (int i : BORDER_INDICIES) {
+        for (int i : BORDER_INDICES) {
             border.add(i);
         }
         

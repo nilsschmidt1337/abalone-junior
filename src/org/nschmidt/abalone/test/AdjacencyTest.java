@@ -136,7 +136,7 @@ class AdjacencyTest {
     
     @Test
     void testBorderIndex() {
-        int[] result = adjacency(BORDER_INDICIES[17]);
+        int[] result = adjacency(BORDER_INDICES[17]);
         
         assertArrayEquals(new int[] {31, -1, 32, -1, 35, -1}, result);
     }
@@ -144,7 +144,7 @@ class AdjacencyTest {
     @Test
     void testBorderForOffByOneIndex() {
         Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
-            adjacency(BORDER_INDICIES[18])
+            adjacency(BORDER_INDICES[18])
         );
         
         assertEquals("Index 18 out of bounds for length 18", ex.getMessage());

@@ -3,7 +3,7 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
-import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
+import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.util.Random;
@@ -25,7 +25,7 @@ public class Main {
         state = populateField(state, 2, BLACK);
         state = populateField(state, 36, BLACK);
         
-        for (int i : BORDER_INDICIES) {
+        for (int i : BORDER_INDICES) {
             state = populateField(state, i, BLACK);
         }
         

@@ -14,8 +14,8 @@ public enum SingleMover {
         
         for (int from = 0; from < 37; from++) {
             if (player == lookAtField(state, from)) {
-                final int[] neighbourIndicies = adjacency(from);
-                for (int to : neighbourIndicies) {
+                final int[] neighbourIndices = adjacency(from);
+                for (int to : neighbourIndices) {
                     if (to == -1 || EMPTY != lookAtField(state, to)) continue;
                     tempResult[moveCount] = move(state, player, from, to);
                     moveCount++;

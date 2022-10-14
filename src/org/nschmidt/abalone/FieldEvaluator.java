@@ -1,6 +1,6 @@
 package org.nschmidt.abalone;
 
-import static org.nschmidt.abalone.Adjacency.BORDER_INDICIES;
+import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.WinningChecker.wins;
@@ -11,8 +11,8 @@ import java.util.TreeSet;
 public enum FieldEvaluator {
     INSTANCE;
     
-    private static final int[] MIDDLE_INDICIES = ring(1);
-    private static final int[] CENTER_INDICIES = ring(2);
+    private static final int[] MIDDLE_INDICES = ring(1);
+    private static final int[] CENTER_INDICES = ring(2);
     private static final int CENTRAL_INDEX = ring(3)[0];
     
     public static long score(Field state, Player player) {
@@ -21,15 +21,15 @@ public enum FieldEvaluator {
         long score = 0;
         if (wins(state, player)) score += 1_000_000;
         
-        for (int i : BORDER_INDICIES) {
+        for (int i : BORDER_INDICES) {
             if (lookAtField(state, i) == player) score -= 1000;
         }
         
-        for (int i : MIDDLE_INDICIES) {
+        for (int i : MIDDLE_INDICES) {
             if (lookAtField(state, i) == player) score += 50;
         }
         
-        for (int i : CENTER_INDICIES) {
+        for (int i : CENTER_INDICES) {
             if (lookAtField(state, i) == player) score += 70;
         }
         
@@ -41,7 +41,7 @@ public enum FieldEvaluator {
     public static int[] ring(int n) {
         final Set<Integer> newRing = new TreeSet<>();
         final Set<Integer> allPrevousRings = new TreeSet<>();
-        for (int i : BORDER_INDICIES) {
+        for (int i : BORDER_INDICES) {
             newRing.add(i);
         }
         
