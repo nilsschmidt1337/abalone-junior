@@ -9,7 +9,7 @@ public enum DoubleMover {
     INSTANCE;
     
     public static Field[] moveTwoMarbles(Field state, Player player) {
-        final Field[] tempResult = new Field[54];
+        final Field[] tempResult = new Field[64];
         int moveCount = 0;
         
         for (int from = 0; from < 37; from++) {

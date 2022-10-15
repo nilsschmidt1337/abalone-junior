@@ -17,6 +17,10 @@ public enum MoveDetector {
                     performTripleAttack(state, player), performTripleToDoubleAttack(state, player));
     }
     
+    public static Field[] allAttackMoves(Field state, Player player) {
+        return join(performDoubleAttack(state, player), performTripleAttack(state, player), performTripleToDoubleAttack(state, player));
+    }
+    
     private static Field[] join(Field[]... arrays) {
         int length = 0;
         for (Field[] array : arrays) {

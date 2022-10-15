@@ -99,10 +99,12 @@ public class Main {
         
         int[] wins = new int[3];
         for (int i = 0; i < 100; i++) {
+            System.out.println("Game " + i + " of 99 (WHITE begins)");
             wins[(int) playRound(Player.WHITE, rnd)] += 1;
         }
         
         for (int i = 0; i < 100; i++) {
+            System.out.println("Game " + i + " of 99 (BLACK begins)");
             wins[(int) playRound(Player.BLACK, rnd)] += 1;
         }
         

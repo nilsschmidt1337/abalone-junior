@@ -57,4 +57,39 @@ class BacktrackerTest {
         Field result = backtrack(start, BLACK, 10);
         assertFalse(WinningChecker.wins(result, WHITE));
     }
+    
+    /*
+        0  1  2  3
+       4  5  6  7  8
+      9 10 11 12 13 14
+    15 16 17 18 19 20 21
+      22 23 24 25 26 27
+       28 29 30 31 32
+        33 34 35 36
+     */
+    @Test
+    void testBacktrackMistake2() {
+        Field start = EMPTY_FIELD;
+        start = populateField(start, 6, WHITE);
+        start = populateField(start, 10, WHITE);
+        start = populateField(start, 12, WHITE);
+        start = populateField(start, 17, WHITE);
+        start = populateField(start, 19, WHITE);
+        start = populateField(start, 23, WHITE);
+        start = populateField(start, 24, WHITE);
+        start = populateField(start, 29, WHITE);
+        start = populateField(start, 33, WHITE);
+        
+        start = populateField(start, 0, BLACK);
+        start = populateField(start, 3, BLACK);
+        start = populateField(start, 5, BLACK);
+        start = populateField(start, 7, BLACK);
+        start = populateField(start, 9, BLACK);
+        start = populateField(start, 11, BLACK);
+        start = populateField(start, 13, BLACK);
+        start = populateField(start, 18, BLACK);
+        start = populateField(start, 20, BLACK);
+        Field result = backtrack(start, BLACK, 10);
+        assertFalse(WinningChecker.wins(result, WHITE));
+    }
 }

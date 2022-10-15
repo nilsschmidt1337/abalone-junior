@@ -48,7 +48,7 @@ public enum Backtracker {
             long initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
             long score = score(result, player);
-            if (score > maxScore && initialScore > maxScore) {
+            if ((score > maxScore || score == Long.MIN_VALUE) && initialScore > maxScore) {
                 // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                 Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                 if (oppenentWinsInTwo.length == 2) {
