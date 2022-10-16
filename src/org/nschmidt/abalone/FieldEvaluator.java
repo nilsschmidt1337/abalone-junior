@@ -33,10 +33,10 @@ public enum FieldEvaluator {
             if (lookAtField(state, i) == player) score += 70;
         }
         
-        if (lookAtField(state, CENTRAL_INDEX) == player) score += 10_000;
+        if (lookAtField(state, CENTRAL_INDEX) == player) score += 1_010_000;
         
-        score -= MoveDetector.allAttackMoves(state, opponent).length * 1000;
-        score += MoveDetector.allAttackMoves(state, player).length * 100;
+        score -= MoveDetector.allAttackMoves(state, opponent).length * 10000;
+        score += MoveDetector.allAttackMoves(state, player).length * 10000;
 
         return score;
     }

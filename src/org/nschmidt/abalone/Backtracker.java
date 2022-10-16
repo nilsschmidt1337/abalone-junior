@@ -3,13 +3,21 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
+import static org.nschmidt.abalone.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
 
 public enum Backtracker {
     INSTANCE;
     
     public static Field backtrack(Field state, Player player, int depth) {
+        System.out.println("Try to find win in one move...");
         final Player opponent = player.switchPlayer();
+        Field[] winsInOne = winsInOneMove(state, player);
+        if (winsInOne.length == 1) {
+            return winsInOne[0];
+        }
+        
+        System.out.println("Try to find win in two moves...");
         Field[] winsInTwo = winsInTwoMoves(state, player);
         if (winsInTwo.length == 2) {
             return winsInTwo[0];
@@ -19,6 +27,11 @@ public enum Backtracker {
         long maxScore = Long.MIN_VALUE;
         Field maxMove = null;
         for (Field move : moves) {
+            // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+            Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+            if (oppenentWinsInOne.length == 1) {
+                continue;
+            }
             // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
             Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
             if (oppenentWinsInTwo.length == 0) {
@@ -32,9 +45,22 @@ public enum Backtracker {
         }
         
         if (score(state, player) == Long.MIN_VALUE) {
+            System.out.println("Try to escape a dangerous situation...");
             for (Field move : moves) {
                 long score = score(move, player);
                 if (score > maxScore) {
+                    // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+                    Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+                    if (oppenentWinsInOne.length == 1) {
+                        continue;
+                    }
+                    // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
+                    Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
+                    if (oppenentWinsInTwo.length == 2) {
+                        continue;
+                    }
+                    
+                    System.out.println("Able to escape... (Score " + score + ")");
                     maxScore = score;
                     maxMove = move;
                 }
@@ -44,11 +70,17 @@ public enum Backtracker {
         }
 
         
+        System.out.println("Try find a strategic solution...");
         for (Field move : moves) {
             long initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
             long score = score(result, player);
-            if ((score > maxScore || score == Long.MIN_VALUE) && initialScore > maxScore) {
+            if (score > maxScore && initialScore > maxScore) {
+                // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+                Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+                if (oppenentWinsInOne.length == 1) {
+                    continue;
+                }
                 // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                 Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                 if (oppenentWinsInTwo.length == 2) {
