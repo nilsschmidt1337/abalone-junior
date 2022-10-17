@@ -13,7 +13,7 @@ public enum WinningInOneMoveChecker {
         
         Field[] firstMoves = allMoves(state, player);
         return Arrays.asList(firstMoves).parallelStream().map(firstMove -> {
-            final Field[] result = new Field[2];
+            final Field[] result = new Field[1];
             boolean hasSolution = false;
             int solutionCount = 0;
             
