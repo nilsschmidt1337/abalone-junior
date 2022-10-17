@@ -51,9 +51,12 @@ public enum WinningInTwoMovesChecker {
                     
                     if (hasSolution) {
                         result[1] = secondMove;
-                        solutionCount++;
+                        break;
                     }
-                    
+                }
+                
+                if (hasSolution) {
+                    solutionCount++;
                 }
             }
             

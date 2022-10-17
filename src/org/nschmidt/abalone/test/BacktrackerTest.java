@@ -68,7 +68,7 @@ class BacktrackerTest {
         33 34 35 36
      */
     @Test
-    void testBacktrackMistake2() {
+    void testBacktrackGiveUp() {
         Field start = EMPTY_FIELD;
         start = populateField(start, 6, WHITE);
         start = populateField(start, 10, WHITE);
@@ -90,6 +90,7 @@ class BacktrackerTest {
         start = populateField(start, 18, BLACK);
         start = populateField(start, 20, BLACK);
         Field result = backtrack(start, BLACK, 10);
-        assertFalse(WinningChecker.wins(result, WHITE));
+        result.printFieldDelta(start);
+        assertTrue(WinningChecker.wins(result, WHITE));
     }
 }
