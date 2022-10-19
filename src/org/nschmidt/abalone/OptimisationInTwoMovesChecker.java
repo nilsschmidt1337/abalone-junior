@@ -62,6 +62,10 @@ public enum OptimisationInTwoMovesChecker {
             }
             
             return new Field[0];
-        }).filter(r -> r.length == 2).sorted((m1, m2) -> Long.compare(score(m2[0], player), score(m1[0], player))).findFirst().orElse(new Field[0]);
+        })
+                .filter(r -> r.length == 2)
+                .sorted((m1, m2) -> Long.compare(score(m2[0], player), score(m1[0], player)))
+                .filter(r -> WinningInTwoMovesChecker.winsInTwoMoves(r[0], opponent).length != 2)
+                .findFirst().orElse(new Field[0]);
     }
 }

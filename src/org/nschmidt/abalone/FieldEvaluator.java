@@ -21,15 +21,33 @@ public enum FieldEvaluator {
         long score = 0;
         
         for (int i : BORDER_INDICES) {
-            if (lookAtField(state, i) == player) score += 1;
+            if (lookAtField(state, i) == player) {
+                if (isIsolated(state, player, i)) {
+                    score -= 100_000;
+                }
+                
+                score += 1;
+            }
         }
         
         for (int i : MIDDLE_INDICES) {
-            if (lookAtField(state, i) == player) score += 2;
+            if (lookAtField(state, i) == player) {
+                if (isIsolated(state, player, i)) {
+                    score -= 100_000;
+                }
+                
+                score += 2;
+            }
         }
         
         for (int i : CENTER_INDICES) {
-            if (lookAtField(state, i) == player) score += 3;
+            if (lookAtField(state, i) == player) {
+                if (isIsolated(state, player, i)) {
+                    score -= 100_000;
+                }
+                
+                score += 3;
+            }
         }
   
         if (lookAtField(state, CENTRAL_INDEX) == player) score += 4;
@@ -38,6 +56,18 @@ public enum FieldEvaluator {
         if (score >= 0 && wins(state, player)) score += 10000;
         
         return score;
+    }
+
+    private static boolean isIsolated(Field state, Player player, int i) {
+        boolean isIsolated = true;
+        for (int neighbour : adjacency(i)) {
+            if (neighbour != -1 && lookAtField(state, neighbour) == player) {
+                isIsolated = false;
+                break;
+            }
+        }
+        
+        return isIsolated;
     }
     
     public static int[] ring(int n) {
