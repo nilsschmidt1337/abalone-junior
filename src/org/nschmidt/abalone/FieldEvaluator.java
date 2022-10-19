@@ -21,22 +21,22 @@ public enum FieldEvaluator {
         long score = 0;
         
         for (int i : BORDER_INDICES) {
-            if (lookAtField(state, i) == player) score -= 1000;
+            if (lookAtField(state, i) == player) score += 1;
         }
         
         for (int i : MIDDLE_INDICES) {
-            if (lookAtField(state, i) == player) score += 50;
+            if (lookAtField(state, i) == player) score += 2;
         }
         
         for (int i : CENTER_INDICES) {
-            if (lookAtField(state, i) == player) score += 70;
+            if (lookAtField(state, i) == player) score += 3;
         }
-        
-        if (lookAtField(state, CENTRAL_INDEX) == player) score += 1_010_000;
+  
+        if (lookAtField(state, CENTRAL_INDEX) == player) score += 4;
         
         score -= MoveDetector.allAttackMoves(state, opponent).length * 10000;
-        score += MoveDetector.allAttackMoves(state, player).length * 10000;
-
+        if (score >= 0 && wins(state, player)) score += 10000;
+        
         return score;
     }
     

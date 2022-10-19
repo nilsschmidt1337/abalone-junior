@@ -18,7 +18,7 @@ class FieldEvaluatorTest {
     @Test
     void testScoreOfInitialFieldForPlayer1() {
         assertEquals(score(INITIAL_FIELD, WHITE), score(INITIAL_FIELD, BLACK));
-        assertEquals(-5850L, score(INITIAL_FIELD, BLACK));
+        assertEquals(12L, score(INITIAL_FIELD, BLACK));
     }
     
     @Test
