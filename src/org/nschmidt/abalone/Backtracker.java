@@ -27,9 +27,9 @@ public enum Backtracker {
             return winsInTwo[0];
         }
         
-        System.out.println("Try to find optimum in three moves...");
-        Field[] optimumInThree = OptimisationInThreeMovesChecker.optimisationInThreeMoves(state, player);
-        if (optimumInThree.length == 3) {
+        System.out.println("Try to find optimum in two moves...");
+        Field[] optimumInThree = OptimisationInTwoMovesChecker.optimisationInTwoMoves(state, player);
+        if (optimumInThree.length == 2) {
             return optimumInThree[0];
         }
         
