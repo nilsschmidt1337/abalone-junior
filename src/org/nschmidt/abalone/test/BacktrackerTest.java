@@ -93,4 +93,20 @@ class BacktrackerTest {
         result.printFieldDelta(start);
         assertTrue(WinningChecker.wins(result, WHITE));
     }
+    
+    @Test
+    void testAvoidIsolation() {
+        Field start = Field.of(new Player[] {BLACK, EMPTY, BLACK, EMPTY, EMPTY, BLACK, BLACK, EMPTY, EMPTY, null, null, BLACK, WHITE, BLACK, BLACK, null, null, WHITE, WHITE, BLACK, BLACK, null, null, WHITE, WHITE, WHITE, WHITE, null, EMPTY, EMPTY, WHITE, WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY});
+        start.printField();
+        Field result = backtrack(start, WHITE, 10);
+        result.printFieldDelta(start);
+    }
+    
+    @Test
+    void testAvoidDoingNothing() {
+        Field start = Field.of(new Player[] {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WHITE, BLACK, BLACK, EMPTY, null, BLACK, WHITE, BLACK, EMPTY, BLACK, null, WHITE, BLACK, BLACK, WHITE, BLACK, EMPTY, EMPTY, WHITE, BLACK, WHITE, WHITE, null, EMPTY, WHITE, EMPTY, WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY});
+        start.printField();
+        Field result = backtrack(start, WHITE, 10);
+        result.printFieldDelta(start);
+    }
 }

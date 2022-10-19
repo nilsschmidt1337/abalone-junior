@@ -58,7 +58,7 @@ public enum FieldEvaluator {
         return score;
     }
 
-    private static boolean isIsolated(Field state, Player player, int i) {
+    public static boolean isIsolated(Field state, Player player, int i) {
         boolean isIsolated = true;
         for (int neighbour : adjacency(i)) {
             if (neighbour != -1 && lookAtField(state, neighbour) == player) {

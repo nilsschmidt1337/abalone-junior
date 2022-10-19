@@ -7,6 +7,7 @@ import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -101,13 +102,13 @@ public class Main {
         System.out.println("Player " + currentPlayer + " wins!");
         
         int[] wins = new int[3];
-        for (int i = 0; i < 100; i++) {
-            System.out.println("Game " + i + " of 99 (WHITE begins)");
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Game " + i + " of 9 (WHITE begins) -> results: " +  Arrays.toString(wins));
             wins[(int) playRound(Player.WHITE, rnd)] += 1;
         }
         
-        for (int i = 0; i < 100; i++) {
-            System.out.println("Game " + i + " of 99 (BLACK begins)");
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Game " + i + " of 9 (BLACK begins) -> results: " +  Arrays.toString(wins));
             wins[(int) playRound(Player.BLACK, rnd)] += 1;
         }
         

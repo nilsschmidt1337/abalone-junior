@@ -7,6 +7,8 @@ import static org.nschmidt.abalone.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.nschmidt.abalone.WinningInThreeMovesChecker.winsInThreeMoves;
 
@@ -56,6 +58,7 @@ public enum Backtracker {
         
         if (score(state, player) == Long.MIN_VALUE) {
             System.out.println("Try to escape a dangerous situation...");
+            boolean notEscaped = true;
             Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
             for (Field move : moves) {
                 long score = score(move, player);
@@ -74,8 +77,27 @@ public enum Backtracker {
                     }
                     
                     System.out.println("Able to escape... (Score " + score + ")");
+                    notEscaped = false;
                     maxScore = score;
                     maxMove = move;
+                }
+            }
+            
+            if (notEscaped) {
+                for (Field move : moves) {
+                    long score = score(move, player);
+                    if (score > maxScore) {
+                        // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+                        Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+                        if (oppenentWinsInOne.length == 1) {
+                            System.out.println("Opponent can win in one step...");
+                            continue;
+                        }
+                        
+                        System.out.println("Able to escape, but opponent can win in two steps... (Score " + score + ")");
+                        maxScore = score;
+                        maxMove = move;
+                    }
                 }
             }
             
@@ -83,7 +105,8 @@ public enum Backtracker {
         }
 
         
-        System.out.println("Try find a strategic solution...");
+        boolean foundStrategicSolution = false;
+        System.out.println("Try to find a strategic solution...");
         Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
         for (Field move : moves) {
             long initialScore = score(move, player);
@@ -105,8 +128,51 @@ public enum Backtracker {
                 if (oppenentWinsInThree.length == 3) {
                     continue;
                 }
+                // Mache keinen Zug, bei dem der Gegner eine zusätzliche Figur isolieren kann
+                final Set<Integer> isolatedPieces = new TreeSet<>();
+                final int originalIsolatedPiecesCount;
+                for (int i = 0; i < 37; i++) {
+                    if (FieldEvaluator.isIsolated(move, player, i)) {
+                        isolatedPieces.add(i);
+                    }
+                }
+                originalIsolatedPiecesCount = isolatedPieces.size();
+                for (Field attack : MoveDetector.allAttackMoves(move, opponent)) {
+                    for (int i = 0; i < 37; i++) {
+                        if (FieldEvaluator.isIsolated(attack, player, i)) {
+                            isolatedPieces.add(i);
+                        }
+                    }   
+                }
+                
+                if (isolatedPieces.size() > originalIsolatedPiecesCount) {
+                    continue;
+                }
+                
+                
+                System.out.println("Found a solution... (Score " + score + ")");
+                foundStrategicSolution = true;
                 maxScore = initialScore;
                 maxMove = move;
+            }
+        }
+        
+        if (!foundStrategicSolution) {
+            System.out.println("Try to find a classic solution...");
+            for (Field move : moves) {
+                long score = score(move, player);
+                if (score > maxScore) {
+                    // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+                    Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+                    if (oppenentWinsInOne.length == 1) {
+                        continue;
+                    }
+                    // Lasse zu, dass der Gegner in zwei Zügen gewinnen kann, um den Handlungspielraum zu vergrößern
+                    
+                    System.out.println("Found a classic solution... (Score " + score + ")");
+                    maxScore = score;
+                    maxMove = move;
+                }
             }
         }
         
