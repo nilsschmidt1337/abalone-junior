@@ -27,10 +27,10 @@ public enum Backtracker {
             return winsInTwo[0];
         }
         
-        System.out.println("Try to find win in three moves...");
-        Field[] winsInThree = winsInThreeMoves(state, player);
-        if (winsInThree.length == 3) {
-            return winsInThree[0];
+        System.out.println("Try to find optimum in three moves...");
+        Field[] optimumInThree = OptimisationInThreeMovesChecker.optimisationInThreeMoves(state, player);
+        if (optimumInThree.length == 3) {
+            return optimumInThree[0];
         }
         
         Field[] moves = allMoves(state, player);
@@ -63,17 +63,13 @@ public enum Backtracker {
                     // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                     Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
                     if (oppenentWinsInOne.length == 1) {
+                        System.out.println("Opponent can win in one step...");
                         continue;
                     }
                     // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                     Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                     if (oppenentWinsInTwo.length == 2) {
-                        continue;
-                    }
-                    
-                    // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
-                    Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
-                    if (oppenentWinsInThree.length == 3) {
+                        System.out.println("Opponent can win in two steps...");
                         continue;
                     }
                     
