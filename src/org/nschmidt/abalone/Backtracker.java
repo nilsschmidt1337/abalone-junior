@@ -5,6 +5,9 @@ import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
 import static org.nschmidt.abalone.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
+
+import java.util.Arrays;
+
 import static org.nschmidt.abalone.WinningInThreeMovesChecker.winsInThreeMoves;
 
 public enum Backtracker {
@@ -53,6 +56,7 @@ public enum Backtracker {
         
         if (score(state, player) == Long.MIN_VALUE) {
             System.out.println("Try to escape a dangerous situation...");
+            Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
             for (Field move : moves) {
                 long score = score(move, player);
                 if (score > maxScore) {
@@ -84,6 +88,7 @@ public enum Backtracker {
 
         
         System.out.println("Try find a strategic solution...");
+        Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
         for (Field move : moves) {
             long initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
