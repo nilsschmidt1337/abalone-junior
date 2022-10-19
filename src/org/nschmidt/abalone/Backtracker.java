@@ -5,6 +5,7 @@ import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
 import static org.nschmidt.abalone.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
+import static org.nschmidt.abalone.WinningInThreeMovesChecker.winsInThreeMoves;
 
 public enum Backtracker {
     INSTANCE;
@@ -21,6 +22,12 @@ public enum Backtracker {
         Field[] winsInTwo = winsInTwoMoves(state, player);
         if (winsInTwo.length == 2) {
             return winsInTwo[0];
+        }
+        
+        System.out.println("Try to find win in three moves...");
+        Field[] winsInThree = winsInThreeMoves(state, player);
+        if (winsInThree.length == 3) {
+            return winsInThree[0];
         }
         
         Field[] moves = allMoves(state, player);
@@ -60,6 +67,12 @@ public enum Backtracker {
                         continue;
                     }
                     
+                    // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
+                    Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
+                    if (oppenentWinsInThree.length == 3) {
+                        continue;
+                    }
+                    
                     System.out.println("Able to escape... (Score " + score + ")");
                     maxScore = score;
                     maxMove = move;
@@ -77,13 +90,18 @@ public enum Backtracker {
             long score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
                 // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
-                Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
+                Field[] oppenentWinsInOne = winsInOneMove(move, opponent);
                 if (oppenentWinsInOne.length == 1) {
                     continue;
                 }
                 // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                 Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                 if (oppenentWinsInTwo.length == 2) {
+                    continue;
+                }
+                // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
+                Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
+                if (oppenentWinsInThree.length == 3) {
                     continue;
                 }
                 maxScore = initialScore;

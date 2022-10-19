@@ -6,6 +6,8 @@ import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
@@ -19,6 +21,7 @@ import static org.nschmidt.abalone.Backtracker.backtrack;
 public class Main {
     
     public static void main(String[] args) {
+        
         Field state = Field.EMPTY_FIELD;
         state = populateField(state, 0, BLACK);
         state = populateField(state, 1, WHITE);
@@ -114,6 +117,7 @@ public class Main {
     }
 
     private static int playRound(Player currentPlayer, Random rnd) {
+        final List<Field> round = new ArrayList<>();
         Field state;
         state = INITIAL_FIELD;
         int moveCount = 0;
@@ -150,11 +154,23 @@ public class Main {
             state = maxMove;
             
             currentPlayer = currentPlayer.switchPlayer();
+            round.add(state);
             if (wins(state, currentPlayer)) break;
         }
         
         if (moveCount == 100) {
             return 0;
+        }
+        
+        if (currentPlayer == BLACK) {
+            System.out.println("-----------------------------");
+            Field previous = Field.INITIAL_FIELD;
+            for (Field field : round) {
+                System.out.println(field);
+                field.printFieldDelta(previous);
+                previous = field;
+            }
+            System.out.println("-----------------------------");
         }
         
         return currentPlayer.getNumber();
