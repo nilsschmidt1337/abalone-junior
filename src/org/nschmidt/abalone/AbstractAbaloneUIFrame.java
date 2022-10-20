@@ -2,6 +2,7 @@ package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
+import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.Player.EMPTY;
 import static org.nschmidt.abalone.WinningChecker.wins;
@@ -151,12 +152,12 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 }
                 
                 System.out.println(currentState);
-                System.out.println("MC-Score: " + MonteCarloEvaluator.score(currentState, currentPlayer) + " Standard-Score: " + FieldEvaluator.score(currentState, currentPlayer));
+                System.out.println(" Standard-Score: " + score(currentState, currentPlayer.switchPlayer()));
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
                 System.out.println(currentState);
-                System.out.println("MC-Score: " + MonteCarloEvaluator.score(currentState, currentPlayer) + " Standard-Score: " + FieldEvaluator.score(currentState, currentPlayer));
+                System.out.println(" Standard-Score: " + score(currentState, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);

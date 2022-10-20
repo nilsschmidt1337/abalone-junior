@@ -29,11 +29,18 @@ public enum Backtracker {
             return winsInTwo[0];
         }
         
+        System.out.println("Try to find optimum with alpha-beta search...");
+        Field alphaBetaMove =  new AI(4, player).bestMove(state);
+        if (alphaBetaMove != null) {
+            return alphaBetaMove;
+        }
+        
         System.out.println("Try to find optimum in two moves...");
         Field[] optimumInThree = OptimisationInTwoMovesChecker.optimisationInTwoMoves(state, player);
         if (optimumInThree.length == 2) {
             return optimumInThree[0];
         }
+        
         
         Field[] moves = allMoves(state, player);
         long maxScore = Long.MIN_VALUE;
@@ -109,9 +116,9 @@ public enum Backtracker {
         System.out.println("Try to find a strategic solution...");
         Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
         for (Field move : moves) {
-            long initialScore = MonteCarloEvaluator.score(move, player);
+            long initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
-            long score = MonteCarloEvaluator.score(result, player);
+            long score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
                 // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                 Field[] oppenentWinsInOne = winsInOneMove(move, opponent);
@@ -160,7 +167,7 @@ public enum Backtracker {
         if (!foundStrategicSolution) {
             System.out.println("Try to find a classic solution...");
             for (Field move : moves) {
-                long score = MonteCarloEvaluator.score(move, player);
+                long score = score(move, player);
                 if (score > maxScore) {
                     // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                     Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);

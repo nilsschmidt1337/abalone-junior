@@ -38,6 +38,23 @@ public enum OptimisationInTwoMovesChecker {
                     
                     // Bedingung 2: Gegner darf nicht gewinnen, wenn wir den zweiten Zug gemacht haben!
                     hasSolution = !wins(secondMove, opponent);
+                    
+                    // Bedingung 3: Wenn wir gewinnen, müssen wir alle Gegnerzüge kontern!
+                    if (hasSolution && wins(secondMove, player)) {
+                        Field[] lastOpponentMoves = allMoves(secondMove, opponent);
+                        for (Field lastOpponentMove : lastOpponentMoves) {
+                            if (!wins(lastOpponentMove, player)) {
+                                hasSolution = false;
+                                break;
+                            }
+                        }
+                        
+                        if (hasSolution) {
+                            result[1] = secondMove;
+                            break;
+                        }
+                    }
+                    
                     if (!hasSolution) continue;
                     
                     final long score = score(secondMove, player);
