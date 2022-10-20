@@ -53,7 +53,19 @@ public enum FieldEvaluator {
         if (lookAtField(state, CENTRAL_INDEX) == player) score += 4;
         
         score -= MoveDetector.allAttackMoves(state, opponent).length * 10000;
-        if (score >= 0 && wins(state, player)) score += 10000;
+        if (score >= 0) {
+            if (wins(state, player)) score += 10000;
+            
+            for (int[] indices : new int[][] {BORDER_INDICES, MIDDLE_INDICES, CENTER_INDICES, new int[] {CENTRAL_INDEX}}) {
+                for (int i : indices) {
+                    for (int neighbour : adjacency(i)) {
+                        if (neighbour != -1 && lookAtField(state, neighbour) == player) {
+                            score += 1;
+                        }
+                    }
+                }
+            }
+        }
         
         return score;
     }
