@@ -54,53 +54,8 @@ public class Main {
         state = INITIAL_FIELD;
         System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
         
-        Player currentPlayer = WHITE;
-        
         Random rnd = new Random(1337L);
-        Field previousState = state;
-        while (true) {
-            state.printFieldDelta(previousState);
-            previousState = state;
-            long currentScore = score(state, currentPlayer);
-            System.out.println("Player " + currentPlayer + " moves (Score " + currentScore +  "):");
-            Field[] moves = allMoves(state, currentPlayer);
-            Field randomMove = moves[rnd.nextInt(moves.length)];
-            
-            if (currentPlayer == WHITE) {
-                state = backtrack(state, currentPlayer, 10);
-            } else {
-                long maxScore = Long.MIN_VALUE;
-                Field maxMove = randomMove;
-                
-                if (currentScore == Long.MIN_VALUE) {
-                    for (Field move : moves) {
-                        long score = score(move, currentPlayer);
-                        if (score > maxScore) {
-                            maxScore = score;
-                            maxMove = move;
-                        }
-                    }
-                }
-                
-                for (int i = 0; i < 100; i++) {
-                    randomMove = moves[rnd.nextInt(moves.length)];
-                    long score = score(randomMove, currentPlayer);
-                    if (score > maxScore) {
-                        maxScore = score;
-                        maxMove = randomMove;
-                    }
-                }
-                
-                state = maxMove;
-            }
-            
-            currentPlayer = currentPlayer.switchPlayer();
-            if (wins(state, currentPlayer)) break;
-        }
-        
-        state.printFieldDelta(previousState);
-        System.out.println("Player " + currentPlayer + " wins!");
-        
+ 
         int[] wins = new int[3];
         for (int i = 0; i < 10; i++) {
             System.out.println("Game " + i + " of 9 (WHITE begins) -> results: " +  Arrays.toString(wins));

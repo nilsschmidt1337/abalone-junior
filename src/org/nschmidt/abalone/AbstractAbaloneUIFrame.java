@@ -151,10 +151,12 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 }
                 
                 System.out.println(currentState);
+                System.out.println("MC-Score: " + MonteCarloEvaluator.score(currentState, currentPlayer) + " Standard-Score: " + FieldEvaluator.score(currentState, currentPlayer));
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
                 System.out.println(currentState);
+                System.out.println("MC-Score: " + MonteCarloEvaluator.score(currentState, currentPlayer) + " Standard-Score: " + FieldEvaluator.score(currentState, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);
