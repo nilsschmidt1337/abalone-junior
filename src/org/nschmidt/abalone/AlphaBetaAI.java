@@ -43,8 +43,7 @@ public class AlphaBetaAI {
                 
             Field localBestMove = null;
             for (Field move : moves) {
-                Field copy = move;
-                long score = alphaBetaPruning(copy, team.switchPlayer(), alpha, beta, depth);
+                long score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
 
                 if (score > alpha) {
                     alpha = score;
@@ -66,8 +65,7 @@ public class AlphaBetaAI {
             }
             
             for (Field move : moves) {
-                Field copy = move;
-                long score = alphaBetaPruning(copy, team.switchPlayer(), alpha, beta, depth);
+                long score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
 
                 if (score < beta) {
                     beta = score;
