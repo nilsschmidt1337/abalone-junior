@@ -3,13 +3,13 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 
-public class AI {
+public class AlphaBetaAI {
 
     private final int maxDepth;
     private final Player player;
     private Field bestMove;
 
-    public AI(int maxDepth, Player player) {
+    public AlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
         this.bestMove = null;
         this.player = player;

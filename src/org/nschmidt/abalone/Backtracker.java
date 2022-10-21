@@ -30,7 +30,7 @@ public enum Backtracker {
         }
         
         System.out.println("Try to find optimum with alpha-beta search...");
-        Field alphaBetaMove =  new AI(4, player).bestMove(state);
+        Field alphaBetaMove =  new AlphaBetaAI(4, player).bestMove(state);
         if (alphaBetaMove != null) {
             return alphaBetaMove;
         }
