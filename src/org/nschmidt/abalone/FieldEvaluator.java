@@ -58,9 +58,11 @@ public enum FieldEvaluator {
             
             for (int[] indices : new int[][] {BORDER_INDICES, MIDDLE_INDICES, CENTER_INDICES, new int[] {CENTRAL_INDEX}}) {
                 for (int i : indices) {
+                    int bonus = 1;
                     for (int neighbour : adjacency(i)) {
                         if (neighbour != -1 && lookAtField(state, neighbour) == player) {
-                            score += 1;
+                            score += bonus;
+                            bonus *= 2;
                         }
                     }
                 }

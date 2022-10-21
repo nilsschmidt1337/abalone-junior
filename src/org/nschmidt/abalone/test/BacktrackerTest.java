@@ -19,7 +19,7 @@ class BacktrackerTest {
     @Test
     void testBacktrack() {
         Field result = backtrack(INITIAL_FIELD, WHITE, 10);
-        assertEquals(Field.of(new Player[] {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, WHITE, WHITE, null, null, EMPTY, EMPTY, EMPTY, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE})
+        assertEquals(Field.of(new Player[] {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, null, null, null, WHITE, EMPTY, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE})
         , result);
     }
     
