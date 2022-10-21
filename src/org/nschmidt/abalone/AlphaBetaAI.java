@@ -3,6 +3,8 @@ package org.nschmidt.abalone;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 
+import java.util.Arrays;
+
 public class AlphaBetaAI {
 
     private final int maxDepth;
@@ -32,7 +34,8 @@ public class AlphaBetaAI {
             return score(board, team);
         }
         Field[] moves = allMoves(board, team);
-
+        Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, team), score(m1, team)));
+        
         if (maximize) {
             if (WinningChecker.wins(board, team)) {
                 return Long.MAX_VALUE;
