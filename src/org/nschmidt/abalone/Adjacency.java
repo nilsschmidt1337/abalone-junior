@@ -23,16 +23,36 @@ public enum Adjacency {
         return adjacencyMatrix[i];
     }
     
-    private static int[][] initAdjacency() {
+    public static int[][] initAdjacency() {
         final int fieldWidthPlusMargin = FIELD_WIDTH + 4;
         final int fieldHeightPlusMargin = FIELD_HEIGHT + 2;
+        final int fieldHeightHalf = (FIELD_HEIGHT - 1) / 2;
+        final int fieldHeightHalfPlusMargin = fieldHeightHalf + 1;
         final int[][] adjacencyArray = new int[FIELD_SIZE][DIRECTION_COUNT];
         final int[][] indexArray = new int[fieldHeightPlusMargin][fieldWidthPlusMargin];
         int i = 0;
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 17; x++) {
-                i = setIndexArrayUpperHalf(x, y, indexArray, i);
-                i = setIndexArrayLowerHalf(x, y, indexArray, i);
+        
+        for (int y = 0; y < fieldHeightPlusMargin; y++) {
+            for (int x = 0; x < fieldWidthPlusMargin; x++) {
+                indexArray[y][x] = -1;
+            }
+        }
+        
+        for (int y = 1; y < fieldHeightHalfPlusMargin; y++) {
+            int fromX = (fieldHeightHalf - y + 1) + 2;
+            int toX = fromX + (fieldHeightHalf + y - 1) * 2 + 2;
+            for (int x = fromX; x < toX; x += 2) {
+                indexArray[y][x] = i;
+                i++;
+            }
+        }
+        
+        for (int y = fieldHeightHalfPlusMargin; y < (fieldHeightPlusMargin - 1); y++) {
+            int fromX = (y - fieldHeightHalfPlusMargin) + 2;
+            int toX = FIELD_WIDTH - (y - fieldHeightHalfPlusMargin) + 2;
+            for (int x = fromX; x < toX; x += 2) {
+                indexArray[y][x] = i;
+                i++;
             }
         }
         
@@ -50,53 +70,7 @@ public enum Adjacency {
             }
         }
         
-        
         return adjacencyArray;
-    }
-
-    private static int setIndexArrayUpperHalf(int x, int y, int[][] indexArray, int i) {
-        indexArray[y][x] = -1;
-        
-        if (y == 1 && x > 4 && x < 12 && x % 2 == 1) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        if (y == 2 && x > 3 && x < 13 && x % 2 == 0) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        if (y == 3 && x > 2 && x < 14 && x % 2 == 1) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        if (y == 4 && x > 1 && x < 15 && x % 2 == 0) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        return i;
-    }
-    
-    private static int setIndexArrayLowerHalf(int x, int y, int[][] indexArray, int i) {
-        if (y == 5 && x > 2 && x < 14 && x % 2 == 1) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        if (y == 6 && x > 3 && x < 13 && x % 2 == 0) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        if (y == 7 && x > 4 && x < 12 && x % 2 == 1) {
-            indexArray[y][x] = i;
-            i++;
-        }
-        
-        return i;
     }
     
     private static int[] initBorderIndices() {
