@@ -8,6 +8,7 @@ import static org.nschmidt.abalone.Field.FIELD_WIDTH;
 public enum Adjacency {
     INSTANCE;
     
+    private static final int[][] indexArray = new int[FIELD_HEIGHT + 2][FIELD_WIDTH + 4];
     private static final int[][] adjacencyMatrix = initAdjacency();
     
     public static final int[] BORDER_INDICES = initBorderIndices();
@@ -23,13 +24,16 @@ public enum Adjacency {
         return adjacencyMatrix[i];
     }
     
+    public static int indexAt(int y, int x) {
+        return indexArray[y + 1][x + 2];
+    }
+    
     public static int[][] initAdjacency() {
         final int fieldWidthPlusMargin = FIELD_WIDTH + 4;
         final int fieldHeightPlusMargin = FIELD_HEIGHT + 2;
         final int fieldHeightHalf = (FIELD_HEIGHT - 1) / 2;
         final int fieldHeightHalfPlusMargin = fieldHeightHalf + 1;
         final int[][] adjacencyArray = new int[FIELD_SIZE][DIRECTION_COUNT];
-        final int[][] indexArray = new int[fieldHeightPlusMargin][fieldWidthPlusMargin];
         int i = 0;
         
         for (int y = 0; y < fieldHeightPlusMargin; y++) {

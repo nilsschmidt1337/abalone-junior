@@ -1,6 +1,8 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Backtracker.backtrack;
+import static org.nschmidt.abalone.Field.FIELD_HEIGHT;
+import static org.nschmidt.abalone.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.Player.WHITE;
 import java.awt.Color;
@@ -38,9 +40,9 @@ public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
     @Override
     protected Component addConfirmComponent() {
         straints.gridx = 0;
-        straints.gridy = 7;
+        straints.gridy = FIELD_HEIGHT;
         straints.gridheight = 1;
-        straints.gridwidth = 13;
+        straints.gridwidth = FIELD_WIDTH;
         straints.fill = GridBagConstraints.BOTH;
         straints.ipadx = 19;
         straints.ipady = 14;

@@ -16,8 +16,8 @@ public class Field {
     
     private static final Player[] NO_PIECES = new Player[0];
     
-    public static final Field INITIAL_FIELD = initJuniorField();
     public static final int FIELD_HEIGHT = 7;
+    public static final Field INITIAL_FIELD = initJuniorField();
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
     public static final int PIECE_COUNT = 9;

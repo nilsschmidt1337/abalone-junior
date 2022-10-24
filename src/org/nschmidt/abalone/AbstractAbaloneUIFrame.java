@@ -1,5 +1,8 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Adjacency.indexAt;
+import static org.nschmidt.abalone.Field.FIELD_HEIGHT;
+import static org.nschmidt.abalone.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.populateField;
 import static org.nschmidt.abalone.FieldEvaluator.score;
@@ -55,8 +58,8 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         // Reset label
         resetComponent = addComponent(0, 0, true, currentPlayer.getColor(), -1);
         
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 13; x++) {
+        for (int y = 0; y < FIELD_HEIGHT; y++) {
+            for (int x = 0; x < FIELD_WIDTH; x++) {
                 if (x == 0 && y == 0) continue;
                 fillGrid(x, y);
             }
@@ -81,9 +84,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     }
 
     private void fillGrid(int x, int y) {
-        int index = -1; 
-        index = calculateIndex(x, y, index);
-        
+        final int index = indexAt(y, x);
         
         Color color = Color.LIGHT_GRAY;
         
@@ -93,17 +94,6 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         }
         
         fieldComponents.add(addComponent(x, y, index != -1, color, index));
-    }
-
-    private int calculateIndex(int x, int y, int index) {
-        if (y == 0 && x > 2 && x < 10 && (x + 1) % 2 == 0) index = (x + 1) / 2 - 2;
-        if (y == 1 && x > 1 && x < 11 && (x + 0) % 2 == 0) index = (x + 1) / 2 + 3;
-        if (y == 2 && x > 0 && x < 12 && (x + 1) % 2 == 0) index = (x + 1) / 2 + 8;
-        if (y == 3 && x % 2 == 0) index = (x + 1) / 2 + 15;
-        if (y == 4 && x > 0 && x < 12 && (x + 1) % 2 == 0) index = (x + 1) / 2 + 21;
-        if (y == 5 && x > 1 && x < 11 && (x + 0) % 2 == 0) index = (x + 1) / 2 + 27;
-        if (y == 6 && x > 2 && x < 10 && (x + 1) % 2 == 0) index = (x + 1) / 2 + 31;
-        return index;
     }
 
     protected abstract Component addComponent(int x, int y, boolean enabled, Color color, int index);
