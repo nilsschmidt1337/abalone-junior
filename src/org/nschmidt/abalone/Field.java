@@ -16,7 +16,7 @@ public class Field {
     
     private static final Player[] NO_PIECES = new Player[0];
     
-    public static final Field INITIAL_FIELD = initField();
+    public static final Field INITIAL_FIELD = initJuniorField();
     public static final int FIELD_HEIGHT = 7;
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
@@ -25,7 +25,7 @@ public class Field {
     
     public static final Field EMPTY_FIELD = new Field();
     
-    private static Field initField() {
+    private static Field initJuniorField() {
         Field state = new Field();
         for (int i = 0; i < PIECE_COUNT; i++) {
             state = populateField(state, i, BLACK);
