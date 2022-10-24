@@ -17,7 +17,9 @@ public class Field {
     private static final Player[] NO_PIECES = new Player[0];
     
     public static final Field INITIAL_FIELD = initField();
-    public static final int FIELD_SIZE = 37;
+    public static final int FIELD_HEIGHT = 7;
+    public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
+    public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
     public static final int PIECE_COUNT = 9;
     public static final int DIRECTION_COUNT = 6;
     
@@ -33,6 +35,24 @@ public class Field {
         return state;
     }
     
+    private static int calculateWidth(int fieldHeight) {
+        return (fieldHeight - 1) + fieldHeight;
+    }
+    
+    private static int calculateSize(int fieldHeight) {
+        final int start = (fieldHeight + 1) / 2;
+        return sumFromTo(start, fieldHeight) + sumFromTo(start, fieldHeight - 1);
+    }
+    
+    private static int sumFromTo(int from, int to) {
+        return sumTo(to) - sumTo(from) + from;
+    }
+    
+    private static int sumTo(int n) {
+        // (n·(n+1)) / 2 = 1 + 2 + 3 + ... + n
+        return (n * (n + 1)) / 2;
+    }
+
     public static Field populateField(Field state, int fieldIndex, Player player) {
         Field result = new Field();
         Player[] playerPieces = state.playerPiecesOnField;

@@ -17,11 +17,6 @@ public class AlphaBetaAI {
         this.player = player;
     }
 
-    /**
-     * Gets the best move via Alpha Beta
-     * @param board initial board
-     * @return best move the AI can make
-     */
     public Field bestMove(Field board) {
         alphaBetaPruning(board, player, Long.MIN_VALUE, Long.MAX_VALUE, 0);
         return bestMove;

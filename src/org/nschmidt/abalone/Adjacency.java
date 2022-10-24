@@ -22,8 +22,8 @@ public enum Adjacency {
     }
     
     private static int[][] initAdjacency() {
-        final int[][] indexArray = new int[9][17];
         final int[][] adjacencyArray = new int[FIELD_SIZE][DIRECTION_COUNT];
+        final int[][] indexArray = new int[9][17];
         int i = 0;
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 17; x++) {
