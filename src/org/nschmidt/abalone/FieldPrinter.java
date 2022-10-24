@@ -6,10 +6,6 @@ import static org.nschmidt.abalone.Field.lookAtField;
 public enum FieldPrinter {
     INSTANCE;
     
-    public static void printJuniorField(Field state) {
-        printJuniorFieldDelta(state, state);
-    }
-    
     public static void printJuniorFieldDelta(Field state, Field previousState) {
         out.println();
         out.println(String.format("      G  %s%s%s%s", charsAt(state, previousState, 0), charsAt(state, previousState, 1), charsAt(state, previousState, 2), charsAt(state, previousState, 3)));
@@ -22,10 +18,6 @@ public enum FieldPrinter {
         out.println(              "          1 2 3 4");
         out.println();
         out.println();
-    }
-    
-    public static void printStandardField(Field state) {
-        printStandardFieldDelta(state, state);
     }
     
     public static void printStandardFieldDelta(Field state, Field previousState) {
