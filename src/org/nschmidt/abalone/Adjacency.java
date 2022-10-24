@@ -1,5 +1,6 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Field.DIRECTION_COUNT;
 import static org.nschmidt.abalone.Field.FIELD_SIZE;
 
 public enum Adjacency {
@@ -22,7 +23,7 @@ public enum Adjacency {
     
     private static int[][] initAdjacency() {
         final int[][] indexArray = new int[9][17];
-        final int[][] adjacencyArray = new int[37][6];
+        final int[][] adjacencyArray = new int[FIELD_SIZE][DIRECTION_COUNT];
         int i = 0;
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 17; x++) {

@@ -1,6 +1,7 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Adjacency.adjacency;
+import static org.nschmidt.abalone.Field.DIRECTION_COUNT;
 import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.Field.lookAtField;
@@ -11,14 +12,14 @@ public enum DoubleMover {
     INSTANCE;
     
     public static Field[] moveTwoMarbles(Field state, Player player) {
-        final Field[] tempResult = new Field[PIECE_COUNT * 6 * 2];
+        final Field[] tempResult = new Field[PIECE_COUNT * DIRECTION_COUNT * 2];
         int moveCount = 0;
         
         for (int from = 0; from < FIELD_SIZE; from++) {
             if (player == lookAtField(state, from)) {
                 final int[] neighbourIndices = adjacency(from);
-                for (int d = 0; d < 6; d++) {
-                    for (int d2 = 0; d2 < 6; d2++) {
+                for (int d = 0; d < DIRECTION_COUNT; d++) {
+                    for (int d2 = 0; d2 < DIRECTION_COUNT; d2++) {
                         moveCount += tryMove(state, player, from, d, d2, moveCount, neighbourIndices, tempResult);
                     }
                 }

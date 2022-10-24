@@ -19,6 +19,7 @@ public class Field {
     public static final Field INITIAL_FIELD = initField();
     public static final int FIELD_SIZE = 37;
     public static final int PIECE_COUNT = 9;
+    public static final int DIRECTION_COUNT = 6;
     
     public static final Field EMPTY_FIELD = new Field();
     
