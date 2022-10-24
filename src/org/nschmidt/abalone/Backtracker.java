@@ -121,21 +121,6 @@ public enum Backtracker {
             Field result = playRound(move, opponent, depth);
             long score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
-                // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
-                Field[] oppenentWinsInOne = winsInOneMove(move, opponent);
-                if (oppenentWinsInOne.length == 1) {
-                    continue;
-                }
-                // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
-                Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
-                if (oppenentWinsInTwo.length == 2) {
-                    continue;
-                }
-                // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
-                Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
-                if (oppenentWinsInThree.length == 3) {
-                    continue;
-                }
                 // Mache keinen Zug, bei dem der Gegner eine zusätzliche Figur isolieren kann
                 final Set<Integer> isolatedPieces = new TreeSet<>();
                 final int originalIsolatedPiecesCount;
@@ -157,6 +142,21 @@ public enum Backtracker {
                     continue;
                 }
                 
+                // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
+                Field[] oppenentWinsInOne = winsInOneMove(move, opponent);
+                if (oppenentWinsInOne.length == 1) {
+                    continue;
+                }
+                // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
+                Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
+                if (oppenentWinsInTwo.length == 2) {
+                    continue;
+                }
+                // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
+                Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
+                if (oppenentWinsInThree.length == 3) {
+                    continue;
+                }
                 
                 System.out.println("Found a solution... (Score " + score + ")");
                 foundStrategicSolution = true;
