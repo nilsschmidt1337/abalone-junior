@@ -1,5 +1,6 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.FieldEvaluator.score;
 import static org.nschmidt.abalone.MoveDetector.allMoves;
 import static org.nschmidt.abalone.WinningChecker.wins;
@@ -138,14 +139,14 @@ public enum Backtracker {
                 // Mache keinen Zug, bei dem der Gegner eine zusätzliche Figur isolieren kann
                 final Set<Integer> isolatedPieces = new TreeSet<>();
                 final int originalIsolatedPiecesCount;
-                for (int i = 0; i < 37; i++) {
+                for (int i = 0; i < FIELD_SIZE; i++) {
                     if (FieldEvaluator.isIsolated(move, player, i)) {
                         isolatedPieces.add(i);
                     }
                 }
                 originalIsolatedPiecesCount = isolatedPieces.size();
                 for (Field attack : MoveDetector.allAttackMoves(move, opponent)) {
-                    for (int i = 0; i < 37; i++) {
+                    for (int i = 0; i < FIELD_SIZE; i++) {
                         if (FieldEvaluator.isIsolated(attack, player, i)) {
                             isolatedPieces.add(i);
                         }

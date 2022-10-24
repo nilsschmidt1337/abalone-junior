@@ -1,5 +1,7 @@
 package org.nschmidt.abalone;
 
+import static org.nschmidt.abalone.Field.FIELD_SIZE;
+
 public enum Adjacency {
     INSTANCE;
     
@@ -95,7 +97,7 @@ public enum Adjacency {
     private static int[] initBorderIndices() {
         final int[] borderIndices = new int[18];
         int i = 0;
-        for (int j = 0; j < 37; j++) {
+        for (int j = 0; j < FIELD_SIZE; j++) {
             for (int neighbourIndex : adjacencyMatrix[j]) {
                 if (neighbourIndex == -1) {
                     borderIndices[i] = j;

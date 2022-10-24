@@ -17,11 +17,14 @@ public class Field {
     private static final Player[] NO_PIECES = new Player[0];
     
     public static final Field INITIAL_FIELD = initField();
+    public static final int FIELD_SIZE = 37;
+    public static final int PIECE_COUNT = 9;
+    
     public static final Field EMPTY_FIELD = new Field();
     
     private static Field initField() {
         Field state = new Field();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < PIECE_COUNT; i++) {
             state = populateField(state, i, BLACK);
             state = populateField(state, i + 28, WHITE);
         }

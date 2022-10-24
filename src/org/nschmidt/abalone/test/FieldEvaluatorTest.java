@@ -3,6 +3,7 @@ package org.nschmidt.abalone.test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
+import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.FieldEvaluator.*;
 import static org.nschmidt.abalone.Player.BLACK;
@@ -47,7 +48,7 @@ class FieldEvaluatorTest {
         
         int[] result = new int[12];
         int index = 0;
-        for (int i = 0; i < 37; i++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
             if (border.contains(i)) continue;
             int[] neighbours = adjacency(i);
             for (int d = 0; d < 6; d++) {

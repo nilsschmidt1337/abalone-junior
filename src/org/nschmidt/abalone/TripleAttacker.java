@@ -1,6 +1,7 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Adjacency.adjacency;
+import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
 import static org.nschmidt.abalone.Player.EMPTY;
@@ -12,7 +13,7 @@ public enum TripleAttacker {
         final Field[] tempResult = new Field[54];
         int attackCount = 0;
         
-        for (int from = 0; from < 37; from++) {
+        for (int from = 0; from < FIELD_SIZE; from++) {
             if (player == lookAtField(state, from)) {
                 final int[] neighbourIndices = adjacency(from);
                 for (int d = 0; d < 6; d++) {
