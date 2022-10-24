@@ -1,7 +1,9 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Field.DIRECTION_COUNT;
+import static org.nschmidt.abalone.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.Field.FIELD_SIZE;
+import static org.nschmidt.abalone.Field.FIELD_WIDTH;
 
 public enum Adjacency {
     INSTANCE;
@@ -22,8 +24,10 @@ public enum Adjacency {
     }
     
     private static int[][] initAdjacency() {
+        final int fieldWidthPlusMargin = FIELD_WIDTH + 4;
+        final int fieldHeightPlusMargin = FIELD_HEIGHT + 2;
         final int[][] adjacencyArray = new int[FIELD_SIZE][DIRECTION_COUNT];
-        final int[][] indexArray = new int[9][17];
+        final int[][] indexArray = new int[fieldHeightPlusMargin][fieldWidthPlusMargin];
         int i = 0;
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 17; x++) {
@@ -32,8 +36,8 @@ public enum Adjacency {
             }
         }
         
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 17; x++) {
+        for (int y = 0; y < fieldHeightPlusMargin; y++) {
+            for (int x = 0; x < fieldWidthPlusMargin; x++) {
                 final int index = indexArray[y][x];
                 if (index != -1) {
                     adjacencyArray[index][TOP_LEFT]     = indexArray[y - 1][x - 1];
@@ -96,7 +100,7 @@ public enum Adjacency {
     }
     
     private static int[] initBorderIndices() {
-        final int[] borderIndices = new int[18];
+        final int[] borderIndices = new int[3 * (FIELD_HEIGHT - 1)];
         int i = 0;
         for (int j = 0; j < FIELD_SIZE; j++) {
             for (int neighbourIndex : adjacencyMatrix[j]) {
