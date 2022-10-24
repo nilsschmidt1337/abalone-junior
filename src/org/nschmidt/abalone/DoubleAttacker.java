@@ -2,6 +2,7 @@ package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Adjacency.adjacency;
 import static org.nschmidt.abalone.Field.FIELD_SIZE;
+import static org.nschmidt.abalone.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.Field.move;
 import static org.nschmidt.abalone.Player.EMPTY;
@@ -10,7 +11,7 @@ public enum DoubleAttacker {
     INSTANCE;
     
     public static Field[] performDoubleAttack(Field state, Player player) {
-        final Field[] tempResult = new Field[54];
+        final Field[] tempResult = new Field[PIECE_COUNT * 6];
         int attackCount = 0;
         
         for (int from = 0; from < FIELD_SIZE; from++) {
