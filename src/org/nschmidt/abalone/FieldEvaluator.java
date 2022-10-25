@@ -2,6 +2,7 @@ package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
+import static org.nschmidt.abalone.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.WinningChecker.wins;
@@ -12,63 +13,24 @@ import java.util.TreeSet;
 public enum FieldEvaluator {
     INSTANCE;
     
-    private static final int[] OUTER_INDICES = ring(1);
-    private static final int[] MIDDLE_INDICES = ring(2);
-    private static final int[] CENTER_INDICES = ring(3);
-    private static final int[] CENTRAL_INDICES = ring(4);
+    private static final int[][] FIELD_RINGS = createRingArray();
     
     public static long score(Field state, Player player) {
         final Player opponent = player.switchPlayer();
         if (wins(state, opponent)) return Long.MIN_VALUE;
         long score = 0;
+        long bonus = 0;
         
-        for (int i : BORDER_INDICES) {
-            if (lookAtField(state, i) == player) {
-                if (isIsolated(state, player, i)) {
-                    score -= 100_000;
+        for (int[] ringIndices : FIELD_RINGS) {
+            bonus += 1;
+            for (int i : ringIndices) {
+                if (lookAtField(state, i) == player) {
+                    if (isIsolated(state, player, i)) {
+                        score -= 100_000;
+                    }
+                    
+                    score += bonus;
                 }
-                
-                score += 1;
-            }
-        }
-        
-        for (int i : OUTER_INDICES) {
-            if (lookAtField(state, i) == player) {
-                if (isIsolated(state, player, i)) {
-                    score -= 100_000;
-                }
-                
-                score += 2;
-            }
-        }
-        
-        for (int i : MIDDLE_INDICES) {
-            if (lookAtField(state, i) == player) {
-                if (isIsolated(state, player, i)) {
-                    score -= 100_000;
-                }
-                
-                score += 3;
-            }
-        }
-        
-        for (int i : CENTER_INDICES) {
-            if (lookAtField(state, i) == player) {
-                if (isIsolated(state, player, i)) {
-                    score -= 100_000;
-                }
-                
-                score += 4;
-            }
-        }
-  
-        for (int i : CENTRAL_INDICES) {
-            if (lookAtField(state, i) == player) {
-                if (isIsolated(state, player, i)) {
-                    score -= 100_000;
-                }
-                
-                score += 5;
             }
         }
         
@@ -77,7 +39,7 @@ public enum FieldEvaluator {
             if (wins(state, player)) score += 10000;
             
             for (int i = 0; i < FIELD_SIZE; i++) {
-                int bonus = 1;
+                bonus = 1;
                 for (int neighbour : adjacency(i)) {
                     if (neighbour != -1 && lookAtField(state, neighbour) == player) {
                         score += bonus;
@@ -123,5 +85,15 @@ public enum FieldEvaluator {
         }
         
         return newRing.stream().mapToInt(i -> i).toArray();
+    }
+    
+    private static int[][] createRingArray() {
+        int ringCount = (FIELD_HEIGHT - 1) / 2 + 1;
+        int[][] result = new int[ringCount][];
+        for (int i = 0; i < ringCount; i++) {
+            result[i] = ring(i);
+        }
+        
+        return result;
     }
 }
