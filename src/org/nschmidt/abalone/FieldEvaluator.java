@@ -12,9 +12,10 @@ import java.util.TreeSet;
 public enum FieldEvaluator {
     INSTANCE;
     
-    private static final int[] MIDDLE_INDICES = ring(1);
-    private static final int[] CENTER_INDICES = ring(2);
-    private static final int CENTRAL_INDEX = ring(3)[0];
+    private static final int[] OUTER_INDICES = ring(1);
+    private static final int[] MIDDLE_INDICES = ring(2);
+    private static final int[] CENTER_INDICES = ring(3);
+    private static final int[] CENTRAL_INDICES = ring(4);
     
     public static long score(Field state, Player player) {
         final Player opponent = player.switchPlayer();
@@ -31,7 +32,7 @@ public enum FieldEvaluator {
             }
         }
         
-        for (int i : MIDDLE_INDICES) {
+        for (int i : OUTER_INDICES) {
             if (lookAtField(state, i) == player) {
                 if (isIsolated(state, player, i)) {
                     score -= 100_000;
@@ -41,7 +42,7 @@ public enum FieldEvaluator {
             }
         }
         
-        for (int i : CENTER_INDICES) {
+        for (int i : MIDDLE_INDICES) {
             if (lookAtField(state, i) == player) {
                 if (isIsolated(state, player, i)) {
                     score -= 100_000;
@@ -50,8 +51,26 @@ public enum FieldEvaluator {
                 score += 3;
             }
         }
+        
+        for (int i : CENTER_INDICES) {
+            if (lookAtField(state, i) == player) {
+                if (isIsolated(state, player, i)) {
+                    score -= 100_000;
+                }
+                
+                score += 4;
+            }
+        }
   
-        if (lookAtField(state, CENTRAL_INDEX) == player) score += 4;
+        for (int i : CENTRAL_INDICES) {
+            if (lookAtField(state, i) == player) {
+                if (isIsolated(state, player, i)) {
+                    score -= 100_000;
+                }
+                
+                score += 5;
+            }
+        }
         
         score -= MoveDetector.allAttackMoves(state, opponent).length * 10000;
         if (score >= 0) {
