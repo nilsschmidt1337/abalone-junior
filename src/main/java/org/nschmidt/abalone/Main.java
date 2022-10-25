@@ -1,23 +1,25 @@
 package org.nschmidt.abalone;
 
-import static org.nschmidt.abalone.FieldEvaluator.score;
-import static org.nschmidt.abalone.Field.populateField;
-import static org.nschmidt.abalone.Field.INITIAL_FIELD;
-import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
-import static org.nschmidt.abalone.WinningChecker.wins;
+import static org.nschmidt.abalone.ai.Backtracker.backtrack;
+import static org.nschmidt.abalone.move.DoubleAttacker.performDoubleAttack;
+import static org.nschmidt.abalone.move.DoubleMover.moveTwoMarbles;
+import static org.nschmidt.abalone.move.MoveDetector.allMoves;
+import static org.nschmidt.abalone.move.SingleMover.moveSingleMarble;
+import static org.nschmidt.abalone.playfield.Adjacency.BORDER_INDICES;
+import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
+import static org.nschmidt.abalone.playfield.Field.populateField;
+import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.Player.BLACK;
+import static org.nschmidt.abalone.playfield.Player.WHITE;
+import static org.nschmidt.abalone.winning.WinningChecker.wins;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.nschmidt.abalone.SingleMover.moveSingleMarble;
-import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
-import static org.nschmidt.abalone.DoubleAttacker.performDoubleAttack;
-import static org.nschmidt.abalone.MoveDetector.allMoves;
-import static org.nschmidt.abalone.Player.BLACK;
-import static org.nschmidt.abalone.Player.WHITE;
-import static org.nschmidt.abalone.Backtracker.backtrack;
+import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.Player;
 
 public class Main {
     
