@@ -85,7 +85,11 @@ public class Field {
     
     @Override
     public String toString() {
-        return Arrays.toString(playerPiecesOnField);
+        if (playerPiecesOnField.length < 38) {
+            return FieldPrinter.buildJuniorFieldDeltaString(this, this);
+        } else {
+            return FieldPrinter.buildStandardFieldDeltaString(this, this);
+        }
     }
     
     @Override
@@ -99,18 +103,14 @@ public class Field {
     }
     
     public void printField() {
-        if (playerPiecesOnField.length < 38) {
-            FieldPrinter.printJuniorFieldDelta(this, this);
-        } else {
-            FieldPrinter.printStandardFieldDelta(this, this);
-        }
+        FieldPrinter.printField(this.toString());
     }
     
     public void printFieldDelta(Field previousState) {
         if (playerPiecesOnField.length < 38) {
-            FieldPrinter.printJuniorFieldDelta(this, previousState);
+            FieldPrinter.printField(FieldPrinter.buildJuniorFieldDeltaString(this, previousState));
         } else {
-            FieldPrinter.printStandardFieldDelta(this, previousState);
+            FieldPrinter.printField(FieldPrinter.buildStandardFieldDeltaString(this, previousState));
         }
     }
 }
