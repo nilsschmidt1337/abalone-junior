@@ -1,10 +1,7 @@
 package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.ai.Backtracker.backtrack;
-import static org.nschmidt.abalone.move.DoubleAttacker.performDoubleAttack;
-import static org.nschmidt.abalone.move.DoubleMover.moveTwoMarbles;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
-import static org.nschmidt.abalone.move.SingleMover.moveSingleMarble;
 import static org.nschmidt.abalone.playfield.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.playfield.Field.populateField;
@@ -40,16 +37,6 @@ public class Main {
         state = populateField(state, 5, WHITE);
         state = populateField(state, 6, WHITE);
         System.out.println(wins(state, WHITE));
-        
-        
-        state = moveSingleMarble(state, WHITE)[0];
-        state.printField();
-        
-        state = moveTwoMarbles(state, BLACK)[0];
-        state.printField();
-        
-        state = performDoubleAttack(state, BLACK)[0];
-        state.printField();
         
         System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
         

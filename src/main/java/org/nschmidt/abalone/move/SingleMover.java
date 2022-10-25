@@ -11,7 +11,7 @@ import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
-public enum SingleMover {
+enum SingleMover {
     INSTANCE;
     
     public static Field[] moveSingleMarble(Field state, Player player) {

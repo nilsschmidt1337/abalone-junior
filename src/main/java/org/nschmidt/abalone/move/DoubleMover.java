@@ -11,7 +11,7 @@ import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
-public enum DoubleMover {
+enum DoubleMover {
     INSTANCE;
     
     public static Field[] moveTwoMarbles(Field state, Player player) {

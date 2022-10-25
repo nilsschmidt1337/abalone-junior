@@ -11,7 +11,7 @@ import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
-public enum DoubleAttacker {
+enum DoubleAttacker {
     INSTANCE;
     
     public static Field[] performDoubleAttack(Field state, Player player) {
