@@ -2,6 +2,7 @@ package org.nschmidt.abalone;
 
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.Adjacency.adjacency;
+import static org.nschmidt.abalone.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.Field.lookAtField;
 import static org.nschmidt.abalone.WinningChecker.wins;
 
@@ -56,14 +57,12 @@ public enum FieldEvaluator {
         if (score >= 0) {
             if (wins(state, player)) score += 10000;
             
-            for (int[] indices : new int[][] {BORDER_INDICES, MIDDLE_INDICES, CENTER_INDICES, new int[] {CENTRAL_INDEX}}) {
-                for (int i : indices) {
-                    int bonus = 1;
-                    for (int neighbour : adjacency(i)) {
-                        if (neighbour != -1 && lookAtField(state, neighbour) == player) {
-                            score += bonus;
-                            bonus *= 2;
-                        }
+            for (int i = 0; i < FIELD_SIZE; i++) {
+                int bonus = 1;
+                for (int neighbour : adjacency(i)) {
+                    if (neighbour != -1 && lookAtField(state, neighbour) == player) {
+                        score += bonus;
+                        bonus *= 2;
                     }
                 }
             }
