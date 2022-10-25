@@ -138,7 +138,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
             }
             
             if (index == -2) {
-                
+                confirmComponent.setEnabled(false);
                 currentPlayer = currentPlayer.switchPlayer();
                 
                 // Prüfe, ob Computer gewonnen hat (bevor er gezogen hat)
