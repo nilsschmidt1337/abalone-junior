@@ -1,4 +1,4 @@
-package org.nschmidt.abalone.test;
+package org.nschmidt.abalone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Adjacency.BORDER_INDICES;

@@ -1,4 +1,4 @@
-package org.nschmidt.abalone.test;
+package org.nschmidt.abalone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Field.*;
@@ -8,8 +8,6 @@ import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.Player.EMPTY;
 
 import org.junit.jupiter.api.Test;
-import org.nschmidt.abalone.Field;
-import org.nschmidt.abalone.Player;
 
 class FieldTest {
 

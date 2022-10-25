@@ -1,4 +1,4 @@
-package org.nschmidt.abalone.test;
+package org.nschmidt.abalone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Field.EMPTY_FIELD;
@@ -10,8 +10,6 @@ import static org.nschmidt.abalone.Player.EMPTY;
 import static org.nschmidt.abalone.WinningInTwoMovesChecker.winsInTwoMoves;
 
 import org.junit.jupiter.api.Test;
-import org.nschmidt.abalone.Field;
-import org.nschmidt.abalone.Player;
 
 class WinningInTwoMovesCheckerTest {
 

@@ -1,4 +1,4 @@
-package org.nschmidt.abalone.test;
+package org.nschmidt.abalone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.DoubleMover.moveTwoMarbles;
@@ -7,7 +7,6 @@ import static org.nschmidt.abalone.Player.BLACK;
 import static org.nschmidt.abalone.Player.WHITE;
 
 import org.junit.jupiter.api.Test;
-import org.nschmidt.abalone.Field;
 
 class DoubleMoverTest {
 

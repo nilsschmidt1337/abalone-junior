@@ -1,4 +1,4 @@
-package org.nschmidt.abalone.test;
+package org.nschmidt.abalone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.nschmidt.abalone.Field.INITIAL_FIELD;
@@ -7,7 +7,6 @@ import static org.nschmidt.abalone.Player.WHITE;
 import static org.nschmidt.abalone.TripleMover.moveThreeMarbles;
 
 import org.junit.jupiter.api.Test;
-import org.nschmidt.abalone.Field;
 
 class TripleMoverTest {
 
