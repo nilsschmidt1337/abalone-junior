@@ -17,8 +17,12 @@ import java.util.Random;
 
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     
     public static void main(String[] args) {
         
@@ -36,29 +40,29 @@ public class Main {
         
         state = populateField(state, 5, WHITE);
         state = populateField(state, 6, WHITE);
-        System.out.println(wins(state, WHITE));
+        LOGGER.info("Wins: {}", wins(state, WHITE));
         
-        System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
+        LOGGER.info("Moves for player 2 : {}", allMoves(state, BLACK).length);
         
         state = INITIAL_FIELD;
-        System.out.println("Moves for player 2 : " + allMoves(state, BLACK).length);
+        LOGGER.info("Moves for player 2 : {}", allMoves(state, BLACK).length);
         
         Random rnd = new Random(1337L);
  
         int[] wins = new int[3];
         for (int i = 0; i < 10; i++) {
-            System.out.println("Game " + i + " of 9 (WHITE begins) -> results: " +  Arrays.toString(wins));
-            wins[(int) playRound(Player.WHITE, rnd)] += 1;
+            LOGGER.info("Game {} of 9 (WHITE begins) -> results: {}", i, Arrays.toString(wins));
+            wins[playRound(Player.WHITE, rnd)] += 1;
         }
         
         for (int i = 0; i < 10; i++) {
-            System.out.println("Game " + i + " of 9 (BLACK begins) -> results: " +  Arrays.toString(wins));
-            wins[(int) playRound(Player.BLACK, rnd)] += 1;
+            LOGGER.info("Game {} of 9 (BLACK begins) -> results: {}", i, Arrays.toString(wins));
+            wins[playRound(Player.BLACK, rnd)] += 1;
         }
         
-        System.out.println("Player 1 " + wins[1] + " wins.");
-        System.out.println("Player 2 " + wins[2] + " wins.");
-        System.out.println(" draw    " + wins[0]);
+        LOGGER.info("Player 1 {} wins.", wins[1]);
+        LOGGER.info("Player 2 {} wins.", wins[2]);
+        LOGGER.info(" draw    {}", wins[0]);
     }
 
     private static int playRound(Player currentPlayer, Random rnd) {
@@ -108,14 +112,14 @@ public class Main {
         }
         
         if (currentPlayer == BLACK) {
-            System.out.println("-----------------------------");
+            LOGGER.info("-----------------------------");
             Field previous = Field.INITIAL_FIELD;
             for (Field field : round) {
-                System.out.println(field);
+                LOGGER.info("{}", field);
                 field.printFieldDelta(previous);
                 previous = field;
             }
-            System.out.println("-----------------------------");
+            LOGGER.info("-----------------------------");
         }
         
         return currentPlayer.getNumber();

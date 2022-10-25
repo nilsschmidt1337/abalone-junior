@@ -1,10 +1,14 @@
 package org.nschmidt.abalone.playfield;
 
-import static java.lang.System.out;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum FieldPrinter {
     INSTANCE;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldPrinter.class);
     
     public static String buildJuniorFieldDeltaString(Field state, Field previousState) {
         final StringBuilder sb = new StringBuilder();
@@ -35,7 +39,7 @@ public enum FieldPrinter {
     }
     
     public static void printField(String fieldString) {
-        out.println(fieldString);
+        LOGGER.info(fieldString);
     }
     
     private static String charsAt(Field state, Field previousState, int index) {

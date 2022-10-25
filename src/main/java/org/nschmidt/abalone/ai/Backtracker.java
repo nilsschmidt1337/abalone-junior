@@ -17,31 +17,35 @@ import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.winning.WinningInOneMoveChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum Backtracker {
     INSTANCE;
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(Backtracker.class);
+    
     public static Field backtrack(Field state, Player player, int depth) {
-        System.out.println("Try to find win in one move...");
+        LOGGER.info("Try to find win in one move...");
         final Player opponent = player.switchPlayer();
         Field[] winsInOne = winsInOneMove(state, player);
         if (winsInOne.length == 1) {
             return winsInOne[0];
         }
         
-        System.out.println("Try to find win in two moves...");
+        LOGGER.info("Try to find win in two moves...");
         Field[] winsInTwo = winsInTwoMoves(state, player);
         if (winsInTwo.length == 2) {
             return winsInTwo[0];
         }
         
-        System.out.println("Try to find optimum with alpha-beta search...");
+        LOGGER.info("Try to find optimum with alpha-beta search...");
         Field alphaBetaMove =  new AlphaBetaAI(4, player).bestMove(state);
         if (alphaBetaMove != null) {
             return alphaBetaMove;
         }
         
-        System.out.println("Try to find optimum in two moves...");
+        LOGGER.info("Try to find optimum in two moves...");
         Field[] optimumInThree = OptimisationInTwoMovesChecker.optimisationInTwoMoves(state, player);
         if (optimumInThree.length == 2) {
             return optimumInThree[0];
@@ -70,7 +74,7 @@ public enum Backtracker {
         }
         
         if (score(state, player) == Long.MIN_VALUE) {
-            System.out.println("Try to escape a dangerous situation...");
+            LOGGER.info("Try to escape a dangerous situation...");
             boolean notEscaped = true;
             Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
             for (Field move : moves) {
@@ -79,17 +83,17 @@ public enum Backtracker {
                     // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                     Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
                     if (oppenentWinsInOne.length == 1) {
-                        System.out.println("Opponent can win in one step...");
+                        LOGGER.info("Opponent can win in one step...");
                         continue;
                     }
                     // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                     Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                     if (oppenentWinsInTwo.length == 2) {
-                        System.out.println("Opponent can win in two steps...");
+                        LOGGER.info("Opponent can win in two steps...");
                         continue;
                     }
                     
-                    System.out.println("Able to escape... (Score " + score + ")");
+                    LOGGER.info("Able to escape... (Score {})", score);
                     notEscaped = false;
                     maxScore = score;
                     maxMove = move;
@@ -103,11 +107,11 @@ public enum Backtracker {
                         // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                         Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
                         if (oppenentWinsInOne.length == 1) {
-                            System.out.println("Opponent can win in one step...");
+                            LOGGER.info("Opponent can win in one step...");
                             continue;
                         }
                         
-                        System.out.println("Able to escape, but opponent can win in two steps... (Score " + score + ")");
+                        LOGGER.info("Able to escape, but opponent can win in two steps... (Score {})", score);
                         maxScore = score;
                         maxMove = move;
                     }
@@ -119,7 +123,7 @@ public enum Backtracker {
 
         
         boolean foundStrategicSolution = false;
-        System.out.println("Try to find a strategic solution...");
+        LOGGER.info("Try to find a strategic solution...");
         Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
         for (Field move : moves) {
             long initialScore = score(move, player);
@@ -163,7 +167,7 @@ public enum Backtracker {
                     continue;
                 }
                 
-                System.out.println("Found a solution... (Score " + score + ")");
+                LOGGER.info("Found a solution... (Score {})", score);
                 foundStrategicSolution = true;
                 maxScore = initialScore;
                 maxMove = move;
@@ -171,7 +175,7 @@ public enum Backtracker {
         }
         
         if (!foundStrategicSolution) {
-            System.out.println("Try to find a classic solution...");
+            LOGGER.info("Try to find a classic solution...");
             for (Field move : moves) {
                 long score = score(move, player);
                 if (score > maxScore) {
@@ -182,7 +186,7 @@ public enum Backtracker {
                     }
                     // Lasse zu, dass der Gegner in zwei Zügen gewinnen kann, um den Handlungspielraum zu vergrößern
                     
-                    System.out.println("Found a classic solution... (Score " + score + ")");
+                    LOGGER.info("Found a classic solution... (Score {})", score);
                     maxScore = score;
                     maxMove = move;
                 }

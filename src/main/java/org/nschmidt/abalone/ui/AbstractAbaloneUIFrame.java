@@ -29,8 +29,12 @@ import java.util.function.BiFunction;
 
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractAbaloneUIFrame extends Frame {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAbaloneUIFrame.class);
 
     private static final String ABALONE_JUNIOR_PLAYER_WINS = "Abalone Junior - Player %s wins!";
 
@@ -39,9 +43,9 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     protected GridBagLayout grid = new GridBagLayout();
     protected GridBagConstraints straints = new GridBagConstraints();
     
-    private Field previousState;
-    private Field[] validMoves;
-    private Field currentState;
+    private transient Field previousState;
+    private transient Field[] validMoves;
+    private transient Field currentState;
     private Player currentPlayer;
     private Player lastColor = null;
     
@@ -144,13 +148,13 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                     return;
                 }
                 
-                System.out.println(currentState);
-                System.out.println(currentPlayer.switchPlayer() + " Standard-Score: " + score(currentState, currentPlayer.switchPlayer()));
+                LOGGER.info("{}", currentState);
+                LOGGER.info("{} Standard-Score: {}", currentPlayer.switchPlayer(), score(currentState, currentPlayer.switchPlayer()));
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
-                System.out.println(currentState);
-                System.out.println(currentPlayer + " Standard-Score: " + score(currentState, currentPlayer));
+                LOGGER.info("{}", currentState);
+                LOGGER.info("{} Standard-Score: {}", currentPlayer, score(currentState, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);
