@@ -2,7 +2,7 @@ package org.nschmidt.abalone.playfield;
 
 import java.awt.Color;
 
-public enum Player implements PlayerLogic{
+public enum Player implements PlayerLogic {
     BLACK {
         @Override
         public Player switchPlayer() {

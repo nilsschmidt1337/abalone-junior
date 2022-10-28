@@ -16,7 +16,8 @@ class AlphaBetaAITest {
         
         // Act
         Field move = cut.bestMove(Field.INITIAL_FIELD);
-        move.printField();
+        
+        // Assert
         assertEquals(128L, FieldEvaluator.score(move, Player.WHITE));
     }
     
@@ -27,7 +28,8 @@ class AlphaBetaAITest {
         
         // Act
         Field move = cut.bestMove(Field.INITIAL_FIELD);
-        move.printField();
+
+        // Assert
         assertEquals(139L, FieldEvaluator.score(move, Player.WHITE));
     }
 }

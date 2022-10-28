@@ -90,23 +90,21 @@ class BacktrackerTest {
         start = populateField(start, 18, BLACK);
         start = populateField(start, 20, BLACK);
         Field result = backtrack(start, BLACK, 10);
-        result.printFieldDelta(start);
         assertTrue(WinningChecker.wins(result, WHITE));
     }
     
     @Test
     void testAvoidIsolation() {
         Field start = Field.of(new Player[] {BLACK, EMPTY, BLACK, EMPTY, EMPTY, BLACK, BLACK, EMPTY, EMPTY, null, null, BLACK, WHITE, BLACK, BLACK, null, null, WHITE, WHITE, BLACK, BLACK, null, null, WHITE, WHITE, WHITE, WHITE, null, EMPTY, EMPTY, WHITE, WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY});
-        start.printField();
         Field result = backtrack(start, WHITE, 10);
-        result.printFieldDelta(start);
+        assertEquals(Field.of(new Player[] {BLACK, EMPTY, BLACK, EMPTY, EMPTY, BLACK, BLACK, EMPTY, EMPTY, null, null, BLACK, WHITE, BLACK, BLACK, null, WHITE, WHITE, WHITE, BLACK, BLACK, null, null, EMPTY, WHITE, WHITE, WHITE, null, EMPTY, EMPTY, WHITE, WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY})
+        , result);
     }
     
     @Test
     void testAvoidDoingNothing() {
         Field start = Field.of(new Player[] {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WHITE, BLACK, BLACK, EMPTY, null, BLACK, WHITE, BLACK, EMPTY, BLACK, null, WHITE, BLACK, BLACK, WHITE, BLACK, EMPTY, EMPTY, WHITE, BLACK, WHITE, WHITE, null, EMPTY, WHITE, EMPTY, WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY});
-        start.printField();
         Field result = backtrack(start, WHITE, 10);
-        result.printFieldDelta(start);
+        assertEquals(Field.of(new Player[] {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WHITE, BLACK, BLACK, EMPTY, null, BLACK, WHITE, BLACK, EMPTY, BLACK, null, EMPTY, BLACK, BLACK, WHITE, BLACK, EMPTY, WHITE, EMPTY, BLACK, WHITE, WHITE, null, WHITE, EMPTY, EMPTY, WHITE, EMPTY, WHITE, EMPTY, EMPTY, EMPTY}), result);
     }
 }
