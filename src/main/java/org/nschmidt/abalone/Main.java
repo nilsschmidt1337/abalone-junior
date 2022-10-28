@@ -72,18 +72,18 @@ public class Main {
         int moveCount = 0;
         while (moveCount < 100) {
             moveCount += 1;
-            long currentScore = score(state, currentPlayer);
+            double currentScore = score(state, currentPlayer);
             Field[] moves = allMoves(state, currentPlayer);
             Field randomMove = moves[rnd.nextInt(moves.length)];
             
-            long maxScore = Long.MIN_VALUE;
+            double maxScore = -Double.MAX_VALUE;
             Field maxMove = randomMove;
             
             if (currentPlayer == WHITE) {
                 maxMove = backtrack(state, currentPlayer, 10);
-            } else if (currentScore == Long.MIN_VALUE) {
+            } else if (currentScore == -Double.MAX_VALUE) {
                 for (Field move : moves) {
-                    long score = score(move, currentPlayer);
+                    double score = score(move, currentPlayer);
                     if (score > maxScore) {
                         maxScore = score;
                         maxMove = move;
@@ -92,7 +92,7 @@ public class Main {
             } else {
                 for (int i = 0; i < 100; i++) {
                     randomMove = moves[rnd.nextInt(moves.length)];
-                    long score = score(randomMove, currentPlayer);
+                    double score = score(randomMove, currentPlayer);
                     if (score > maxScore) {
                         maxScore = score;
                         maxMove = randomMove;

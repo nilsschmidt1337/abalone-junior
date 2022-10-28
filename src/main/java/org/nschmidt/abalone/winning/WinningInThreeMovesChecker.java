@@ -45,14 +45,14 @@ public enum WinningInThreeMovesChecker {
                     bestSecondMove = secondMoves[0];
                 }
                 
-                long maxScore = Long.MIN_VALUE;
+                double maxScore = -Double.MAX_VALUE;
                 
                 for (Field secondMove : secondMoves) {
                     
                     hasSolution = !wins(secondMove, opponent);
                     if (!hasSolution) continue;
                     
-                    long score = score(secondMove, player);
+                    double score = score(secondMove, player);
                     if (score > maxScore) {
                         maxScore = score;
                         bestSecondMove = secondMove;
@@ -73,14 +73,14 @@ public enum WinningInThreeMovesChecker {
                     } else {
                         bestThirdMove = thirdMoves[0];
                     }
-                    maxScore = Long.MIN_VALUE;
+                    maxScore = -Double.MAX_VALUE;
                         
                     for (Field thirdMove : thirdMoves) {
                         
                         hasSolution = !wins(thirdMove, opponent);
                         if (!hasSolution) continue;
                         
-                        long score = score(thirdMove, player);
+                        double score = score(thirdMove, player);
                         if (score > maxScore) {
                             maxScore = score;
                             bestThirdMove = thirdMove;

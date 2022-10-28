@@ -17,11 +17,11 @@ public enum FieldEvaluator {
     
     private static final int[][] FIELD_RINGS = createRingArray();
     
-    public static long score(Field state, Player player) {
+    public static double score(Field state, Player player) {
         final Player opponent = player.switchPlayer();
-        if (wins(state, opponent)) return Long.MIN_VALUE;
-        long score = 0;
-        long bonus = 0;
+        if (wins(state, opponent)) return -Double.MAX_VALUE;
+        double score = 0;
+        double bonus = 0;
         
         for (int[] ringIndices : FIELD_RINGS) {
             bonus += 1;

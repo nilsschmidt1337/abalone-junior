@@ -15,7 +15,7 @@ public enum OptimisationInTwoMovesChecker {
     
     public static Field[] optimisationInTwoMoves(Field state, Player player) {
         final Player opponent = player.switchPlayer();
-        final long initialScore = score(state, player);
+        final double initialScore = score(state, player);
         Field[] firstMoves = allMoves(state, player);
         return Arrays.asList(firstMoves).parallelStream().map(firstMove -> {
             final Field[] result = new Field[2];
@@ -61,7 +61,7 @@ public enum OptimisationInTwoMovesChecker {
                     
                     if (!hasSolution) continue;
                     
-                    final long score = score(secondMove, player);
+                    final double score = score(secondMove, player);
                     hasSolution = score >= initialScore;
                     
                     if (hasSolution) {
@@ -85,7 +85,7 @@ public enum OptimisationInTwoMovesChecker {
             return new Field[0];
         })
                 .filter(r -> r.length == 2)
-                .sorted((m1, m2) -> Long.compare(score(m2[0], player), score(m1[0], player)))
+                .sorted((m1, m2) -> Double.compare(score(m2[0], player), score(m1[0], player)))
                 .filter(r -> WinningInTwoMovesChecker.winsInTwoMoves(r[0], opponent).length != 2)
                 .findFirst().orElse(new Field[0]);
     }

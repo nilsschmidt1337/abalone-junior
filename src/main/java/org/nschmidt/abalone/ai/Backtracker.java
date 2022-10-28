@@ -53,7 +53,7 @@ public enum Backtracker {
         
         
         Field[] moves = allMoves(state, player);
-        long maxScore = Long.MIN_VALUE;
+        double maxScore = -Double.MAX_VALUE;
         Field maxMove = null;
         for (Field move : moves) {
             // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
@@ -73,12 +73,12 @@ public enum Backtracker {
             maxMove = moves[0];
         }
         
-        if (score(state, player) == Long.MIN_VALUE) {
+        if (score(state, player) == -Double.MAX_VALUE) {
             LOGGER.info("Try to escape a dangerous situation...");
             boolean notEscaped = true;
-            Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
+            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
             for (Field move : moves) {
-                long score = score(move, player);
+                double score = score(move, player);
                 if (score > maxScore) {
                     // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                     Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
@@ -102,7 +102,7 @@ public enum Backtracker {
             
             if (notEscaped) {
                 for (Field move : moves) {
-                    long score = score(move, player);
+                    double score = score(move, player);
                     if (score > maxScore) {
                         // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                         Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
@@ -124,11 +124,11 @@ public enum Backtracker {
         
         boolean foundStrategicSolution = false;
         LOGGER.info("Try to find a strategic solution...");
-        Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, player), score(m1, player)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
         for (Field move : moves) {
-            long initialScore = score(move, player);
+            double initialScore = score(move, player);
             Field result = playRound(move, opponent, depth);
-            long score = score(result, player);
+            double score = score(result, player);
             if (score > maxScore && initialScore > maxScore) {
                 // Mache keinen Zug, bei dem der Gegner eine zusätzliche Figur isolieren kann
                 final Set<Integer> isolatedPieces = new TreeSet<>();
@@ -177,7 +177,7 @@ public enum Backtracker {
         if (!foundStrategicSolution) {
             LOGGER.info("Try to find a classic solution...");
             for (Field move : moves) {
-                long score = score(move, player);
+                double score = score(move, player);
                 if (score > maxScore) {
                     // Mache keinen Zug, bei dem der Gegner in einem Zug gewinnt
                     Field[] oppenentWinsInOne = WinningInOneMoveChecker.winsInOneMove(move, opponent);
@@ -202,11 +202,11 @@ public enum Backtracker {
         while (depth < maxDepth) {
             Field[] moves = allMoves(state, currentPlayer);
             
-            long maxScore = Long.MIN_VALUE;
+            double maxScore = -Double.MAX_VALUE;
             Field maxMove = moves[0];
             
             for (Field move : moves) {
-                long score = score(move, currentPlayer);
+                double score = score(move, currentPlayer);
                 if (score > maxScore) {
                     maxScore = score;
                     maxMove = move;

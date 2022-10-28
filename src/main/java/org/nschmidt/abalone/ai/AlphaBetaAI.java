@@ -22,18 +22,18 @@ public class AlphaBetaAI {
     }
 
     public Field bestMove(Field board) {
-        alphaBetaPruning(board, player, Long.MIN_VALUE, Long.MAX_VALUE, 0);
+        alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         return bestMove;
     }
 
-    private long alphaBetaPruning(Field board, Player team, long alpha, long beta, int depth) {
+    private double alphaBetaPruning(Field board, Player team, double alpha, double beta, int depth) {
         final boolean maximize = team == player;
 
         if (depth++ == maxDepth) {
             return score(board, team);
         }
         Field[] moves = allMoves(board, team);
-        Arrays.sort(moves, (m1, m2) -> Long.compare(score(m2, team), score(m1, team)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, team), score(m1, team)));
         
         if (maximize) {
             if (WinningChecker.wins(board, team)) {
@@ -42,7 +42,7 @@ public class AlphaBetaAI {
                 
             Field localBestMove = null;
             for (Field move : moves) {
-                long score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                double score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
 
                 if (score > alpha) {
                     alpha = score;
@@ -60,11 +60,11 @@ public class AlphaBetaAI {
             return alpha;
         } else {
             if (WinningChecker.wins(board, team)) {
-                return Long.MIN_VALUE;
+                return -Double.MAX_VALUE;
             }
             
             for (Field move : moves) {
-                long score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                double score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
 
                 if (score < beta) {
                     beta = score;
