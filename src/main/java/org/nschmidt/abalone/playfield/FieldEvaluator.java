@@ -17,6 +17,9 @@ public enum FieldEvaluator {
     
     private static final int[][] FIELD_RINGS = createRingArray();
     
+    private static final double RING_BONUS_FACTOR = calculateRingBonusFactor(FIELD_SIZE);
+    private static final double ADJACENCY_BONUS_FACTOR = calculateAdjacencyBonusFactor(FIELD_SIZE);
+    
     public static double score(Field state, Player player) {
         final Player opponent = player.switchPlayer();
         if (wins(state, opponent)) return -Double.MAX_VALUE;
@@ -24,7 +27,7 @@ public enum FieldEvaluator {
         double bonus = 0;
         
         for (int[] ringIndices : FIELD_RINGS) {
-            bonus += 1;
+            bonus += RING_BONUS_FACTOR;
             for (int i : ringIndices) {
                 if (lookAtField(state, i) == player) {
                     if (isIsolated(state, player, i)) {
@@ -36,12 +39,12 @@ public enum FieldEvaluator {
             }
         }
         
-        score -= MoveDetector.allAttackMoves(state, opponent).length * 10000;
+        score -= MoveDetector.allAttackMoves(state, opponent).length * 10_000;
         if (score >= 0) {
-            if (wins(state, player)) score += 10000;
+            if (wins(state, player)) score += 10_000;
             
             for (int i = 0; i < FIELD_SIZE; i++) {
-                bonus = 1;
+                bonus = ADJACENCY_BONUS_FACTOR;
                 for (int neighbour : adjacency(i)) {
                     if (neighbour != -1 && lookAtField(state, neighbour) == player) {
                         score += bonus;
@@ -52,6 +55,22 @@ public enum FieldEvaluator {
         }
         
         return score;
+    }
+
+    private static double calculateAdjacencyBonusFactor(int fieldSize) {
+        if (fieldSize < 38) {
+            return 1;
+        }
+        
+        return 1;
+    }
+
+    private static double calculateRingBonusFactor(int fieldSize) {
+        if (fieldSize < 38) {
+            return 1;
+        }
+        
+        return 2;
     }
 
     public static boolean isIsolated(Field state, Player player, int i) {
