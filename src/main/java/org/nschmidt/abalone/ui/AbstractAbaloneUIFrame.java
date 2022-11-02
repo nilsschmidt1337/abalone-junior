@@ -196,6 +196,16 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         }
         
         private void resetField() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("Field.of(new Player[]{");
+            sb.append(lookAtField(currentState, 0));
+            for (int i = 1; i < Field.FIELD_SIZE; i++) {
+                sb.append(',');
+                sb.append(lookAtField(currentState, i));
+            }
+            
+            sb.append("})");
+            LOGGER.info(sb.toString());
             currentState = previousState;
             lastColor = null;
             redraw();
