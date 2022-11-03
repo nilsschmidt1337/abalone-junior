@@ -26,6 +26,12 @@ public enum Backtracker {
     private static final Logger LOGGER = LoggerFactory.getLogger(Backtracker.class);
     
     public static Field backtrack(Field state, Player player, int depth) {
+        LOGGER.info("Try to find opening move...");
+        Field openingMove = HardcodedOpenings.findOpeningMove(state, player);
+        if (openingMove != null) {
+            return openingMove;
+        }
+        
         LOGGER.info("Try to find win in one move...");
         final Player opponent = player.switchPlayer();
         Field[] winsInOne = winsInOneMove(state, player);
@@ -40,7 +46,7 @@ public enum Backtracker {
         }
         
         LOGGER.info("Try to find optimum with alpha-beta search...");
-        Field alphaBetaMove =  new AlphaBetaAI(4, player).bestMove(state);
+        Field alphaBetaMove = new AlphaBetaAI(4, player).bestMove(state);
         if (alphaBetaMove != null) {
             return alphaBetaMove;
         }
