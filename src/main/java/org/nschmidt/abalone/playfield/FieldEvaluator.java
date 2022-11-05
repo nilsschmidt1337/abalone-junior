@@ -39,7 +39,30 @@ public enum FieldEvaluator {
             }
         }
         
+        if (FIELD_SIZE > 37) {
+            double opponentScore = 0;
+            bonus = 0;
+            for (int[] ringIndices : FIELD_RINGS) {
+                bonus += RING_BONUS_FACTOR;
+                for (int i : ringIndices) {
+                    if (lookAtField(state, i) == opponent) {
+                        if (isIsolated(state, opponent, i)) {
+                            opponentScore -= 100_000;
+                        }
+                        
+                        opponentScore += bonus;
+                    }
+                }
+            }
+            
+            if (opponentScore > score) {
+                score -= 100_000;
+            }
+        }
+            
         score -= MoveDetector.allAttackMoves(state, opponent).length * 10_000;
+        
+        
         if (score >= 0) {
             if (wins(state, player)) score += 10_000;
             
@@ -70,7 +93,7 @@ public enum FieldEvaluator {
             return 1;
         }
         
-        return 2;
+        return 2000;
     }
 
     public static boolean isIsolated(Field state, Player player, int i) {
