@@ -30,15 +30,15 @@ public enum Backtracker {
     private static final Map<Field, Field> MOVE_CACHE = new HashMap<>();
     
     public static Field backtrack(Field state, Player player, int depth) {
-        LOGGER.info("Try to find a cached move...");
-        if (MOVE_CACHE.containsKey(state)) {
-            return MOVE_CACHE.get(state);
-        }
-        
         LOGGER.info("Try to find opening move...");
         Field openingMove = HardcodedOpenings.findOpeningMove(state, player);
         if (openingMove != null) {
-            return addToCache(state, openingMove);
+            return openingMove;
+        }
+        
+        LOGGER.info("Try to find a cached move...");
+        if (MOVE_CACHE.containsKey(state)) {
+            return MOVE_CACHE.get(state);
         }
         
         LOGGER.info("Try to find win in one move...");
