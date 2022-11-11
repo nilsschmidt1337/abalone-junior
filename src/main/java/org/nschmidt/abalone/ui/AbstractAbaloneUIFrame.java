@@ -24,6 +24,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -42,6 +44,9 @@ abstract class AbstractAbaloneUIFrame extends Frame {
 
     protected GridBagLayout grid = new GridBagLayout();
     protected GridBagConstraints straints = new GridBagConstraints();
+    
+    private transient Deque<Field> previousStates = new LinkedList<>();
+    private transient Deque<Player> previousPlayers = new LinkedList<>();
     
     private transient Field previousState;
     private transient Field[] validMoves;
@@ -62,12 +67,15 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         setLayout(grid);
         addWindowListener(new UIFrameWindowListener());
        
-        // Reset label
+        // Reset Component
         resetComponent = addComponent(0, 0, true, currentPlayer.getColor(), -1);
+        
+        // Undo Component
+        addComponent(1, 0, true, Color.ORANGE, -3);
         
         for (int y = 0; y < FIELD_HEIGHT; y++) {
             for (int x = 0; x < FIELD_WIDTH; x++) {
-                if (x == 0 && y == 0) continue;
+                if (x <= 1 && y == 0) continue;
                 fillGrid(x, y);
             }
         }
@@ -137,7 +145,21 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 return;
             }
             
+            if (index == -3) {
+                if (!previousPlayers.isEmpty()) {
+                    currentPlayer = previousPlayers.pop();
+                    previousState = previousStates.pop();
+                    currentState = previousState;
+                    update(currentState, currentPlayer);
+                }
+                
+                return;
+            }
+            
             if (index == -2) {
+                previousPlayers.push(currentPlayer);
+                previousStates.push(previousState);
+                
                 confirmComponent.setEnabled(false);
                 currentPlayer = currentPlayer.switchPlayer();
                 
@@ -152,6 +174,7 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
+                
                 LOGGER.info("{} Standard-Score: {}", currentPlayer, score(currentState, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
