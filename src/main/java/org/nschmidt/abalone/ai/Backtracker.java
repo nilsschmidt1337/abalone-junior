@@ -9,6 +9,8 @@ import static org.nschmidt.abalone.winning.WinningInThreeMovesChecker.winsInThre
 import static org.nschmidt.abalone.winning.WinningInTwoMovesChecker.winsInTwoMoves;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,36 +27,43 @@ public enum Backtracker {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(Backtracker.class);
     
+    private static final Map<Field, Field> MOVE_CACHE = new HashMap<>();
+    
     public static Field backtrack(Field state, Player player, int depth) {
+        LOGGER.info("Try to find a cached move...");
+        if (MOVE_CACHE.containsKey(state)) {
+            return MOVE_CACHE.get(state);
+        }
+        
         LOGGER.info("Try to find opening move...");
         Field openingMove = HardcodedOpenings.findOpeningMove(state, player);
         if (openingMove != null) {
-            return openingMove;
+            return addToCache(state, openingMove);
         }
         
         LOGGER.info("Try to find win in one move...");
         final Player opponent = player.switchPlayer();
         Field[] winsInOne = winsInOneMove(state, player);
         if (winsInOne.length == 1) {
-            return winsInOne[0];
+            return addToCache(state, winsInOne[0]);
         }
         
         LOGGER.info("Try to find win in two moves...");
         Field[] winsInTwo = winsInTwoMoves(state, player);
         if (winsInTwo.length == 2) {
-            return winsInTwo[0];
+            return addToCache(state, winsInTwo[0]);
         }
         
         LOGGER.info("Try to find optimum with alpha-beta search...");
         Field alphaBetaMove = new AlphaBetaAI(4, player).bestMove(state);
         if (alphaBetaMove != null) {
-            return alphaBetaMove;
+            return addToCache(state, alphaBetaMove);
         }
         
         LOGGER.info("Try to find optimum in two moves...");
         Field[] optimumInThree = OptimisationInTwoMovesChecker.optimisationInTwoMoves(state, player);
         if (optimumInThree.length == 2) {
-            return optimumInThree[0];
+            return addToCache(state, optimumInThree[0]);
         }
         
         
@@ -124,7 +133,7 @@ public enum Backtracker {
                 }
             }
             
-            return maxMove;
+            return addToCache(state, maxMove);
         }
 
         
@@ -203,6 +212,12 @@ public enum Backtracker {
     }
     
     
+    static Field addToCache(Field state, Field response) {
+        MOVE_CACHE.put(state, response);
+        return response;
+    }
+
+
     private static Field playRound(Field state, Player currentPlayer, int maxDepth) {
         int depth = 0;
         while (depth < maxDepth) {
