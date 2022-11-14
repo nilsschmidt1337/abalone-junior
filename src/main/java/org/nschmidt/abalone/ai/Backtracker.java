@@ -54,11 +54,23 @@ public enum Backtracker {
             return addToCache(state, winsInTwo[0]);
         }
         
+        LOGGER.info("Try to find optimum with agressive alpha-beta V2 search...");
+        Field alphaBetaMoveV2 = new AlphaBetaAIV2(6, player).bestMove(state);
+        if (alphaBetaMoveV2 != null && Field.countPieces(alphaBetaMoveV2, opponent) < Field.countPieces(state, opponent)) {
+            return addToCache(state, alphaBetaMoveV2);
+        }
+        
         LOGGER.info("Try to find optimum with alpha-beta search...");
         Field alphaBetaMove = new AlphaBetaAI(4, player).bestMove(state);
         if (alphaBetaMove != null) {
             return addToCache(state, alphaBetaMove);
         }
+        
+        if (alphaBetaMoveV2 != null) {
+            LOGGER.info("Using fallback alpha-beta V2 search...");
+            return addToCache(state, alphaBetaMoveV2);
+        }
+            
         
         LOGGER.info("Try to find optimum in two moves...");
         Field[] optimumInThree = OptimisationInTwoMovesChecker.optimisationInTwoMoves(state, player);

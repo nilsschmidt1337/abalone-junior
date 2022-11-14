@@ -22,7 +22,7 @@ public class Field {
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
     public static final int DIRECTION_COUNT = 6;
-    public static final int PIECE_COUNT_FOR_WIN = 2; 
+    public static final int PIECE_COUNT_FOR_WIN = 5; 
     
     public static final Field EMPTY_FIELD = new Field();
     
