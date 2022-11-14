@@ -190,11 +190,11 @@ abstract class AbstractAbaloneUIFrame extends Frame {
             }
             
             Player player = lookAtField(currentState, index);
-            if (lastColor != null && player == EMPTY) {
+            if (lastColor != null) {
                 player = lastColor;
                 lastColor = null;
                 currentState = populateField(currentState, index, player);
-            } else if (lastColor == null && player != EMPTY) {
+            } else if (player != EMPTY) {
                 lastColor = player;
                 player = EMPTY;
                 currentState = populateField(currentState, index, EMPTY);

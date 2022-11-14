@@ -16,12 +16,13 @@ public class Field {
     
     private static final Player[] NO_PIECES = new Player[0];
     
-    public static final int FIELD_HEIGHT = 7;
+    public static final int FIELD_HEIGHT = 9;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
     public static final Field INITIAL_FIELD = initField(FIELD_HEIGHT);
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
     public static final int DIRECTION_COUNT = 6;
+    public static final int PIECE_COUNT_FOR_WIN = 2; 
     
     public static final Field EMPTY_FIELD = new Field();
     
@@ -121,6 +122,17 @@ public class Field {
         
         final Player result = playerPieces[fieldIndex];
         return result == null ? EMPTY : result;
+    }
+    
+    public static int countPieces(Field state, Player player) {
+        int result = 0;
+        for (Player p : state.playerPiecesOnField) {
+            if (p == player) {
+                result++;
+            }
+        }
+        
+        return result;
     }
     
     public static Field of(Player[] playerPieces) {

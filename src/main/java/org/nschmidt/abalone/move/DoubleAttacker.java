@@ -4,6 +4,7 @@ import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.DIRECTION_COUNT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
+import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.move;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
@@ -51,7 +52,20 @@ enum DoubleAttacker {
         final int[] opponentNeighbourIndices = adjacency(targetForSecondMarbleIndex);
         final int emptyPlaceForOpponentMarbleIndex = opponentNeighbourIndices[dir];
         // Die Richtung hat kein Feld, auf das der Gegner gezogen werden kann:
-        if (emptyPlaceForOpponentMarbleIndex == -1) return 0;
+        if (emptyPlaceForOpponentMarbleIndex == -1) {
+            if (PIECE_COUNT_FOR_WIN > 1) {
+                int lostPieces = PIECE_COUNT - Field.countPieces(state, player.switchPlayer()) + 1;
+                if (lostPieces < PIECE_COUNT_FOR_WIN) {
+                    state = move(state, player, secondMarbleIndex, targetForSecondMarbleIndex);
+                    state = move(state, player, from, secondMarbleIndex);
+                    tempResult[moveCount] = state;
+                    
+                    return 1;
+                }
+            }
+            
+            return 0;
+        }
         final Player emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);
         // Das Feld ist nicht leer
         if (emptyPlaceForOpponentMarble != EMPTY) return 0;

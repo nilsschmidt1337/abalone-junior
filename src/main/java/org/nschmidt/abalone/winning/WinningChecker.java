@@ -2,6 +2,8 @@ package org.nschmidt.abalone.winning;
 
 import static org.nschmidt.abalone.playfield.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
+import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
+import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 
@@ -12,6 +14,14 @@ public enum WinningChecker {
     INSTANCE;
     
     public static boolean wins(Field state, Player player) {
+        if (PIECE_COUNT_FOR_WIN > 1) {
+            Player opponent = player.switchPlayer();
+            int lostPieces = PIECE_COUNT - Field.countPieces(state, opponent) + 1;
+            if (lostPieces < PIECE_COUNT_FOR_WIN) {
+                return false;
+            }
+        }
+        
         for (int i : BORDER_INDICES) {
             final Player borderPiece = lookAtField(state, i);
             final int[] neighbourIndices = adjacency(i);
