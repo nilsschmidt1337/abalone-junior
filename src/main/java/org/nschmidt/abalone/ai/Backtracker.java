@@ -58,6 +58,20 @@ public enum Backtracker {
             return addToCache(state, winsInTwo[0]);
         }
         
+        Field[] moves = allMoves(state, player);
+        Field alphaBetaMoveV2 = null;
+        for (Field move : moves) {
+            if (Field.countPieces(move, opponent) < Field.countPieces(state, opponent)) {
+                LOGGER.info("Try to find optimum with agressive alpha-beta V2 search...");
+                alphaBetaMoveV2 = new AlphaBetaAIV2(6, player).bestMove(state);
+                if (alphaBetaMoveV2 != null && Field.countPieces(alphaBetaMoveV2, opponent) < Field.countPieces(state, opponent)) {
+                    return addToCache(state, alphaBetaMoveV2);
+                }
+                
+                break;
+            }
+        }
+        
         if (PIECE_COUNT_FOR_WIN > 1) {
             int lostPieces = PIECE_COUNT - Field.countPieces(state, opponent) + 1;
             if (lostPieces < PIECE_COUNT_FOR_WIN) {
@@ -72,20 +86,6 @@ public enum Backtracker {
                 if (gainInTwo.length == 2) {
                     return addToCache(state, gainInTwo[0]);
                 }
-            }
-        }
-        
-        Field[] moves = allMoves(state, player);
-        Field alphaBetaMoveV2 = null;
-        for (Field move : moves) {
-            if (Field.countPieces(move, opponent) < Field.countPieces(state, opponent)) {
-                LOGGER.info("Try to find optimum with agressive alpha-beta V2 search...");
-                alphaBetaMoveV2 = new AlphaBetaAIV2(6, player).bestMove(state);
-                if (alphaBetaMoveV2 != null && Field.countPieces(alphaBetaMoveV2, opponent) < Field.countPieces(state, opponent)) {
-                    return addToCache(state, alphaBetaMoveV2);
-                }
-                
-                break;
             }
         }
         
