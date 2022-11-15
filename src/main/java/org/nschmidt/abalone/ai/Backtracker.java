@@ -67,6 +67,14 @@ public enum Backtracker {
                 if (alphaBetaMoveV2 != null && Field.countPieces(alphaBetaMoveV2, opponent) < Field.countPieces(state, opponent)) {
                     return addToCache(state, alphaBetaMoveV2);
                 }
+                Field[] moves2 = allMoves(state, player);
+                Arrays.sort(moves2, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
+                for (Field move2 : moves2) {
+                    if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent)) {
+                        LOGGER.info("Try to find ranked optimum with agressive alpha-beta V2 search...");
+                        return addToCache(state, move2);
+                    }
+                }
                 
                 break;
             }
@@ -177,7 +185,7 @@ public enum Backtracker {
         }
         
         LOGGER.info("Try to find fallback optimum with agressive alpha-beta V2 search...");
-        alphaBetaMoveV2 = new AlphaBetaAIV2(6, player).bestMove(state);
+        alphaBetaMoveV2 = new AlphaBetaAIV2(4, player).bestMove(state);
         if (alphaBetaMoveV2 != null) {
             return addToCache(state, alphaBetaMoveV2);
         }
