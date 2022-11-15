@@ -5,7 +5,7 @@ import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
-import static org.nschmidt.abalone.winning.WinningChecker.wins;
+import static org.nschmidt.abalone.winning.WinningChecker.gainPiece;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,7 +22,7 @@ public enum FieldEvaluator {
     
     public static double score(Field state, Player player) {
         final Player opponent = player.switchPlayer();
-        if (wins(state, opponent)) return -Double.MAX_VALUE;
+        if (gainPiece(state, opponent)) return -Double.MAX_VALUE;
         double score = 0;
         double bonus = 0;
         
@@ -64,7 +64,7 @@ public enum FieldEvaluator {
         
         
         if (score >= 0) {
-            if (wins(state, player)) score += 10_000;
+            if (gainPiece(state, player)) score += 10_000;
             
             for (int i = 0; i < FIELD_SIZE; i++) {
                 bonus = ADJACENCY_BONUS_FACTOR;

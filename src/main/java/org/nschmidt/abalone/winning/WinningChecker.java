@@ -22,6 +22,10 @@ public enum WinningChecker {
             }
         }
         
+        return gainPiece(state, player);
+    }
+    
+    public static boolean gainPiece(Field state, Player player) {
         for (int i : BORDER_INDICES) {
             final Player borderPiece = lookAtField(state, i);
             final int[] neighbourIndices = adjacency(i);
