@@ -4,6 +4,7 @@ import static org.nschmidt.abalone.playfield.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
+import static org.nschmidt.abalone.playfield.Field.countPieces;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.winning.WinningChecker.gainPiece;
 
@@ -61,7 +62,7 @@ public enum FieldEvaluator {
         }
             
         score -= MoveDetector.allAttackMoves(state, opponent).length * 10_000;
-        
+        score -= (countPieces(state, opponent) - countPieces(state, player)) * 10_000;
         
         if (score >= 0) {
             if (gainPiece(state, player)) score += 10_000;
