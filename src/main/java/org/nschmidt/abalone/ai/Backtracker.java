@@ -70,7 +70,7 @@ public enum Backtracker {
                 Field[] moves2 = allMoves(state, player);
                 Arrays.sort(moves2, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
-                    if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent)) {
+                    if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
                         LOGGER.info("Try to find ranked optimum with agressive alpha-beta V2 search...");
                         return addToCache(state, move2);
                     }
