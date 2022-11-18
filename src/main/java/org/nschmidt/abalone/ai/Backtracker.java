@@ -23,6 +23,7 @@ import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
+import org.nschmidt.abalone.winning.WinningChecker;
 import org.nschmidt.abalone.winning.WinningInOneMoveChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,18 +47,22 @@ public enum Backtracker {
             return MOVE_CACHE.get(state);
         }
         
-        LOGGER.info("Try to find win in one move...");
-        final Player opponent = player.switchPlayer();
-        Field[] winsInOne = winsInOneMove(state, player);
-        if (winsInOne.length == 1) {
-            return addToCache(state, winsInOne[0]);
+        
+        if (WinningChecker.canWin(state, player)) {
+            LOGGER.info("Try to find win in one move...");
+            Field[] winsInOne = winsInOneMove(state, player);
+            if (winsInOne.length == 1) {
+                return addToCache(state, winsInOne[0]);
+            }
+            
+            LOGGER.info("Try to find win in two moves...");
+            Field[] winsInTwo = winsInTwoMoves(state, player);
+            if (winsInTwo.length == 2) {
+                return addToCache(state, winsInTwo[0]);
+            }
         }
         
-        LOGGER.info("Try to find win in two moves...");
-        Field[] winsInTwo = winsInTwoMoves(state, player);
-        if (winsInTwo.length == 2) {
-            return addToCache(state, winsInTwo[0]);
-        }
+        final Player opponent = player.switchPlayer();
         
         Field[] moves = allMoves(state, player);
         Field alphaBetaMoveV2 = null;

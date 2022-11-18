@@ -13,13 +13,21 @@ import org.nschmidt.abalone.playfield.Player;
 public enum WinningChecker {
     INSTANCE;
     
-    public static boolean wins(Field state, Player player) {
+    public static boolean canWin(Field state, Player player) {
         if (PIECE_COUNT_FOR_WIN > 1) {
             Player opponent = player.switchPlayer();
             int lostPieces = PIECE_COUNT - Field.countPieces(state, opponent) + 1;
             if (lostPieces < PIECE_COUNT_FOR_WIN) {
                 return false;
             }
+        }
+        
+        return true;
+    }
+    
+    public static boolean wins(Field state, Player player) {
+        if (!canWin(state, player)) {
+            return false;
         }
         
         return gainPiece(state, player);
