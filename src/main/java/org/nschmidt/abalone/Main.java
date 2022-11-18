@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.nschmidt.abalone.ai.Backtracker;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 import org.slf4j.Logger;
@@ -70,7 +71,8 @@ public class Main {
         Field state;
         state = INITIAL_FIELD;
         int moveCount = 0;
-        while (moveCount < 100) {
+        Backtracker.clearCache();
+        while (moveCount < 200) {
             moveCount += 1;
             double currentScore = score(state, currentPlayer);
             Field[] moves = allMoves(state, currentPlayer);
@@ -79,7 +81,7 @@ public class Main {
             double maxScore = -Double.MAX_VALUE;
             Field maxMove = randomMove;
             
-            if (currentPlayer == WHITE) {
+            if (currentPlayer == WHITE || currentPlayer == BLACK) {
                 maxMove = backtrack(state, currentPlayer, 10);
             } else if (currentScore == -Double.MAX_VALUE) {
                 for (Field move : moves) {
@@ -107,7 +109,10 @@ public class Main {
             if (wins(state, currentPlayer)) break;
         }
         
-        if (moveCount == 100) {
+        LOGGER.info("Pieces {} {}", WHITE, Field.countPieces(state, WHITE));
+        LOGGER.info("Pieces {} {}", BLACK, Field.countPieces(state, BLACK));
+        
+        if (moveCount == 200) {
             return 0;
         }
         

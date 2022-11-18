@@ -99,6 +99,14 @@ public enum Backtracker {
         }
         
         if (FIELD_SIZE > 37) {
+            if (player == Player.WHITE) {
+                LOGGER.info("Try to find optimum with next gen AI (alpha-beta)...");
+                Field nextGenMove = new NextGenAlphaBetaAI(4, player).bestMove(state);
+                if (nextGenMove != null) {
+                    return addToCache(state, nextGenMove);
+                }
+            }
+            
             LOGGER.info("Try to find optimum with next gen AI...");
             Field nextGenMove = getBestMove(state, player);
             if (nextGenMove != null) {
@@ -304,5 +312,9 @@ public enum Backtracker {
         }
         
         return state;
+    }
+    
+    public static void clearCache() {
+        MOVE_CACHE.clear();
     }
 }

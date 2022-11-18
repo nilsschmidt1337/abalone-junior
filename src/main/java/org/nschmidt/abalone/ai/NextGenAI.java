@@ -180,7 +180,7 @@ public enum NextGenAI {
         return  moves[0];
     }
 
-    private static int evalGameField(Field state, Player currentPlayer) {
+    public static int evalGameField(Field state, Player currentPlayer) {
         populateGameField(state);
         int checkCurrentPlayer = currentPlayer.getNumber() - 1;
         int ii = 0;
