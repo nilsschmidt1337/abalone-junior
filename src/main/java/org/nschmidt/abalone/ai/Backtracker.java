@@ -56,20 +56,19 @@ public enum Backtracker {
         
         final Player opponent = player.switchPlayer();
         
-        Field[] moves = allMoves(state, player);
-        Field alphaBetaMoveV2 = null;
+        final Field[] moves = allMoves(state, player);
         for (Field move : moves) {
             if (Field.countPieces(move, opponent) < Field.countPieces(state, opponent)) {
-                LOGGER.info("Try to find optimum with agressive alpha-beta V2 search...");
-                alphaBetaMoveV2 = new AlphaBetaAIV2(6, player).bestMove(state);
-                if (alphaBetaMoveV2 != null && Field.countPieces(alphaBetaMoveV2, opponent) < Field.countPieces(state, opponent)) {
-                    return addToCache(state, alphaBetaMoveV2);
+                LOGGER.info("Try to find optimum with aggressive alpha-beta V2 search...");
+                Field aggressiveMove = new AggressiveAlphaBetaAI(6, player).bestMove(state);
+                if (aggressiveMove != null && Field.countPieces(aggressiveMove, opponent) < Field.countPieces(state, opponent)) {
+                    return addToCache(state, aggressiveMove);
                 }
                 Field[] moves2 = allMoves(state, player);
                 Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
                     if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
-                        LOGGER.info("Try to find ranked optimum (agressive)");
+                        LOGGER.info("Try to find ranked optimum (aggressive)");
                         return addToCache(state, move2);
                     }
                 }

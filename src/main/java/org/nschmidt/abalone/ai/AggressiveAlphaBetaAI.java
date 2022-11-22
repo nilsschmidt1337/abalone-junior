@@ -8,13 +8,13 @@ import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.winning.WinningChecker;
 
-public class AlphaBetaAIV2 {
+public class AggressiveAlphaBetaAI {
 
     private final int maxDepth;
     private final Player player;
     private Field bestMove;
 
-    public AlphaBetaAIV2(int maxDepth, Player player) {
+    public AggressiveAlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
         this.bestMove = null;
         this.player = player;
