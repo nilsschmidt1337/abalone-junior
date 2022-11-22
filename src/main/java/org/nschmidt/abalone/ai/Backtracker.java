@@ -4,7 +4,7 @@ import static org.nschmidt.abalone.ai.NextGenAI.bestMove;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
-import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;
 import static org.nschmidt.abalone.winning.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.winning.WinningInTwoMovesChecker.winsInTwoMoves;
@@ -66,10 +66,10 @@ public enum Backtracker {
                     return addToCache(state, alphaBetaMoveV2);
                 }
                 Field[] moves2 = allMoves(state, player);
-                Arrays.sort(moves2, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
+                Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
                     if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
-                        LOGGER.info("Try to find ranked optimum with agressive alpha-beta V2 search...");
+                        LOGGER.info("Try to find ranked optimum (agressive)");
                         return addToCache(state, move2);
                     }
                 }

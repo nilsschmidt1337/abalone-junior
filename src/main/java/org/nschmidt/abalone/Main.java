@@ -5,7 +5,7 @@ import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Adjacency.BORDER_INDICES;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
 import static org.nschmidt.abalone.playfield.Field.populateField;
-import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
 import static org.nschmidt.abalone.playfield.Player.BLACK;
 import static org.nschmidt.abalone.playfield.Player.WHITE;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;

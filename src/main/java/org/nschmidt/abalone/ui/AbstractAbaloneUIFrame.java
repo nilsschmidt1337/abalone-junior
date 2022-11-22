@@ -6,7 +6,7 @@ import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.populateField;
-import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;
 
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.nschmidt.abalone.playfield.Field;
-import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,8 +217,8 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         }
         
         private void resetField() {
-            LOGGER.info("Score: {} {}", Player.WHITE, FieldEvaluator.score(currentState, Player.WHITE));
-            LOGGER.info("Score: {} {}", Player.BLACK, FieldEvaluator.score(currentState, Player.BLACK));
+            LOGGER.info("Score: {} {}", Player.WHITE, score(currentState, Player.WHITE));
+            LOGGER.info("Score: {} {}", Player.BLACK, score(currentState, Player.BLACK));
             final StringBuilder sb = new StringBuilder();
             sb.append("Field.of(new Player[]{");
             sb.append(lookAtField(currentState, 0));
