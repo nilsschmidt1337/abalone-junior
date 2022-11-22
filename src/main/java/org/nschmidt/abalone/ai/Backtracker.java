@@ -1,6 +1,6 @@
 package org.nschmidt.abalone.ai;
 
-import static org.nschmidt.abalone.ai.NextGenAI.getBestMove;
+import static org.nschmidt.abalone.ai.NextGenAI.bestMove;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
@@ -104,7 +104,7 @@ public enum Backtracker {
         }
         
         if (FIELD_SIZE > 37) {
-            if (player == Player.WHITE) {
+            if (player == Player.BLACK) {
                 LOGGER.info("Try to find optimum with next gen AI (alpha-beta)...");
                 Field nextGenMove = new NextGenAlphaBetaAI(4, player).bestMove(state);
                 if (nextGenMove != null) {
@@ -113,7 +113,7 @@ public enum Backtracker {
             }
             
             LOGGER.info("Try to find optimum with next gen AI...");
-            Field nextGenMove = getBestMove(state, player);
+            Field nextGenMove = bestMove(state, player);
             if (nextGenMove != null) {
                 return addToCache(state, nextGenMove);
             }

@@ -1,7 +1,7 @@
 package org.nschmidt.abalone.playfield;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.nschmidt.abalone.ai.NextGenAI.evalGameField;
+import static org.nschmidt.abalone.ai.NextGenAIOld.evalGameField;
 import static org.nschmidt.abalone.playfield.Field.EMPTY_FIELD;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;

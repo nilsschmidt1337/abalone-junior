@@ -1,7 +1,7 @@
 package org.nschmidt.abalone.ai;
 
-import static org.nschmidt.abalone.ai.NextGenAI.evalGameField;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
+import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
 
 import java.util.Arrays;
 
@@ -29,10 +29,10 @@ public class NextGenAlphaBetaAI {
         final boolean maximize = team == player;
 
         if (depth++ == maxDepth) {
-            return evalGameField(board, team);
+            return score(board, team);
         }
         Field[] moves = allMoves(board, team);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(evalGameField(m2, team), evalGameField(m1, team)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, team), score(m1, team)));
         
         if (maximize) {
             Field localBestMove = null;
