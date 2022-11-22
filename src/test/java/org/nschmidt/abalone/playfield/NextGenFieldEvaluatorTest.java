@@ -51,10 +51,27 @@ class NextGenFieldEvaluatorTest {
     }
     
     @Test
-    void testScoreOfRandomField() {
+    void testScoreOfRandomHighPopulationField() {
         for (int k = 0; k < 100000; k++) {
             Field randomField = EMPTY_FIELD;
             for (int i = 0; i < 96; i++) {
+                if (RND.nextBoolean()) {
+                    randomField = populateField(randomField, RND.nextInt(FIELD_SIZE), WHITE);
+                } else {
+                    randomField = populateField(randomField, RND.nextInt(FIELD_SIZE), BLACK);
+                }
+            }
+            
+            assertEquals(evalGameField(randomField, WHITE), score(randomField, WHITE));
+            assertEquals(evalGameField(randomField, BLACK), score(randomField, BLACK));
+        }
+    }
+    
+    @Test
+    void testScoreOfRandomLowPopulationField() {
+        for (int k = 0; k < 1000; k++) {
+            Field randomField = EMPTY_FIELD;
+            for (int i = 0; i < 32; i++) {
                 if (RND.nextBoolean()) {
                     randomField = populateField(randomField, RND.nextInt(FIELD_SIZE), WHITE);
                 } else {
