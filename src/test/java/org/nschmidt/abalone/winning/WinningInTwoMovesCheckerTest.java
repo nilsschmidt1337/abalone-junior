@@ -39,7 +39,7 @@ class WinningInTwoMovesCheckerTest {
     
     @Test
     void testWinsInTwo() {
-        Field start = Field.of(new Player[] {EMPTY, BLACK, BLACK, BLACK, WHITE, BLACK, EMPTY, BLACK, BLACK, BLACK, EMPTY, EMPTY, EMPTY, null, null, EMPTY, EMPTY, BLACK, BLACK, null, null, null, EMPTY, null, null, null, null, null, EMPTY, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE});
+        Field start = Field.of(new Player[] {EMPTY, BLACK, BLACK, BLACK, WHITE, BLACK, EMPTY, BLACK, BLACK, BLACK, EMPTY, EMPTY, EMPTY, null, null, EMPTY, EMPTY, BLACK, BLACK, null, null, null, EMPTY, null, null, null, null, null, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY});
         Field[] result = winsInTwoMoves(start, BLACK);
         assertEquals(2, result.length);
     }
