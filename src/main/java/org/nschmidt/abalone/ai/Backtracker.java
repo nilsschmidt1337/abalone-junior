@@ -4,7 +4,7 @@ import static org.nschmidt.abalone.ai.NextGenAI.bestMove;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
-import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;
 import static org.nschmidt.abalone.winning.WinningInOneMoveChecker.winsInOneMove;
 import static org.nschmidt.abalone.winning.WinningInTwoMovesChecker.winsInTwoMoves;

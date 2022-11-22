@@ -1,7 +1,7 @@
 package org.nschmidt.abalone.ai;
 
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
-import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
 
 import java.util.Arrays;
 

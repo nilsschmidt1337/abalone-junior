@@ -6,7 +6,7 @@ import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.populateField;
-import static org.nschmidt.abalone.playfield.NextGenFieldEvaluator.score;
+import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;
 
