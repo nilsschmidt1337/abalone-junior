@@ -9,20 +9,16 @@ class AdjacencyTest {
 
     @Test
     void testAdjacencyForNegativeIndex() {
-        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
             adjacency(-1)
         );
-        
-        assertEquals("Index -1 out of bounds for length 37", ex.getMessage());
     }
 
     @Test
     void testAdjacencyForOffByOneIndex() {
-        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
             adjacency(38)
         );
-        
-        assertEquals("Index 38 out of bounds for length 37", ex.getMessage());
     }
     
     @Test
