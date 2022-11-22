@@ -8,7 +8,6 @@ import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
 import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
 import static org.nschmidt.abalone.winning.WinningChecker.wins;
 import static org.nschmidt.abalone.winning.WinningInOneMoveChecker.winsInOneMove;
-import static org.nschmidt.abalone.winning.WinningInThreeMovesChecker.winsInThreeMoves;
 import static org.nschmidt.abalone.winning.WinningInTwoMovesChecker.winsInTwoMoves;
 import static org.nschmidt.abalone.winning.GainPieceInOneMoveChecker.gainPieceInOneMove;
 import static org.nschmidt.abalone.winning.GainPieceInTwoMovesChecker.gainPieceInTwoMoves;
@@ -249,11 +248,6 @@ public enum Backtracker {
                 // Mache keinen Zug, bei dem der Gegner in zwei Zügen gewinnt
                 Field[] oppenentWinsInTwo = winsInTwoMoves(move, opponent);
                 if (oppenentWinsInTwo.length == 2) {
-                    continue;
-                }
-                // Mache keinen Zug, bei dem der Gegner in drei Zügen gewinnt
-                Field[] oppenentWinsInThree = winsInThreeMoves(move, opponent);
-                if (oppenentWinsInThree.length == 3) {
                     continue;
                 }
                 
