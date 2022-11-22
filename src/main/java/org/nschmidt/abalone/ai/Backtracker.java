@@ -1,6 +1,6 @@
 package org.nschmidt.abalone.ai;
 
-import static org.nschmidt.abalone.ai.NextGenAI.bestMove;
+import static org.nschmidt.abalone.ai.AI.bestMove;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
@@ -27,7 +27,7 @@ public enum Backtracker {
     
     private static final Map<Field, Field> MOVE_CACHE = new HashMap<>();
     
-    public static Field backtrack(Field state, Player player, int depth) {
+    public static Field backtrack(Field state, Player player) {
         LOGGER.info("Try to find opening move...");
         Field openingMove = HardcodedOpenings.findOpeningMove(state, player);
         if (openingMove != null) {
@@ -68,7 +68,7 @@ public enum Backtracker {
                 Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
                     if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
-                        LOGGER.info("Try to find ranked optimum (aggressive)");
+                        LOGGER.info("Try to find ranked optimum (aggressive)...");
                         return addToCache(state, move2);
                     }
                 }
@@ -95,14 +95,14 @@ public enum Backtracker {
         }
         
         if (player == Player.BLACK) {
-            LOGGER.info("Try to find optimum with next gen AI (alpha-beta)...");
-            Field nextGenMove = new NextGenAlphaBetaAI(4, player).bestMove(state);
+            LOGGER.info("Try to find optimum with AI (alpha-beta)...");
+            Field nextGenMove = new AlphaBetaAI(4, player).bestMove(state);
             if (nextGenMove != null) {
                 return addToCache(state, nextGenMove);
             }
         }
         
-        LOGGER.info("Try to find optimum with next gen AI...");
+        LOGGER.info("Try to find optimum with AI...");
         Field nextGenMove = bestMove(state, player);
         return addToCache(state, nextGenMove);
     }

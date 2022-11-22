@@ -82,7 +82,7 @@ public class Main {
             Field maxMove = randomMove;
             
             if (currentPlayer == WHITE || currentPlayer == BLACK) {
-                maxMove = backtrack(state, currentPlayer, 10);
+                maxMove = backtrack(state, currentPlayer);
             } else if (currentScore == -Double.MAX_VALUE) {
                 for (Field move : moves) {
                     double score = score(move, currentPlayer);

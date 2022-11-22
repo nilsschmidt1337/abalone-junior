@@ -8,13 +8,13 @@ import java.util.Arrays;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
-public class NextGenAlphaBetaAI {
+public class AlphaBetaAI {
 
     private final int maxDepth;
     private final Player player;
     private Field bestMove;
 
-    public NextGenAlphaBetaAI(int maxDepth, Player player) {
+    public AlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
         this.bestMove = null;
         this.player = player;

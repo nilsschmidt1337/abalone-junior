@@ -15,7 +15,7 @@ class BacktrackerTest {
 
     @Test
     void testBacktrack() {
-        Field result = backtrack(INITIAL_FIELD, WHITE, 10);
+        Field result = backtrack(INITIAL_FIELD, WHITE);
         
         if (Field.FIELD_SIZE > 37) {
             assertEquals(Field.of(new Player[] {WHITE, WHITE, null, BLACK, BLACK, WHITE, WHITE, WHITE, BLACK, BLACK, BLACK, null, WHITE, WHITE, null, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, null, null, null, null, BLACK, BLACK, null, WHITE, WHITE, null, BLACK, BLACK, BLACK, WHITE, WHITE, WHITE, BLACK, BLACK, null, WHITE, EMPTY}), result);

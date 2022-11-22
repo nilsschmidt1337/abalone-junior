@@ -9,7 +9,7 @@ import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
-public enum NextGenAI {
+public enum AI {
     INSTANCE;
     
     private static final Random RND = new Random(1337L);

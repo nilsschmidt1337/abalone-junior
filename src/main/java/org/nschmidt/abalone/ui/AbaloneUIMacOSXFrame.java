@@ -1,6 +1,5 @@
 package org.nschmidt.abalone.ui;
 
-import static org.nschmidt.abalone.ai.Backtracker.backtrack;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
@@ -11,6 +10,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.Label;
 
+import org.nschmidt.abalone.ai.Backtracker;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
 
@@ -63,7 +63,7 @@ public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
     public static void main(String[] args) 
     {
       AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, WHITE);
-      frame.setArtificialIntelligence((state, player) -> backtrack(state, player, 10));
+      frame.setArtificialIntelligence(Backtracker::backtrack);
       frame.waitOnResult();
     }
 }
