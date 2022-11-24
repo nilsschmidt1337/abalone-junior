@@ -25,7 +25,8 @@ public enum Backtracker {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(Backtracker.class);
     
-    private static final Map<Field, Field> MOVE_CACHE = new HashMap<>();
+    private static final Map<Field, Field> MOVE_CACHE_BLACK = new HashMap<>();
+    private static final Map<Field, Field> MOVE_CACHE_WHITE = new HashMap<>();
     
     public static Field backtrack(Field state, Player player) {
         LOGGER.info("Try to find opening move...");
@@ -35,8 +36,10 @@ public enum Backtracker {
         }
         
         LOGGER.info("Try to find a cached move...");
-        if (MOVE_CACHE.containsKey(state)) {
-            return MOVE_CACHE.get(state);
+        if (player == Player.WHITE && MOVE_CACHE_WHITE.containsKey(state)) {
+            return MOVE_CACHE_WHITE.get(state);
+        } else if (player == Player.BLACK && MOVE_CACHE_BLACK.containsKey(state)) {
+            return MOVE_CACHE_BLACK.get(state);
         }
         
         
@@ -44,13 +47,13 @@ public enum Backtracker {
             LOGGER.info("Try to find win in one move...");
             Field[] winsInOne = winsInOneMove(state, player);
             if (winsInOne.length == 1) {
-                return addToCache(state, winsInOne[0]);
+                return addToCache(player, state, winsInOne[0]);
             }
             
             LOGGER.info("Try to find win in two moves...");
             Field[] winsInTwo = winsInTwoMoves(state, player);
             if (winsInTwo.length == 2) {
-                return addToCache(state, winsInTwo[0]);
+                return addToCache(player, state, winsInTwo[0]);
             }
         }
         
@@ -62,14 +65,14 @@ public enum Backtracker {
                 LOGGER.info("Try to find optimum with aggressive alpha-beta V2 search...");
                 Field aggressiveMove = new AggressiveAlphaBetaAI(6, player).bestMove(state);
                 if (aggressiveMove != null && Field.countPieces(aggressiveMove, opponent) < Field.countPieces(state, opponent)) {
-                    return addToCache(state, aggressiveMove);
+                    return addToCache(player, state, aggressiveMove);
                 }
                 Field[] moves2 = allMoves(state, player);
                 Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
                     if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
                         LOGGER.info("Try to find ranked optimum (aggressive)...");
-                        return addToCache(state, move2);
+                        return addToCache(player, state, move2);
                     }
                 }
                 
@@ -83,13 +86,13 @@ public enum Backtracker {
                 LOGGER.info("Try to gain piece in one move...");
                 Field[] gainInOne = gainPieceInOneMove(state, player);
                 if (gainInOne.length == 1) {
-                    return addToCache(state, gainInOne[0]);
+                    return addToCache(player, state, gainInOne[0]);
                 }
                 
                 LOGGER.info("Try to gain piece in two moves...");
                 Field[] gainInTwo = gainPieceInTwoMoves(state, player);
                 if (gainInTwo.length == 2) {
-                    return addToCache(state, gainInTwo[0]);
+                    return addToCache(player, state, gainInTwo[0]);
                 }
             }
         }
@@ -98,22 +101,28 @@ public enum Backtracker {
             LOGGER.info("Try to find optimum with AI (alpha-beta)...");
             Field nextGenMove = new AlphaBetaAI(4, player).bestMove(state);
             if (nextGenMove != null) {
-                return addToCache(state, nextGenMove);
+                return addToCache(player, state, nextGenMove);
             }
         }
         
         LOGGER.info("Try to find optimum with AI...");
         Field nextGenMove = bestMove(state, player);
-        return addToCache(state, nextGenMove);
+        return addToCache(player, state, nextGenMove);
     }
     
     
-    static Field addToCache(Field state, Field response) {
-        MOVE_CACHE.put(state, response);
+    static Field addToCache(Player player, Field state, Field response) {
+        if (player == Player.WHITE) {
+            MOVE_CACHE_WHITE.put(state, response);
+        } else if (player == Player.BLACK) {
+            MOVE_CACHE_BLACK.put(state, response);
+        }
+        
         return response;
     }
     
     public static void clearCache() {
-        MOVE_CACHE.clear();
+        MOVE_CACHE_WHITE.clear();
+        MOVE_CACHE_BLACK.clear();
     }
 }
