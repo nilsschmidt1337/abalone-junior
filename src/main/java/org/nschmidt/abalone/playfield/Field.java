@@ -18,9 +18,9 @@ public class Field {
     
     public static final int FIELD_HEIGHT = 7;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
-    public static final Field INITIAL_FIELD = initField(FIELD_HEIGHT);
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
+    public static final Field INITIAL_FIELD = initField(FIELD_HEIGHT);
     public static final int DIRECTION_COUNT = 6;
     public static final int PIECE_COUNT_FOR_WIN = 5; 
     
@@ -45,39 +45,21 @@ public class Field {
         return state;
     }
     
+    private static Field populateInDaisyFormation(Field state, int pos, Player player) {
+        state = populateField(state,  pos, player);
+        for (int i : Adjacency.adjacency(pos)) {
+            state = populateField(state,  i, player);
+        }
+        
+        return state;
+    }
+    
     private static Field initStandardField() {
         Field state = new Field();
-        state = populateField(state,  0, WHITE);
-        state = populateField(state,  1, WHITE);
-        state = populateField(state,  5, WHITE);
-        state = populateField(state,  6, WHITE);
-        state = populateField(state,  7, WHITE);
-        state = populateField(state, 12, WHITE);
-        state = populateField(state, 13, WHITE);
-        
-        state = populateField(state,  3, BLACK);
-        state = populateField(state,  4, BLACK);
-        state = populateField(state,  8, BLACK);
-        state = populateField(state,  9, BLACK);
-        state = populateField(state, 10, BLACK);
-        state = populateField(state, 15, BLACK);
-        state = populateField(state, 16, BLACK);
-        
-        state = populateField(state, 44, BLACK);
-        state = populateField(state, 45, BLACK);
-        state = populateField(state, 50, BLACK);
-        state = populateField(state, 51, BLACK);
-        state = populateField(state, 52, BLACK);
-        state = populateField(state, 56, BLACK);
-        state = populateField(state, 57, BLACK);
-        
-        state = populateField(state, 47, WHITE);
-        state = populateField(state, 48, WHITE);
-        state = populateField(state, 53, WHITE);
-        state = populateField(state, 54, WHITE);
-        state = populateField(state, 55, WHITE);
-        state = populateField(state, 59, WHITE);
-        state = populateField(state, 60, WHITE);
+        state = populateInDaisyFormation(state,  6, WHITE);
+        state = populateInDaisyFormation(state,  9, BLACK);
+        state = populateInDaisyFormation(state, 51, BLACK);
+        state = populateInDaisyFormation(state, 54, WHITE);
         
         return state;
     }
