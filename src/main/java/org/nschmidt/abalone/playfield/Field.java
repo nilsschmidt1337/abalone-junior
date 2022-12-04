@@ -4,17 +4,16 @@ import static org.nschmidt.abalone.playfield.Player.BLACK;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import static org.nschmidt.abalone.playfield.Player.WHITE;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 public class Field {
     
-    private Player[] playerPiecesOnField = NO_PIECES;
+    private long black = 0L;
+    private long white = 0L;
     
     private Field() {
         // Hidden constructor
     }
-    
-    private static final Player[] NO_PIECES = new Player[0];
     
     public static final int FIELD_HEIGHT = 7;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
@@ -84,11 +83,20 @@ public class Field {
 
     public static Field populateField(Field state, int fieldIndex, Player player) {
         Field result = new Field();
-        Player[] playerPieces = state.playerPiecesOnField;
-        Player[] newPlayerPiecesOnField = new Player[Math.max(playerPieces.length, fieldIndex + 1)];
-        System.arraycopy(playerPieces, 0, newPlayerPiecesOnField, 0, playerPieces.length);
-        newPlayerPiecesOnField[fieldIndex] = player;
-        result.playerPiecesOnField = newPlayerPiecesOnField;
+        long op = 1L << fieldIndex;
+        long opNeg = ~op;
+        if (player == WHITE) {
+            result.white = state.white | op;
+            result.black = state.black & opNeg;
+        } else if (player == BLACK) {
+            result.black = state.black | op;
+            result.white = state.white & opNeg;
+        } else {
+            result.white = state.white & opNeg;
+            result.black = state.black & opNeg;
+        }
+        
+        
         return result;
     }
     
@@ -97,19 +105,17 @@ public class Field {
     }
     
     public static Player lookAtField(Field state, int fieldIndex) {
-        Player[] playerPieces = state.playerPiecesOnField;
-        if (fieldIndex >= playerPieces.length) {
-            return EMPTY;
-        }
-        
-        final Player result = playerPieces[fieldIndex];
-        return result == null ? EMPTY : result;
+        long opWhite = (1L << fieldIndex) & state.white;
+        if (opWhite > 0) return WHITE;
+        long opBlack = (1L << fieldIndex) & state.black;
+        if (opBlack > 0) return BLACK;
+        return EMPTY;
     }
     
     public static int countPieces(Field state, Player player) {
         int result = 0;
-        for (Player p : state.playerPiecesOnField) {
-            if (p == player) {
+        for (int i = 0; i < 64; i++) {
+            if (lookAtField(state, i) == player) {
                 result++;
             }
         }
@@ -119,13 +125,16 @@ public class Field {
     
     public static Field of(Player[] playerPieces) {
         Field result = new Field();
-        result.playerPiecesOnField = playerPieces;
+        for (int i = 0; i < playerPieces.length; i++) {
+            Player player = playerPieces[i];
+            result = populateField(result, i, player);
+        }
         return result;
     }
     
     @Override
     public String toString() {
-        if (playerPiecesOnField.length < 38) {
+        if (FIELD_SIZE < 38) {
             return FieldPrinter.buildJuniorFieldDeltaString(this, this);
         } else {
             return FieldPrinter.buildStandardFieldDeltaString(this, this);
@@ -134,12 +143,12 @@ public class Field {
     
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Field other) && Arrays.equals(playerPiecesOnField, other.playerPiecesOnField);
+        return (obj instanceof Field other) && white == other.white && black == other.black;
     }
     
     @Override
     public int hashCode() {
-        return Arrays.hashCode(playerPiecesOnField);
+        return Objects.hash(white, black);
     }
     
     public void printField() {
@@ -147,7 +156,7 @@ public class Field {
     }
     
     public void printFieldDelta(Field previousState) {
-        if (playerPiecesOnField.length < 38) {
+        if (FIELD_SIZE < 38) {
             FieldPrinter.printField(FieldPrinter.buildJuniorFieldDeltaString(this, previousState));
         } else {
             FieldPrinter.printField(FieldPrinter.buildStandardFieldDeltaString(this, previousState));

@@ -40,11 +40,8 @@ class FieldTest {
     
     @Test
     void testLookAtFieldForNegativeIndex() {
-        Throwable ex = assertThrows(ArrayIndexOutOfBoundsException.class, () -> 
-            lookAtField(INITIAL_FIELD, -1)
-        );
-        
-        assertEquals("Index -1 out of bounds for length 37", ex.getMessage());
+        final Player playerOutOfBounds = lookAtField(INITIAL_FIELD, -1);
+        assertEquals(EMPTY, playerOutOfBounds);
     }
 
     @Test
