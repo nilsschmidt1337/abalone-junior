@@ -4,6 +4,8 @@ import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Adjacency.indexAt;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
+import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
+import static org.nschmidt.abalone.playfield.Field.countPieces;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.populateField;
 import static org.nschmidt.abalone.playfield.FieldEvaluator.score;
@@ -39,6 +41,8 @@ abstract class AbstractAbaloneUIFrame extends Frame {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAbaloneUIFrame.class);
 
     private static final String ABALONE_JUNIOR_PLAYER_WINS = "Abalone Junior - Player %s wins!";
+    
+    private static final String ABALONE_JUNIOR_SCORE = "Abalone Junior - Score [%s %s | %s %s]";
 
     private static final long serialVersionUID = 1L;
 
@@ -94,7 +98,9 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         if (wins(state, currentPlayer)) {
             setTitle(String.format(ABALONE_JUNIOR_PLAYER_WINS, currentPlayer));
         } else {
-            setTitle("Abalone Junior");
+            setTitle(String.format(ABALONE_JUNIOR_SCORE, 
+                                   Player.WHITE, PIECE_COUNT - countPieces(state, Player.BLACK),
+                                   Player.BLACK, PIECE_COUNT - countPieces(state, Player.WHITE)));
         }
     }
 
