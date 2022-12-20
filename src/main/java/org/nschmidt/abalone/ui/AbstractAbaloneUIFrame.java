@@ -173,8 +173,8 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                 LOGGER.info("{} Standard-Score: {}", currentPlayer.switchPlayer(), score(currentState, currentPlayer.switchPlayer()));
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
+                setTitle("Waiting for move...");
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
-                
                 LOGGER.info("{} Standard-Score: {}", currentPlayer, score(currentState, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
