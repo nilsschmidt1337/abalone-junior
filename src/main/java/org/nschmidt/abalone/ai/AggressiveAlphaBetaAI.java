@@ -3,6 +3,7 @@ package org.nschmidt.abalone.ai;
 import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
@@ -32,6 +33,7 @@ public class AggressiveAlphaBetaAI {
             return score(board, team);
         }
         Field[] moves = allMoves(board, team);
+        moves = new HashSet<>(Arrays.asList(moves)).toArray(new Field[0]);
         Arrays.sort(moves, (m1, m2) -> Integer.compare(score(m2, team), score(m1, team)));
         
         if (maximize) {

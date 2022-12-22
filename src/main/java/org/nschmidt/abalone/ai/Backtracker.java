@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.Player;
+import org.nschmidt.abalone.winning.GainPieceInThreeMovesChecker;
 import org.nschmidt.abalone.winning.WinningChecker;
+import org.nschmidt.abalone.winning.WinningInOneMoveChecker;
+import org.nschmidt.abalone.winning.WinningInTwoMovesChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +58,14 @@ public enum Backtracker {
             if (winsInTwo.length == 2) {
                 return addToCache(player, state, winsInTwo[0]);
             }
+            
+            if (player == Player.BLACK) {
+                LOGGER.info("Try to gain piece in three moves...");
+                Field[] gainInThree = GainPieceInThreeMovesChecker.gainPieceInThreeMoves(state, player);
+                if (gainInThree.length == 3) {
+                    return addToCache(player, state, gainInThree[0]);
+                }
+            }
         }
         
         final Player opponent = player.switchPlayer();
@@ -65,13 +76,42 @@ public enum Backtracker {
                 LOGGER.info("Try to find optimum with aggressive alpha-beta V2 search...");
                 Field aggressiveMove = new AggressiveAlphaBetaAI(6, player).bestMove(state);
                 if (aggressiveMove != null && Field.countPieces(aggressiveMove, opponent) < Field.countPieces(state, opponent)) {
-                    return addToCache(player, state, aggressiveMove);
+                    
+                    if (player == Player.BLACK) {
+                        LOGGER.info("Compare with normal move...");
+                        Field nextGenMove = new AlphaBetaAI(4, player).bestMove(state);
+                        if (nextGenMove != null && score(nextGenMove, player) > score(aggressiveMove, player)) {
+                            LOGGER.info("Took normal move.");
+                            return addToCache(player, state, nextGenMove);
+                        }
+                        
+                        if (!wins(aggressiveMove, opponent) 
+                                && WinningInOneMoveChecker.winsInOneMove(aggressiveMove, opponent).length == 0
+                                && WinningInTwoMovesChecker.winsInTwoMoves(aggressiveMove, opponent).length == 0) {
+                            return addToCache(player, state, aggressiveMove);
+                        }
+                    } else {
+                        return addToCache(player, state, aggressiveMove);
+                    }
                 }
                 Field[] moves2 = allMoves(state, player);
                 Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
-                    if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) && !wins(move2, opponent)) {
+                    if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) 
+                            && !wins(move2, opponent)
+                            && WinningInOneMoveChecker.winsInOneMove(move2, opponent).length == 0
+                            && WinningInTwoMovesChecker.winsInTwoMoves(move2, opponent).length == 0) {
                         LOGGER.info("Try to find ranked optimum (aggressive)...");
+                        
+                        if (player == Player.BLACK) {
+                            LOGGER.info("Compare with normal move...");
+                            Field nextGenMove = new AlphaBetaAI(4, player).bestMove(state);
+                            if (nextGenMove != null && score(nextGenMove, player) > score(move2, player)) {
+                                LOGGER.info("Took normal move.");
+                                return addToCache(player, state, nextGenMove);
+                            }
+                        }
+                        
                         return addToCache(player, state, move2);
                     }
                 }
@@ -97,7 +137,7 @@ public enum Backtracker {
             }
         }
         
-        if (player == Player.BLACK) {
+        if (player == Player.WHITE || player == Player.BLACK) {
             LOGGER.info("Try to find optimum with AI (alpha-beta)...");
             Field nextGenMove = new AlphaBetaAI(4, player).bestMove(state);
             if (nextGenMove != null) {
