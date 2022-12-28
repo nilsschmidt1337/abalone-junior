@@ -1,18 +1,36 @@
 package org.nschmidt.abalone.ai;
 
+import static org.nschmidt.abalone.move.MoveDetector.allMoves;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Player.BLACK;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 import static org.nschmidt.abalone.playfield.Player.WHITE;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldPrinter;
 import org.nschmidt.abalone.playfield.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum HardcodedOpenings {
     INSTANCE;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(HardcodedOpenings.class);
     
     private static final Map<Field, Field> BLACK_OPENINGS = new HashMap<>();
     private static final Map<Field, Field> WHITE_OPENINGS = new HashMap<>();
@@ -39,7 +57,34 @@ public enum HardcodedOpenings {
             , Field.of(new Player[]{WHITE,WHITE,EMPTY,BLACK,BLACK,WHITE,WHITE,WHITE,BLACK,BLACK,BLACK,EMPTY,WHITE,WHITE,EMPTY,BLACK,BLACK,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,WHITE,EMPTY,EMPTY,BLACK,BLACK,BLACK,WHITE,WHITE,EMPTY,BLACK,BLACK,BLACK,WHITE,WHITE,WHITE,BLACK,EMPTY,EMPTY,EMPTY,WHITE}));
         BLACK_OPENINGS.put(Field.of(new Player[]{WHITE,EMPTY,EMPTY,BLACK,BLACK,WHITE,WHITE,WHITE,BLACK,BLACK,BLACK,EMPTY,WHITE,WHITE,EMPTY,BLACK,BLACK,EMPTY,EMPTY,WHITE,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,BLACK,BLACK,EMPTY,WHITE,WHITE,EMPTY,BLACK,BLACK,BLACK,WHITE,WHITE,WHITE,BLACK,BLACK,EMPTY,WHITE,WHITE})
             , Field.of(new Player[]{WHITE,EMPTY,EMPTY,BLACK,EMPTY,WHITE,WHITE,WHITE,BLACK,BLACK,BLACK,EMPTY,WHITE,WHITE,BLACK,BLACK,BLACK,EMPTY,EMPTY,WHITE,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,BLACK,BLACK,EMPTY,WHITE,WHITE,EMPTY,BLACK,BLACK,BLACK,WHITE,WHITE,WHITE,BLACK,BLACK,EMPTY,WHITE,WHITE}));
+    
+        // Read openings
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(HardcodedOpenings.class.getResourceAsStream("openings.txt"), StandardCharsets.UTF_8))) {
+            loadOpenings(reader, WHITE_OPENINGS);
+            loadOpenings(reader, BLACK_OPENINGS);
+        } catch (IOException e) {
+            LOGGER.error("Can't load opening table.", e);
+        }
+    
     }
+
+    private static void loadOpenings(BufferedReader reader, Map<Field, Field> openings) throws IOException {
+        long openingCount = Long.parseLong(reader.readLine());
+        for (int i = 0; i < openingCount; i++) {
+            long white = Long.parseLong(reader.readLine());
+            long black = Long.parseLong(reader.readLine());
+            
+            long answerWhite = Long.parseLong(reader.readLine());
+            long answerBlack = Long.parseLong(reader.readLine());
+            
+            Field board = Field.of(white, black);
+            Field answer = Field.of(answerWhite, answerBlack);
+            openings.put(board, answer);
+            
+            for (int j = 0; j < 13; j++) reader.readLine();
+        }
+    }
+
     /**
      * Ermittelt einen Eröffnungszug für die 61 Felder Variante. <br/>
      * Dies ist notwendig, da die KI nicht selbst die zwei 7er-Gruppen im Standard-Spielfeld effizient und schnell zusammenführen kann. 
@@ -72,5 +117,107 @@ public enum HardcodedOpenings {
         }
         
         return result;
+    }
+    
+    private static final Random RND = new Random();
+    
+    public static void main(String[] args) {
+        LOGGER.info("Path for openings {}", HardcodedOpenings.class.getResource("openings.txt").getPath());
+        
+        // Read openings
+        init();
+        
+        final Map<Field, Field> openings;
+        final Player player;
+        if (RND.nextBoolean()) {
+            LOGGER.info("Will generate a black opening move");
+            openings = BLACK_OPENINGS;
+            player = Player.BLACK;
+        } else {
+            LOGGER.info("Will generate a white opening move");
+            openings = WHITE_OPENINGS;
+            player = Player.WHITE;
+        }
+        
+        final Player opponent = player.switchPlayer();
+        
+        Field board = findMove(player).orElse(Field.INITIAL_FIELD);
+        Field[] moves;
+        
+        if (board != Field.INITIAL_FIELD) {
+            moves = allMoves(board, opponent);
+        } else if (player == Player.WHITE) {
+            moves = new Field[] {Field.INITIAL_FIELD};
+        } else {
+            LOGGER.warn("Did not find a new opening move.");
+            return;
+        }
+        
+        new HashSet<>(Arrays.asList(moves))
+        .stream()
+        .filter(move -> !openings.containsKey(move))
+        .parallel()
+        .map(move -> new Field[] {move, new AlphaBetaAI(6, player).bestMove(move)})
+        .filter(pair -> Objects.nonNull(pair[1]))
+        .sequential()
+        .forEach(pair ->
+            openings.put(pair[0], pair[1])
+        );
+        
+        // Write openings
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream(HardcodedOpenings.class.getResource("openings.txt").getPath()), false, StandardCharsets.UTF_8)) {
+            writeOpenings(writer, WHITE_OPENINGS);
+            writeOpenings(writer, BLACK_OPENINGS);
+            writer.flush();
+        } catch (IOException e) {
+            LOGGER.error("Can't save opening table.", e);
+        }
+    }
+
+    private static Optional<Field> findMove(Player targetPlayer) {
+        final int targetDepth = RND.nextInt(3) * 2 + (targetPlayer == Player.BLACK ? 1 : 0);
+        Field currentField = Field.INITIAL_FIELD;
+        Player currentPlayer = Player.WHITE;
+        Map<Field, Field> openings = WHITE_OPENINGS;
+        for (int depth = 0; depth < targetDepth; depth++) {
+            if (openings.containsKey(currentField)) {
+                currentField = openings.get(currentField);
+            } else if (currentPlayer == targetPlayer) {
+                return Optional.of(currentField);
+            } else {
+                return Optional.empty();
+            }
+            
+            currentPlayer = currentPlayer.switchPlayer();
+            switch (currentPlayer) {
+            case BLACK:
+                openings = BLACK_OPENINGS;
+                break;
+            case WHITE:
+                openings = WHITE_OPENINGS;
+                break;
+            default:
+                break;
+            }
+        }
+        
+        if (currentField != Field.INITIAL_FIELD) {
+            return Optional.of(currentField);
+        }
+        
+        return Optional.empty();
+    }
+
+    private static void writeOpenings(PrintWriter writer, Map<Field, Field> openings) {
+        writer.println(openings.size());
+        for (Entry<Field, Field> entry : openings.entrySet()) {
+            Field board = entry.getKey();
+            Field answer = entry.getValue();
+            writer.println(board.getWhite());
+            writer.println(board.getBlack());
+            writer.println(answer.getWhite());
+            writer.println(answer.getBlack());
+            writer.println(FieldPrinter.buildStandardFieldDeltaString(answer, board));
+        }
     }
 }
