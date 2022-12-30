@@ -172,6 +172,7 @@ public enum HardcodedOpenings {
                 Field[] answers = new AlphaBetaAI(6, player).bestVariantMoves(move, 2);
                 if (answers.length == 0) return new Field[] {move, null};
                 if (answers.length == 1) return new Field[] {move, answers[0], answers[0]};
+                if (answers.length == 2 && WinningChecker.gainPiece(answers[1], opponent)) return new Field[] {move, answers[0], answers[0]};
                 return new Field[] {move, answers[0], answers[1]};
             } else {
                 Field aggressiveMove = new AggressiveAlphaBetaAI(6, player).bestMove(move);
@@ -215,12 +216,15 @@ public enum HardcodedOpenings {
         Field currentField = Field.INITIAL_FIELD;
         Player currentPlayer = Player.WHITE;
         Map<Field, Field> openings = WHITE_OPENINGS;
+        Map<Field, Field> variants = WHITE_VARIANT_OPENINGS;
         for (int depth = 0; depth < targetDepth; depth++) {
             if (currentPlayer != targetPlayer && RND.nextBoolean()) {
                 Field[] moves = allMoves(currentField, currentPlayer);
                 if (moves.length > 0) {
                     currentField = moves[RND.nextInt(moves.length)];
                 }
+            } else if (RND.nextBoolean() && variants.containsKey(currentField)) {
+                currentField = variants.get(currentField);
             } else if (openings.containsKey(currentField)) {
                 currentField = openings.get(currentField);
             } else if (currentPlayer == targetPlayer) {
@@ -234,9 +238,11 @@ public enum HardcodedOpenings {
             switch (currentPlayer) {
             case BLACK:
                 openings = BLACK_OPENINGS;
+                variants = BLACK_VARIANT_OPENINGS;
                 break;
             case WHITE:
                 openings = WHITE_OPENINGS;
+                variants = WHITE_VARIANT_OPENINGS;
                 break;
             default:
                 break;
