@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import org.nschmidt.abalone.playfield.Field;
 import org.nschmidt.abalone.playfield.FieldPrinter;
@@ -128,7 +129,7 @@ public enum HardcodedOpenings {
         // Read openings
         init();
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             LOGGER.info("Iteration {}:", i);
             searchForOpenings();
         }
@@ -153,18 +154,24 @@ public enum HardcodedOpenings {
         final Player opponent = player.switchPlayer();
         
         Field board = findMove(player).orElse(Field.INITIAL_FIELD);
-        Field[] moves;
+        Field board2 = Field.INITIAL_FIELD;
+        while (Field.INITIAL_FIELD.equals(board2) || board.equals(board2)) {
+            board2 = findMove(player).orElse(Field.INITIAL_FIELD);
+        }
+        
+        Set<Field> moves;
         
         if (board != Field.INITIAL_FIELD || opponent == Player.WHITE) {
-            moves = allMoves(board, opponent);
+            moves = new HashSet<>(Arrays.asList(allMoves(board, opponent)));
+            moves.addAll(Arrays.asList(allMoves(board2, opponent)));
         } else if (player == Player.WHITE) {
-            moves = new Field[] {Field.INITIAL_FIELD};
+            moves = new HashSet<>(Arrays.asList(Field.INITIAL_FIELD));
         } else {
             LOGGER.warn("Did not find a new opening move.");
             return;
         }
         
-        List<Field[]> newOpenings = new HashSet<>(Arrays.asList(moves))
+        List<Field[]> newOpenings = moves
         .parallelStream()
         .filter(move -> !openings.containsKey(move))
         .map(move -> {
