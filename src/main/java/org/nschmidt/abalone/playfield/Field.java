@@ -15,6 +15,14 @@ public class Field {
         // Hidden constructor
     }
     
+    public long getBlack() {
+        return black;
+    }
+
+    public long getWhite() {
+        return white;
+    }
+
     public static final int FIELD_HEIGHT = 7;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
@@ -129,6 +137,13 @@ public class Field {
             Player player = playerPieces[i];
             result = populateField(result, i, player);
         }
+        return result;
+    }
+    
+    public static Field of(long white, long black) {
+        Field result = new Field();
+        result.white = white;
+        result.black = black;
         return result;
     }
     
