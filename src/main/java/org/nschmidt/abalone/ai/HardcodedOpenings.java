@@ -53,10 +53,10 @@ public enum HardcodedOpenings {
 
         // Read openings
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(HardcodedOpenings.class.getResourceAsStream(OPENINGS_TXT), StandardCharsets.UTF_8))) {
-            loadOpenings(reader, WHITE_OPENINGS);
             loadOpenings(reader, BLACK_OPENINGS);
-            loadOpenings(reader, WHITE_VARIANT_OPENINGS);
+            loadOpenings(reader, WHITE_OPENINGS);
             loadOpenings(reader, BLACK_VARIANT_OPENINGS);
+            loadOpenings(reader, WHITE_VARIANT_OPENINGS);
         } catch (IOException e) {
             LOGGER.error("Can't load opening table.", e);
         }
@@ -68,14 +68,14 @@ public enum HardcodedOpenings {
         long openingCount = Long.parseLong(reader.readLine());
         LOGGER.info("Read {} openings for player {}", openingCount, player);
         for (int i = 0; i < openingCount; i++) {
-            long white = Long.parseLong(reader.readLine());
             long black = Long.parseLong(reader.readLine());
+            long white = Long.parseLong(reader.readLine());
             
-            long answerWhite = Long.parseLong(reader.readLine());
             long answerBlack = Long.parseLong(reader.readLine());
+            long answerWhite = Long.parseLong(reader.readLine());
             
-            Field board = Field.of(white, black);
-            Field answer = Field.of(answerWhite, answerBlack);
+            Field board = Field.of(black, white);
+            Field answer = Field.of(answerBlack, answerWhite);
             openings.put(board, answer);
             
             for (int j = 0; j < 13; j++) reader.readLine();
@@ -104,17 +104,17 @@ public enum HardcodedOpenings {
         
         final Field currentField = Field.of(currentPieces);
         final Field result;
-        if (player == WHITE) {
-            if (RND.nextBoolean() || !WHITE_VARIANT_OPENINGS.containsKey(currentField)) {
-                result = WHITE_OPENINGS.get(currentField);
-            } else {
-                result = WHITE_VARIANT_OPENINGS.get(currentField);
-            }
-        } else if (player == BLACK) {
+        if (player == BLACK) {
             if (RND.nextBoolean() || !BLACK_VARIANT_OPENINGS.containsKey(currentField)) {
                 result = BLACK_OPENINGS.get(currentField);
             } else {
                 result = BLACK_VARIANT_OPENINGS.get(currentField);
+            }
+        } else if (player == WHITE) {
+            if (RND.nextBoolean() || !WHITE_VARIANT_OPENINGS.containsKey(currentField)) {
+                result = WHITE_OPENINGS.get(currentField);
+            } else {
+                result = WHITE_VARIANT_OPENINGS.get(currentField);
             }
         } else {
             return null;
@@ -161,10 +161,10 @@ public enum HardcodedOpenings {
         
         Set<Field> moves;
         
-        if (board != Field.INITIAL_FIELD || opponent == Player.WHITE) {
+        if (board != Field.INITIAL_FIELD || opponent == Player.BLACK) {
             moves = new HashSet<>(Arrays.asList(allMoves(board, opponent)));
             moves.addAll(Arrays.asList(allMoves(board2, opponent)));
-        } else if (player == Player.WHITE) {
+        } else if (player == Player.BLACK) {
             moves = new HashSet<>(Arrays.asList(Field.INITIAL_FIELD));
         } else {
             LOGGER.warn("Did not find a new opening move.");
@@ -207,10 +207,10 @@ public enum HardcodedOpenings {
 
         // Write openings
         try (PrintWriter writer = new PrintWriter(new FileOutputStream(HardcodedOpenings.class.getResource(OPENINGS_TXT).getPath()), false, StandardCharsets.UTF_8)) {
-            writeOpenings(writer, WHITE_OPENINGS, Player.WHITE);
             writeOpenings(writer, BLACK_OPENINGS, Player.BLACK);
-            writeOpenings(writer, WHITE_VARIANT_OPENINGS, Player.WHITE);
+            writeOpenings(writer, WHITE_OPENINGS, Player.WHITE);
             writeOpenings(writer, BLACK_VARIANT_OPENINGS, Player.BLACK);
+            writeOpenings(writer, WHITE_VARIANT_OPENINGS, Player.WHITE);
             writer.flush();
         } catch (IOException e) {
             LOGGER.error("Can't save opening table.", e);

@@ -20,7 +20,7 @@ class BacktrackerTest {
         if (Field.FIELD_SIZE > 37) {
             assertEquals(Field.of(new Player[] {WHITE, WHITE, null, BLACK, BLACK, WHITE, WHITE, WHITE, BLACK, BLACK, BLACK, null, WHITE, WHITE, null, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, null, null, null, null, BLACK, BLACK, null, WHITE, WHITE, null, BLACK, BLACK, BLACK, WHITE, WHITE, WHITE, BLACK, BLACK, null, WHITE, EMPTY}), result);
         } else {
-            assertEquals(Field.of(new Player[] {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, WHITE, WHITE, null, WHITE, WHITE, EMPTY, EMPTY, EMPTY, WHITE, WHITE, WHITE, WHITE}), result);
+            assertEquals(Field.of(new Player[] {WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, EMPTY, EMPTY, EMPTY, null, null, WHITE, WHITE, WHITE, null, null, null, null, null, null, null, null, null, null, null, null, null, null, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK}), result);
         }
     }
 }

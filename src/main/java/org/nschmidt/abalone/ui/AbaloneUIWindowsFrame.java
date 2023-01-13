@@ -3,7 +3,7 @@ package org.nschmidt.abalone.ui;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
-import static org.nschmidt.abalone.playfield.Player.WHITE;
+import static org.nschmidt.abalone.playfield.Player.BLACK;
 
 import java.awt.Button;
 import java.awt.Color;
@@ -61,7 +61,7 @@ public class AbaloneUIWindowsFrame extends AbstractAbaloneUIFrame {
     
     public static void main(String[] args) 
     {
-      AbaloneUIWindowsFrame frame = new AbaloneUIWindowsFrame(INITIAL_FIELD, WHITE);
+      AbaloneUIWindowsFrame frame = new AbaloneUIWindowsFrame(INITIAL_FIELD, BLACK);
       frame.setArtificialIntelligence(Backtracker::backtrack);
       frame.waitOnResult();
     }

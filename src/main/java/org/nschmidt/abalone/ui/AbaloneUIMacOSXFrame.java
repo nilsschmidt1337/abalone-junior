@@ -3,7 +3,7 @@ package org.nschmidt.abalone.ui;
 import static org.nschmidt.abalone.playfield.Field.FIELD_HEIGHT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_WIDTH;
 import static org.nschmidt.abalone.playfield.Field.INITIAL_FIELD;
-import static org.nschmidt.abalone.playfield.Player.WHITE;
+import static org.nschmidt.abalone.playfield.Player.BLACK;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -62,7 +62,7 @@ public class AbaloneUIMacOSXFrame extends AbstractAbaloneUIFrame {
     
     public static void main(String[] args) 
     {
-      AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, WHITE);
+      AbaloneUIMacOSXFrame frame = new AbaloneUIMacOSXFrame(INITIAL_FIELD, BLACK);
       frame.setArtificialIntelligence(Backtracker::backtrack);
       frame.waitOnResult();
     }

@@ -45,8 +45,8 @@ public class Field {
     private static Field initJuniorField() {
         Field state = new Field();
         for (int i = 0; i < PIECE_COUNT; i++) {
-            state = populateField(state, i, BLACK);
-            state = populateField(state, i + 28, WHITE);
+            state = populateField(state, i, WHITE);
+            state = populateField(state, i + 28, BLACK);
         }
         
         return state;
@@ -113,10 +113,10 @@ public class Field {
     }
     
     public static Player lookAtField(Field state, int fieldIndex) {
-        long opWhite = (1L << fieldIndex) & state.white;
-        if (opWhite > 0) return WHITE;
         long opBlack = (1L << fieldIndex) & state.black;
         if (opBlack > 0) return BLACK;
+        long opWhite = (1L << fieldIndex) & state.white;
+        if (opWhite > 0) return WHITE;
         return EMPTY;
     }
     
@@ -140,10 +140,10 @@ public class Field {
         return result;
     }
     
-    public static Field of(long white, long black) {
+    public static Field of(long black, long white) {
         Field result = new Field();
-        result.white = white;
         result.black = black;
+        result.white = white;
         return result;
     }
     
@@ -158,12 +158,12 @@ public class Field {
     
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Field other) && white == other.white && black == other.black;
+        return (obj instanceof Field other) && black == other.black && white == other.white;
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(white, black);
+        return Objects.hash(black, white);
     }
     
     public void printField() {

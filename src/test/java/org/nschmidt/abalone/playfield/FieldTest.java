@@ -12,7 +12,7 @@ class FieldTest {
 
     @Test
     void testInitialize() {
-        assertEquals(Field.of(new Player[] {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE}), INITIAL_FIELD);
+        assertEquals(Field.of(new Player[] {WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK}), INITIAL_FIELD);
     }
     
     @Test
@@ -34,8 +34,8 @@ class FieldTest {
 
     @Test
     void testLookAtField() {
-        assertEquals(BLACK, lookAtField(INITIAL_FIELD, 0));
-        assertEquals(WHITE, lookAtField(INITIAL_FIELD, 36));
+        assertEquals(WHITE, lookAtField(INITIAL_FIELD, 0));
+        assertEquals(BLACK, lookAtField(INITIAL_FIELD, 36));
     }
     
     @Test

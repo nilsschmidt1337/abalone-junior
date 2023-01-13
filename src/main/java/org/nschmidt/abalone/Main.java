@@ -52,13 +52,13 @@ public class Main {
  
         int[] wins = new int[3];
         for (int i = 0; i < 10; i++) {
-            LOGGER.info("Game {} of 9 (WHITE begins) -> results: {}", i, Arrays.toString(wins));
-            wins[playRound(Player.WHITE, rnd)] += 1;
+            LOGGER.info("Game {} of 9 (BLACK begins) -> results: {}", i, Arrays.toString(wins));
+            wins[playRound(Player.BLACK, rnd)] += 1;
         }
         
         for (int i = 0; i < 10; i++) {
-            LOGGER.info("Game {} of 9 (BLACK begins) -> results: {}", i, Arrays.toString(wins));
-            wins[playRound(Player.BLACK, rnd)] += 1;
+            LOGGER.info("Game {} of 9 (WHITE begins) -> results: {}", i, Arrays.toString(wins));
+            wins[playRound(Player.WHITE, rnd)] += 1;
         }
         
         LOGGER.info("Player 1 {} wins.", wins[1]);
