@@ -39,7 +39,7 @@ public class EvaluationByConvolutedNeuralNetwork {
             recordReader.initialize(new FileSplit(
                     new ClassPathResource("monte-carlo.txt").getFile()));
             
-           DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 150, FEATURES_COUNT, FEATURES_COUNT, REGRESSION);
+           DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 900, FEATURES_COUNT, FEATURES_COUNT, REGRESSION);
             
            DataSet allData = iterator.next();
            allData.shuffle(42);
