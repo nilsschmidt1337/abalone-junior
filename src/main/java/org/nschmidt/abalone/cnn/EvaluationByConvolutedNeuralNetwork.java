@@ -1,5 +1,7 @@
 package org.nschmidt.abalone.cnn;
 
+import static org.nschmidt.abalone.playfield.Field.lookAtField;
+
 import java.io.IOException;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -16,12 +18,19 @@ import org.nd4j.evaluation.classification.EvaluationCalibration;
 import org.nd4j.evaluation.curves.Histogram;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.cpu.nativecpu.NDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nschmidt.abalone.ai.AI;
+import org.nschmidt.abalone.ai.CnnBacktracker;
+import org.nschmidt.abalone.ai.FastBacktracker;
+import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.Player;
+import org.nschmidt.abalone.winning.WinningChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +41,61 @@ public class EvaluationByConvolutedNeuralNetwork {
     private static final Logger LOGGER = LoggerFactory.getLogger(EvaluationByConvolutedNeuralNetwork.class);
     
     private static final int FEATURES_COUNT = 61;
+    
+    private static MultiLayerNetwork model = null;
 
     public static void main(String[] args) {
 
+        double s1 = 0;
+        double s2 = 0;
+        do {
+            createModel();
+            
+            s1 = score(Field.INITIAL_FIELD, Player.BLACK);
+            s2 = score(Field.EMPTY_FIELD, Player.BLACK);
+        } while (Math.abs(s1) > 1e-4 || Math.abs(s2) > 1e-4);
+
+        LOGGER.info("Score {}", s1);
+        LOGGER.info("Score {}", s2);
+        
+        playGame();
+    }
+    
+    private static void playGame() {
+        Player currentPlayer;
+        Field currentField;
+        currentField = Field.INITIAL_FIELD;
+        currentPlayer = Player.BLACK; 
+        double moves = 1;
+        FastBacktracker.clearCache();
+        while (!WinningChecker.wins(currentField, currentPlayer)) {
+            
+            LOGGER.info(currentField.toString());
+            
+            if (Player.BLACK != currentPlayer) {
+                currentField = FastBacktracker.backtrack(currentField, currentPlayer);
+                if (currentField == null) {
+                    currentField = AI.bestMove(currentField, currentPlayer);
+                }
+            } else {
+                currentField = CnnBacktracker.backtrack(currentField, currentPlayer);
+                if (currentField == null) {
+                    currentField = AI.bestMove(currentField, currentPlayer);
+                }
+            }
+            
+            currentPlayer = currentPlayer.switchPlayer();
+            moves++;
+            
+            if (moves > 1000) {
+                break;
+            }
+        }
+        
+        LOGGER.info(currentField.toString());
+    }
+
+    private static void createModel() {
         try (RecordReader recordReader = new CSVRecordReader(0, ',')) {
             recordReader.initialize(new FileSplit(
                     new ClassPathResource("monte-carlo.txt").getFile()));
@@ -65,7 +126,7 @@ public class EvaluationByConvolutedNeuralNetwork {
                  .nIn(3).nOut(1).build())
              .build();
            
-           MultiLayerNetwork model = new MultiLayerNetwork(configuration);
+           model = new MultiLayerNetwork(configuration);
            model.init();
            model.fit(trainingData);
            
@@ -96,10 +157,35 @@ public class EvaluationByConvolutedNeuralNetwork {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
 
-        /*DataSetIterator foo = new AbaloneDataSetIterator(1, DataSetType.TEST);
-        Evaluation ev = model.evaluate(foo);
-
-        System.out.println(ev.toString());*/
+    public static double score(Field field, Player player) {
+        
+        float[] data = new float[Field.FIELD_SIZE];
+        
+        for (int i = 0; i < Field.FIELD_SIZE; i++) {
+            switch (lookAtField(field, i)) {
+            case BLACK: 
+                data[i] = 1.0f;
+                break;
+            case WHITE:
+                data[i] = -1.0f;
+                break;
+            case EMPTY:
+                data[i] = 0.0f;
+                break;
+            }
+        }
+        
+        INDArray in = new NDArray(data);
+        INDArray out = model.output(in);
+        
+        double result = out.getDouble(0);
+        
+        if (player == Player.WHITE) {
+            result *= -1.0;
+        }
+        
+        return result;
     }
 }
