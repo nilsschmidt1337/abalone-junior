@@ -14,6 +14,7 @@ import org.nschmidt.abalone.ai.AI;
 import org.nschmidt.abalone.ai.FastBacktracker;
 import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.winning.WinningChecker;
 import org.slf4j.Logger;
@@ -25,16 +26,78 @@ public class EvaluationByMonteCarlo {
     private static final  Random RND = new Random();
     
     public static void main(String[] args) throws IOException {
-        try (PrintWriter myWriter = new PrintWriter(new ClassPathResource("monte-carlo.txt").getFile(), StandardCharsets.UTF_8.toString())) {
-            for (int i = 0; i < 20000; i++) {
+        
+        int iterations = 2_000_000;
+        try (PrintWriter myWriter = new PrintWriter(new ClassPathResource("monte-carlo-black.txt").getFile(), StandardCharsets.UTF_8.toString())) {
+            for (int i = 0; i < iterations; i++) {
                 LOGGER.info("Write entry {}", i);
-                writeEntry(myWriter);
+                writeEntryBlack(myWriter);
+                myWriter.flush();
+            }
+        }
+        
+        try (PrintWriter myWriter = new PrintWriter(new ClassPathResource("monte-carlo-white.txt").getFile(), StandardCharsets.UTF_8.toString())) {
+            for (int i = 0; i < iterations; i++) {
+                LOGGER.info("Write entry {}", i);
+                writeEntryWhite(myWriter);
                 myWriter.flush();
             }
         }
     }
+    
+    private static void writeEntryBlack(PrintWriter myWriter) {
+        Player currentPlayer = Player.BLACK;
+        Field currentField = Field.INITIAL_FIELD;
+        
+        int preCalculatedMoves;
+        preCalculatedMoves = RND.nextInt(50) * 2;
+        
+        for (int i = 0; i < preCalculatedMoves; i++) {
+            Field[] moves = MoveDetector.allMoves(currentField, currentPlayer);
+            currentField = moves[RND.nextInt(moves.length)];
+            currentPlayer = currentPlayer.switchPlayer();
+        }
+        
+        writeTrainingData(myWriter, currentPlayer, currentField);
+    }
+    
+    private static void writeEntryWhite(PrintWriter myWriter) {
+        Player currentPlayer = Player.BLACK;
+        Field currentField = Field.INITIAL_FIELD;
+        
+        int preCalculatedMoves;
+        preCalculatedMoves = RND.nextInt(50) * 2 + 1;
+        
+        for (int i = 0; i < preCalculatedMoves; i++) {
+            Field[] moves = MoveDetector.allMoves(currentField, currentPlayer);
+            currentField = moves[RND.nextInt(moves.length)];
+            currentPlayer = currentPlayer.switchPlayer();
+        }
+        
+        writeTrainingData(myWriter, currentPlayer, currentField);
+    }
 
-    private static void writeEntry(PrintWriter myWriter) {
+    private static void writeTrainingData(PrintWriter myWriter, Player currentPlayer, Field currentField) {
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < Field.FIELD_SIZE; i++) {
+            switch (lookAtField(currentField, i)) {
+            case BLACK: 
+                sb2.append("1.0,");
+                break;
+            case WHITE:
+                sb2.append("-1.0,");
+                break;
+            case EMPTY:
+                sb2.append("0.0,");
+                break;
+            }
+        }
+        
+        sb2.append(FieldEvaluator.score(currentField, currentPlayer));
+        myWriter.println(sb2.toString());
+    }
+
+    private static void writeEntryOld(PrintWriter myWriter) {
         Player currentPlayer = Player.BLACK;
         Field currentField = Field.INITIAL_FIELD;
         

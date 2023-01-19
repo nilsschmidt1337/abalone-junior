@@ -24,11 +24,13 @@ import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nschmidt.abalone.ai.AI;
 import org.nschmidt.abalone.ai.CnnBacktracker;
 import org.nschmidt.abalone.ai.FastBacktracker;
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.winning.WinningChecker;
 import org.slf4j.Logger;
@@ -47,18 +49,13 @@ public class EvaluationByConvolutedNeuralNetwork {
 
     public static void main(String[] args) {
 
-        double s1 = 0;
-        double s2 = 0;
-        do {
-            modelBlack = createModel("monte-carlo-black.txt");
-            modelWhite = createModel("monte-carlo-white.txt");
-            
-            s1 = score(Field.INITIAL_FIELD, Player.BLACK);
-            s2 = score(Field.EMPTY_FIELD, Player.BLACK);
-        } while (Math.abs(s1) > 1e-4 || Math.abs(s2) > 1e-4);
-
-        LOGGER.info("Score {}", s1);
-        LOGGER.info("Score {}", s2);
+        modelBlack = createModel("monte-carlo-black.txt");
+        modelWhite = createModel("monte-carlo-white.txt");
+        
+        LOGGER.info("Score {}", score(Field.INITIAL_FIELD, Player.BLACK));
+        LOGGER.info("Score {}", score(Field.EMPTY_FIELD, Player.BLACK));
+        LOGGER.info("Score {}", score(Field.INITIAL_FIELD, Player.WHITE));
+        LOGGER.info("Score {}", score(Field.EMPTY_FIELD, Player.WHITE));
         
         playGame();
     }
@@ -72,6 +69,7 @@ public class EvaluationByConvolutedNeuralNetwork {
         FastBacktracker.clearCache();
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             
+            LOGGER.info("SOLL : {} IST : {} IST* : {} ", FieldEvaluator.score(currentField, currentPlayer), score(currentField, currentPlayer), score(currentField, currentPlayer.switchPlayer()));
             LOGGER.info(currentField.toString());
             
             if (Player.BLACK != currentPlayer) {
@@ -102,7 +100,7 @@ public class EvaluationByConvolutedNeuralNetwork {
             recordReader.initialize(new FileSplit(
                     new ClassPathResource(modelDataFile).getFile()));
             
-           DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 900, FEATURES_COUNT, FEATURES_COUNT, REGRESSION);
+           DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 100_000, FEATURES_COUNT, FEATURES_COUNT, REGRESSION);
             
            DataSet allData = iterator.next();
            allData.shuffle(42);
@@ -114,25 +112,28 @@ public class EvaluationByConvolutedNeuralNetwork {
            SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.5);
            DataSet trainingData = testAndTrain.getTrain();
            DataSet testData = testAndTrain.getTest();
-           
+           double learningRate = 0.01;
+        int numHiddenNodes = 50;
         MultiLayerConfiguration configuration 
            = new NeuralNetConfiguration.Builder()
-             .activation(Activation.RELU)
-             .weightInit(WeightInit.XAVIER)
              .l2(0.0001)
+             .weightInit(WeightInit.XAVIER)
+             .updater(new Nesterovs(learningRate, 0.9))
              .list()
-             .layer(0, new DenseLayer.Builder().nIn(FEATURES_COUNT).nOut(3).build())
-             .layer(1, new DenseLayer.Builder().nIn(3).nOut(3).build())
+             .layer(0, new DenseLayer.Builder().nIn(FEATURES_COUNT).nOut(numHiddenNodes)
+                     .activation(Activation.IDENTITY).build())
+             .layer(1, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                     .activation(Activation.IDENTITY).build())
              .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
-                 .activation(Activation.IDENTITY)
-                 .nIn(3).nOut(1).build())
+                     .activation(Activation.IDENTITY)
+                     .nIn(numHiddenNodes).nOut(1).build())
              .build();
            
            MultiLayerNetwork model = new MultiLayerNetwork(configuration);
            model.init();
            model.fit(trainingData);
            
-           INDArray output = model.output(testData.getFeatures());
+           INDArray output = model.output(testData.getFeatures(), false);
            EvaluationCalibration eval = new EvaluationCalibration(10, 10);
            eval.eval(testData.getLabels(), output);
            
