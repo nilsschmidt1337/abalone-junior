@@ -42,14 +42,16 @@ public class EvaluationByConvolutedNeuralNetwork {
     
     private static final int FEATURES_COUNT = 61;
     
-    private static MultiLayerNetwork model = null;
+    private static MultiLayerNetwork modelBlack = null;
+    private static MultiLayerNetwork modelWhite = null;
 
     public static void main(String[] args) {
 
         double s1 = 0;
         double s2 = 0;
         do {
-            createModel();
+            modelBlack = createModel("monte-carlo-black.txt");
+            modelWhite = createModel("monte-carlo-white.txt");
             
             s1 = score(Field.INITIAL_FIELD, Player.BLACK);
             s2 = score(Field.EMPTY_FIELD, Player.BLACK);
@@ -95,10 +97,10 @@ public class EvaluationByConvolutedNeuralNetwork {
         LOGGER.info(currentField.toString());
     }
 
-    private static void createModel() {
+    private static MultiLayerNetwork createModel(String modelDataFile) {
         try (RecordReader recordReader = new CSVRecordReader(0, ',')) {
             recordReader.initialize(new FileSplit(
-                    new ClassPathResource("monte-carlo.txt").getFile()));
+                    new ClassPathResource(modelDataFile).getFile()));
             
            DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 900, FEATURES_COUNT, FEATURES_COUNT, REGRESSION);
             
@@ -126,7 +128,7 @@ public class EvaluationByConvolutedNeuralNetwork {
                  .nIn(3).nOut(1).build())
              .build();
            
-           model = new MultiLayerNetwork(configuration);
+           MultiLayerNetwork model = new MultiLayerNetwork(configuration);
            model.init();
            model.fit(trainingData);
            
@@ -142,6 +144,7 @@ public class EvaluationByConvolutedNeuralNetwork {
                LOGGER.info(String.format("%02d : %d", binNumber, bin));
                binNumber++;
            }
+           
            /*
            A residual plot is typically used to find problems with regression. Some data sets are not good candidates for regression, including:
 
@@ -152,11 +155,15 @@ public class EvaluationByConvolutedNeuralNetwork {
            These problems are more easily seen with a residual plot than by looking at a plot of the original data set. Ideally, residual values should be equally and randomly spaced around the horizontal axis.
            */
            
+           return model;
+           
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        
+        return null;
     }
 
     public static double score(Field field, Player player) {
@@ -178,14 +185,12 @@ public class EvaluationByConvolutedNeuralNetwork {
         }
         
         INDArray in = new NDArray(data);
-        INDArray out = model.output(in);
-        
-        double result = out.getDouble(0);
-        
-        if (player == Player.WHITE) {
-            result *= -1.0;
+        if (player == Player.BLACK) {
+            INDArray out = modelBlack.output(in);
+            return out.getDouble(0);
+        } else {
+            INDArray out = modelWhite.output(in);
+            return out.getDouble(0);
         }
-        
-        return result;
     }
 }
