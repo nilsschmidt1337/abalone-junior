@@ -60,7 +60,7 @@ public enum CnnBacktracker {
                     }
                 }
                 Field[] moves2 = allMoves(state, player);
-                Arrays.sort(moves2, (m1, m2) -> Integer.compare(score(m2, player), score(m1, player)));
+                Arrays.sort(moves2, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
                 for (Field move2 : moves2) {
                     if (Field.countPieces(move2, opponent) < Field.countPieces(state, opponent) 
                             && !wins(move2, opponent)

@@ -8,10 +8,10 @@ import java.util.Objects;
 
 public class Field {
     
-    private long black = 0L;
-    private long white = 0L;
+    protected long black = 0L;
+    protected long white = 0L;
     
-    private Field() {
+    protected Field() {
         // Hidden constructor
     }
     
@@ -23,13 +23,13 @@ public class Field {
         return white;
     }
 
-    public static final int FIELD_HEIGHT = 7;
+    public static final int FIELD_HEIGHT = 9;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);
     public static final Field INITIAL_FIELD = initField(FIELD_HEIGHT);
     public static final int DIRECTION_COUNT = 6;
-    public static final int PIECE_COUNT_FOR_WIN = 5; 
+    public static final int PIECE_COUNT_FOR_WIN = 6; 
     
     public static final Field EMPTY_FIELD = new Field();
     
