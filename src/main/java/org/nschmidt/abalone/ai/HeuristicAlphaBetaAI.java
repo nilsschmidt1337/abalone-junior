@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldPrinter;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.playfield.Transposition;
 import org.nschmidt.abalone.winning.WinningChecker;
@@ -31,7 +32,10 @@ public class HeuristicAlphaBetaAI {
     private final int maxDepth;
     private final Player player;
     private Field bestMove;
-    private double initialScore = 0; 
+    private double initialScore = 0;
+    
+    private long filteredOut = 0;
+    private long passed = 0;
 
     public HeuristicAlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
@@ -40,13 +44,18 @@ public class HeuristicAlphaBetaAI {
     }
 
     public Field bestMove(Field board) {
-        FUNNEL = new double[][] {{0.0, 0.0},{0.0, 1100.0},{-1100.0, 1100.0},{-1100.0, 1100.0},{0.0, 0.0},{0.0, 0.0},{0.0, 0.0},{0.0, 0.0},{0.0, 0.0},{0.0, 0.0}}; 
+        FUNNEL = new double[][] {{0.0, 0.0},{-1.0, 994.0},{-997.0, 993.0},{-994.0, 999.0},{-1990.0, 5.0},{-1.0, 1000.0},{-1990.0, 5.0},{-1000.0, 2000.0},{0.0, 0.0},{0.0, 0.0}}; 
         
         initialScore = score(board, player);
         alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         for (int i = 1; i <= maxDepth; i++) {
             LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
         }
+        
+        LOGGER.info("filteredOut {}", filteredOut);
+        LOGGER.info("passed      {}", passed);
+        filteredOut = 0;
+        passed = 0;
         return bestMove;
     }
     
@@ -78,13 +87,14 @@ public class HeuristicAlphaBetaAI {
                 }
                 
                 if (depth == 1) {
-                    LOGGER.info("Progress {}%", count * 100.0 / moves.length);
+                    // LOGGER.info("Progress {}%", count * 100.0 / moves.length);
                     count++;
                 }
             }
 
-            if (localBestMove != null && depth == 1)
+            if (localBestMove != null && depth == 1) {
                 bestMove = localBestMove;
+            }
             
             if (localBestMove != null) {
                 double s = score(localBestMove, player);
@@ -128,7 +138,13 @@ public class HeuristicAlphaBetaAI {
     }
 
     private boolean between(double dmin, double dmax, double score) {
-        return score < dmax + initialScore && score >= initialScore + dmin;
+        if (score < dmax + initialScore && score >= initialScore + dmin) {
+            passed++;
+            return true;
+        } else {
+            filteredOut++;
+            return false;
+        }
     }
     
     public static void main(String[] args) {
@@ -136,7 +152,7 @@ public class HeuristicAlphaBetaAI {
         wins.put("Variant A", 0);
         wins.put("Variant B", 0);
         wins.put("draw", 0);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Player currentPlayer;
             Field currentField;
             currentField = Field.INITIAL_FIELD;
@@ -188,17 +204,18 @@ public class HeuristicAlphaBetaAI {
         double moves = 1;
         Set<Field> previousMoves = new HashSet<>();
         final Player startPlayer = currentPlayer;
+        Field previousField = currentField;
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             Field answer;
-            LOGGER.info("{} {}", gameNumber, currentField.toString());
-            
             if (startPlayer == currentPlayer) { // Variant A
-                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 6);
             } else { // Variant B
-                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
             }
             
+            previousField = currentField;
             currentField = answer;
+            LOGGER.info("{} {}", gameNumber, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
             currentPlayer = currentPlayer.switchPlayer();
             moves++;
             
@@ -207,7 +224,7 @@ public class HeuristicAlphaBetaAI {
             }
         }
         
-        LOGGER.info(currentField.toString());
+        LOGGER.info("{} {}", gameNumber, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
         
         if (WinningChecker.wins(currentField, currentPlayer)) {
             return currentPlayer;
@@ -217,17 +234,21 @@ public class HeuristicAlphaBetaAI {
     }
 
     private static Field doVariation(Player currentPlayer, Field currentField, Set<Field> previousMoves, int level) {
-        Field answer;
+        Field answer = null;
         if (previousMoves.contains(currentField)) {
-            answer = currentField;
-            int rank = 1;
-            while (previousMoves.contains(answer) && rank < 100) {
-                HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(level, currentPlayer);
-                answer = ai.bestVariantMove(currentField, rank);
-                rank++;
+            HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(level, currentPlayer);
+            Field[] variants = ai.bestVariantMoves(currentField, 2);
+                        
+            for (Field variant : variants) {
+                if (!previousMoves.contains(variant)) {
+                    answer = variant;
+                    break;
+                }
             }
             
-            previousMoves.add(answer);
+            if (answer == null && variants.length > 0) {
+                answer = variants[0];
+            }
         } else {
             previousMoves.add(currentField);
             HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(level, currentPlayer);
