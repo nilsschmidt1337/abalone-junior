@@ -16,12 +16,12 @@ public enum AI {
     
     public static Field bestMove(Field state, Player currentPlayer) {
         Field[] moves = MoveDetector.allMoves(state, currentPlayer);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, currentPlayer), score(m1, currentPlayer)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, currentPlayer, currentPlayer), score(m1, currentPlayer, currentPlayer)));
         
         if (moves.length == 0) return state;
         if (moves.length == 1) return moves[0];
         
-        if (RND.nextBoolean() && score(moves[0], currentPlayer) == score(moves[1], currentPlayer)) {
+        if (RND.nextBoolean() && score(moves[0], currentPlayer, currentPlayer) == score(moves[1], currentPlayer, currentPlayer)) {
             return moves[1];
         }
         

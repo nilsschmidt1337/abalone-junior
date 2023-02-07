@@ -66,7 +66,7 @@ public class AlphaBetaAI {
         }
         
         moves = movesAsSet.toArray(new Field[0]);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player, player), score(m1, player, player)));
         
         Field localBestMove = null;
         for (Field move : moves) {
@@ -91,14 +91,15 @@ public class AlphaBetaAI {
         final boolean maximize = team == player;
 
         if (depth++ == maxDepth) {
-            return score(board, team);
+            return score(board, player, team);
         }
         
         Field[] moves = allMoves(board, team);
         moves = new HashSet<>(Arrays.asList(moves)).toArray(new Field[0]);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, team), score(m1, team)));
         
         if (maximize) {
+            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player, team), score(m1, player, team)));
+            
             Field localBestMove = null;
             for (Field move : moves) {
                 double score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
@@ -118,6 +119,8 @@ public class AlphaBetaAI {
 
             return alpha;
         } else {
+            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m1, player, team), score(m2, player, team)));
+            
             for (Field move : moves) {
                 double score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
 

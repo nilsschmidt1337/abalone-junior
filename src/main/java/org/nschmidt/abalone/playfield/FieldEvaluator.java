@@ -4,6 +4,8 @@ import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 
+import org.nschmidt.abalone.winning.WinningChecker;
+
 public enum FieldEvaluator {
     INSTANCE;
     
@@ -13,12 +15,12 @@ public enum FieldEvaluator {
     private static final double[][] COORDS = createCoords();
     private static final double[] CENTER = COORDS[FIELD_SIZE / 2];
     
-    public static double score(Field state, Player player) {
+    public static double score(Field state, Player player, Player toMove) {
         final Player opponent = player.switchPlayer();
         double score = 0;
         
-        double opponentPieceCount = 0; 
-        double playerPieceCount = 0;
+        int opponentPieceCount = 0; 
+        int playerPieceCount = 0;
         
         double playerX = 0;
         double playerY = 0;
@@ -61,7 +63,20 @@ public enum FieldEvaluator {
             }
         }
         
-        score = sumOpponent - sumPlayer - (Field.PIECE_COUNT - playerPieceCount) * 1000 + (Field.PIECE_COUNT - opponentPieceCount) * 1000;
+        int lostPieces = Field.PIECE_COUNT - playerPieceCount;
+        int lostOpponentPieces = Field.PIECE_COUNT - opponentPieceCount;
+        score = sumOpponent - sumPlayer - lostPieces * 1000 + lostOpponentPieces * 1000;
+        
+        if (player == toMove) {
+            if ((lostPieces + 1) >= Field.PIECE_COUNT_FOR_WIN && WinningChecker.wins(state, opponent)) {
+                return Double.NEGATIVE_INFINITY;
+            }
+        } else {
+            if ((lostOpponentPieces + 1) >= Field.PIECE_COUNT_FOR_WIN && WinningChecker.wins(state, player)) {
+                return Double.POSITIVE_INFINITY;
+            }
+        }
+
         return score;
     }
     

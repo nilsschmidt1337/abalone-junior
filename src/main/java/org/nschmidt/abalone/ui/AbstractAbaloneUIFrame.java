@@ -176,12 +176,12 @@ abstract class AbstractAbaloneUIFrame extends Frame {
                     return;
                 }
                 
-                LOGGER.info("{} Standard-Score: {}", currentPlayer.switchPlayer(), score(currentState, currentPlayer.switchPlayer()));
+                LOGGER.info("{} Standard-Score: {}", currentPlayer.switchPlayer(), score(currentState, currentPlayer.switchPlayer(), currentPlayer.switchPlayer()));
                 currentState.printFieldDelta(previousState);
                 Field previous = currentState;
                 setTitle("Waiting for move...");
                 currentState = artificicalIntelligence.apply(currentState, currentPlayer);
-                LOGGER.info("{} Standard-Score: {}", currentPlayer, score(currentState, currentPlayer));
+                LOGGER.info("{} Standard-Score: {}", currentPlayer, score(currentState, currentPlayer, currentPlayer));
                 currentState.printFieldDelta(previous);
                 currentPlayer = currentPlayer.switchPlayer();
                 update(currentState, currentPlayer);
@@ -223,8 +223,8 @@ abstract class AbstractAbaloneUIFrame extends Frame {
         }
         
         private void resetField() {
-            LOGGER.info("Score: {} {}", Player.WHITE, score(currentState, Player.WHITE));
-            LOGGER.info("Score: {} {}", Player.BLACK, score(currentState, Player.BLACK));
+            LOGGER.info("Score: {} {}", Player.WHITE, score(currentState, Player.WHITE, Player.WHITE));
+            LOGGER.info("Score: {} {}", Player.BLACK, score(currentState, Player.BLACK, Player.BLACK));
             final StringBuilder sb = new StringBuilder();
             sb.append("Field.of(new Player[]{");
             sb.append(lookAtField(currentState, 0));

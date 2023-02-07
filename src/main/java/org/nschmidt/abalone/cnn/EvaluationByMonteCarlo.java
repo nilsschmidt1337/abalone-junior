@@ -93,7 +93,7 @@ public class EvaluationByMonteCarlo {
             }
         }
         
-        sb2.append(FieldEvaluator.score(currentField, currentPlayer));
+        sb2.append(FieldEvaluator.score(currentField, currentPlayer, currentPlayer));
         myWriter.println(sb2.toString());
     }
 

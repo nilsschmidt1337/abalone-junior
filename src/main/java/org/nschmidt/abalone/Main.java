@@ -74,7 +74,7 @@ public class Main {
         Backtracker.clearCache();
         while (moveCount < 200) {
             moveCount += 1;
-            double currentScore = score(state, currentPlayer);
+            double currentScore = score(state, currentPlayer, currentPlayer);
             Field[] moves = allMoves(state, currentPlayer);
             Field randomMove = moves[rnd.nextInt(moves.length)];
             
@@ -85,7 +85,7 @@ public class Main {
                 maxMove = backtrack(state, currentPlayer);
             } else if (currentScore == -Double.MAX_VALUE) {
                 for (Field move : moves) {
-                    double score = score(move, currentPlayer);
+                    double score = score(move, currentPlayer, currentPlayer);
                     if (score > maxScore) {
                         maxScore = score;
                         maxMove = move;
@@ -94,7 +94,7 @@ public class Main {
             } else {
                 for (int i = 0; i < 100; i++) {
                     randomMove = moves[rnd.nextInt(moves.length)];
-                    double score = score(randomMove, currentPlayer);
+                    double score = score(randomMove, currentPlayer, currentPlayer);
                     if (score > maxScore) {
                         maxScore = score;
                         maxMove = randomMove;

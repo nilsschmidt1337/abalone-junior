@@ -69,7 +69,7 @@ public class EvaluationByConvolutedNeuralNetwork {
         FastBacktracker.clearCache();
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             
-            LOGGER.info("SOLL : {} IST : {} IST* : {} ", FieldEvaluator.score(currentField, currentPlayer), score(currentField, currentPlayer), score(currentField, currentPlayer.switchPlayer()));
+            LOGGER.info("SOLL : {} IST : {} IST* : {} ", FieldEvaluator.score(currentField, currentPlayer, currentPlayer), score(currentField, currentPlayer), score(currentField, currentPlayer.switchPlayer()));
             LOGGER.info(currentField.toString());
             
             if (Player.BLACK != currentPlayer) {

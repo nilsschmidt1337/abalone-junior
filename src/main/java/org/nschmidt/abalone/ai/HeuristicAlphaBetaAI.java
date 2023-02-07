@@ -36,6 +36,7 @@ public class HeuristicAlphaBetaAI {
     
     private long filteredOut = 0;
     private long passed = 0;
+    private long endgame = 0;
 
     public HeuristicAlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
@@ -44,9 +45,12 @@ public class HeuristicAlphaBetaAI {
     }
 
     public Field bestMove(Field board) {
-        FUNNEL = new double[][] {{0.0, 0.0},{-1.0, 994.0},{-997.0, 993.0},{-994.0, 999.0},{-1990.0, 5.0},{-1.0, 1000.0},{-1990.0, 5.0},{-1000.0, 2000.0},{0.0, 0.0},{0.0, 0.0}}; 
+        FUNNEL = new double[][] {{0.0, 0.0},
+            {-1000.0, 1000.0},{-1000.0, 1000.0},{-2000.0, 2000.0},
+            {-2000.0, 2000.0},{-2000.0, 2000.0},{-1000.0, 1000.0},
+            {-1.0, 1.0},{0.0, 0.0},{0.0, 0.0}}; 
         
-        initialScore = score(board, player);
+        initialScore = score(board, player, player);
         alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         for (int i = 1; i <= maxDepth; i++) {
             LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
@@ -54,6 +58,7 @@ public class HeuristicAlphaBetaAI {
         
         LOGGER.info("filteredOut {}", filteredOut);
         LOGGER.info("passed      {}", passed);
+        LOGGER.info("endgame     {}", endgame);
         filteredOut = 0;
         passed = 0;
         return bestMove;
@@ -63,19 +68,23 @@ public class HeuristicAlphaBetaAI {
         final boolean maximize = team == player;
 
         if (depth++ == maxDepth) {
-            return score(board, player);
+            return score(board, player, team);
         }
         
         Field[] moves = allMoves(board, team);
         final int d = depth;
-        moves = new HashSet<>(Arrays.asList(moves)).stream().filter(m -> between(FUNNEL[d][0], FUNNEL[d][1], score(m, player))).toList().toArray(new Field[0]);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, team), score(m1, team)));
-        
+        moves = new HashSet<>(Arrays.asList(moves)).stream().toList().toArray(new Field[0]);
+         
         if (maximize) {
+            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player, team), score(m1, player, team)));
+            
             Field localBestMove = null;
             int count = 0;
             for (Field move : moves) {
-                double score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                double score = score(move, player, team);
+                if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
+                    score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                }
                 
                 if (score > alpha) {
                     alpha = score;
@@ -97,20 +106,25 @@ public class HeuristicAlphaBetaAI {
             }
             
             if (localBestMove != null) {
-                double s = score(localBestMove, player);
+                double s = score(localBestMove, player, team);
                 BEST[depth] = Math.max(BEST[depth], s - initialScore);
                 WORST[depth] = Math.min(WORST[depth], s - initialScore);
             }
 
             return alpha;
         } else {
+            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m1, player, team), score(m2, player, team)));
+            
             Field localBestMove = null;
             final boolean twoMoves = depth == 4;
             for (Field move : moves) {
                 Transposition t =  twoMoves ? Transposition.of(depth, move) : null;
                 Double score = twoMoves ? TRANSPOSITION.get(t) : null;
                 if (score == null) {
-                    score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                    score = score(move, player, team);
+                    if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
+                        score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
+                    }
                     if (twoMoves) TRANSPOSITION.put(new Transposition(depth, move), score);
                 } else {
                     if (TRANSPOSITION.size() > 100_000) TRANSPOSITION.clear();
@@ -128,7 +142,7 @@ public class HeuristicAlphaBetaAI {
             }
             
             if (localBestMove != null) {
-                double s = score(localBestMove, player);
+                double s = score(localBestMove, player, team);
                 BEST[depth] = Math.max(BEST[depth], s - initialScore);
                 WORST[depth] = Math.min(WORST[depth], s - initialScore);
             }
@@ -141,6 +155,9 @@ public class HeuristicAlphaBetaAI {
         if (score < dmax + initialScore && score >= initialScore + dmin) {
             passed++;
             return true;
+        } else if (score == Double.NEGATIVE_INFINITY || score == Double.POSITIVE_INFINITY) {
+            endgame++;
+            return false;
         } else {
             filteredOut++;
             return false;
@@ -152,7 +169,7 @@ public class HeuristicAlphaBetaAI {
         wins.put("Variant A", 0);
         wins.put("Variant B", 0);
         wins.put("draw", 0);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Player currentPlayer;
             Field currentField;
             currentField = Field.INITIAL_FIELD;
@@ -208,9 +225,9 @@ public class HeuristicAlphaBetaAI {
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             Field answer;
             if (startPlayer == currentPlayer) { // Variant A
-                answer = doVariation(currentPlayer, currentField, previousMoves, 6);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
             } else { // Variant B
-                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
             }
             
             previousField = currentField;
@@ -301,7 +318,7 @@ public class HeuristicAlphaBetaAI {
         }
         
         moves = movesAsSet.toArray(new Field[0]);
-        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player), score(m1, player)));
+        Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player, player), score(m1, player, player)));
         
         Field localBestMove = null;
         for (Field move : moves) {
