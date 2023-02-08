@@ -16,8 +16,8 @@ public enum FieldEvaluator {
     private static final double[][] COORDS = createCoords();
     private static final double[] CENTER = COORDS[FIELD_SIZE / 2];
     
-    public static double wp = 0.2;
-    public static double wc = 0.6;
+    public static double CENTER_WEIGHT = 0.41;
+    public static double PLAYER_WEIGHT = (1.0 - FieldEvaluator.CENTER_WEIGHT) / 2.0;
     
     public static double score(Field state, Player player, Player toMove) {
         final Player opponent = player.switchPlayer();
@@ -53,8 +53,8 @@ public enum FieldEvaluator {
         double referenceX = 0;
         double referenceY = 0;
         
-        referenceX = playerX * wp + opponentX * wp + CENTER[0] * wc;
-        referenceY = playerY * wp + opponentY * wp + CENTER[1] * wc;
+        referenceX = playerX * PLAYER_WEIGHT + opponentX * PLAYER_WEIGHT + CENTER[0] * CENTER_WEIGHT;
+        referenceY = playerY * PLAYER_WEIGHT + opponentY * PLAYER_WEIGHT + CENTER[1] * CENTER_WEIGHT;
         
         double sumPlayer = 0;
         double sumOpponent = 0;

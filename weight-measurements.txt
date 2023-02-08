@@ -1,0 +1,409 @@
+19:09:00.015 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.0 iteration 99; move 105; player BLACK; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · · X_· · · 
+    F  · · · · ·_X · O 
+   E  · · O · O X · · · 
+    D  · · · X X O X X 9
+     C  · · O X O · · 8
+      B  · · · O O O 7
+       A  · · · O X 6
+           1 2 3 4 5
+
+
+19:09:00.015 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 82
+19:09:00.016 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 12
+19:09:00.016 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 6
+
+19:23:46.200 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.1 iteration 99; move 250; player WHITE; score -2976.814905833333; Variant B; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · · · O · · 
+    F  · · O_O O · · · 
+   E  · X O X O O · · · 
+    D  X ·_X X O · · · 9
+     C  X X X X · · · 8
+      B  X X · O · · 7
+       A  · X · · · 6
+           1 2 3 4 5
+
+
+19:23:46.200 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 74
+19:23:46.201 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 18
+19:23:46.201 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 8
+
+19:25:14.211 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.2 iteration 99; move 191; player BLACK; score -Infinity; Variant A; board 
+       I  ·_X_· · · 
+      H  · O O · · · 
+     G  · O O · · · · 
+    F  · · X · O · · · 
+   E  · X X O X O O · · 
+    D  · O X X O X · · 9
+     C  · · · · · · · 8
+      B  · · X · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:25:14.211 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 69
+19:25:14.211 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 21
+19:25:14.211 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 10
+
+19:25:26.743 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.3 iteration 99; move 47; player BLACK; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · O · O · 
+     G  · · · X_· · · 
+    F  · · · O ·_X · · 
+   E  · · · · X · O O X 
+    D  · · · O O O O · 9
+     C  · X X O X X · 8
+      B  · · · · · X 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:25:26.743 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 68
+19:25:26.743 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 15
+19:25:26.743 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 17
+
+19:26:04.051 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.4 iteration 99; move 250; player WHITE; score -13.194268000000193; Variant B; board 
+       I  · · · · · 
+      H  · O · O · · 
+     G  · ·_X X · · · 
+    F  · · O_X · O · · 
+   E  · O X X X X O · · 
+    D  · O X X · O · · 9
+     C  · · O X · · · 8
+      B  · · O · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:26:04.051 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 68
+19:26:04.051 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 13
+19:26:04.051 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 19
+
+19:25:58.758 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.5 iteration 99; move 93; player WHITE; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · X O_· · 
+     G  X · · ·_· · · 
+    F  · X · O O · X · 
+   E  · X X O X X X X · 
+    D  O X O X X · · · 9
+     C  · · O X · · · 8
+      B  · · O O · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:25:58.758 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 83
+19:25:58.758 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 3
+19:25:58.758 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 14
+
+19:26:18.390 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.6 iteration 99; move 250; player WHITE; score 1985.974; Variant B; board 
+       I  · · · · · 
+      H  · · O · · · 
+     G  · · O · O · · 
+    F  · · X_X O_O O ·_
+   E  · · O · X X X X · 
+    D  · O O X X X · · 9
+     C  · X O · O O · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:26:18.390 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 82
+19:26:18.391 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 3
+19:26:18.391 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 15
+
+19:10:11.549 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.7 iteration 99; move 87; player BLACK; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · O X_· · · 
+    F  · O · ·_· O O X 
+   E  · O O X · · X O · 
+    D  · · O X X X O X 9
+     C  · · O X O · · 8
+      B  · O · O · · 7
+       A  · · · O · 6
+           1 2 3 4 5
+
+
+19:10:11.549 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 77
+19:10:11.549 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 3
+19:10:11.549 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 20
+
+19:07:53.123 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.8 iteration 99; move 173; player BLACK; score -Infinity; Variant A; board 
+       I  · · X_· · 
+      H  · · O ·_· · 
+     G  · · · · · O · 
+    F  · · X O · X O · 
+   E  · O X O O X O O · 
+    D  · O · O · X · · 9
+     C  · · O O · X · 8
+      B  · · O · · · 7
+       A  · X X · · 6
+           1 2 3 4 5
+
+
+19:07:53.123 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 89
+19:07:53.123 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 2
+19:07:53.123 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 9
+
+----
+DETAIL RANGE BETWEEN 0.3-0.4
+----
+
+19:38:29.627 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.3 iteration 99; move 250; player BLACK; score -986.134274181818; Variant B; board 
+       I  · · O · · 
+      H  · · · O O O 
+     G  · · X · O O X 
+    F  · · X O O X O O 
+   E  · · X · X X O · · 
+    D  · · · ·_X_X · · 9
+     C  · · ·_X_· · · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:38:29.627 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 67
+19:38:29.628 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 15
+19:38:29.628 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 18
+
+19:38:59.682 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.325 iteration 99; move 250; player WHITE; score 1985.5111706293706; Variant B; board 
+       I  · · · · · 
+      H  · · · · O · 
+     G  · · · X X O · 
+    F  · · X X X X X_O 
+   E  · O X X O X O_O · 
+    D  · · O O X O O · 9
+     C  · O · O ·_· · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:38:59.682 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 72
+19:38:59.682 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 11
+19:38:59.682 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 17
+
+19:38:57.658 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.35 iteration 99; move 117; player BLACK; score -Infinity; Variant A; board 
+       I  · · X_· · 
+      H  · · O ·_· · 
+     G  · · · X O · · 
+    F  · · · · X X · · 
+   E  · · · · X X X O O 
+    D  · · · · · X O · 9
+     C  · · O O O · · 8
+      B  · · · O O · 7
+       A  · · · · X 6
+           1 2 3 4 5
+
+
+19:38:57.658 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 69
+19:38:57.658 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 8
+19:38:57.658 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 23
+
+19:39:13.412 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.375 iteration 99; move 168; player WHITE; score -Infinity; Variant B; board 
+       I  ·_O_· · · 
+      H  · X X · · · 
+     G  · O X X O · · 
+    F  · · X X · O · · 
+   E  · O X X · · O · · 
+    D  · · · X X O · · 9
+     C  · · · O O · · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:39:13.412 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 72
+19:39:13.412 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 13
+19:39:13.412 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 15
+
+19:38:55.774 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.4 iteration 99; move 148; player BLACK; score -Infinity; Variant B; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · ·_· X · · 
+    F  · · · X_O X · · 
+   E  · O O O O X X X · 
+    D  · · O · O · · · 9
+     C  · O O O X · · 8
+      B  · O · X · · 7
+       A  X · · · · 6
+           1 2 3 4 5
+
+
+19:38:55.774 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 66
+19:38:55.774 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 10
+19:38:55.774 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 24
+
+
+----
+DETAIL RANGE BETWEEN 0.37-0.43
+----
+
+19:55:27.927 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.37 iteration 99; move 186; player BLACK; score -Infinity; Variant B; board 
+       I  · · · X_·_
+      H  · · · · O · 
+     G  · · · X O O O 
+    F  · · X O O O O · 
+   E  · · X O · O O X · 
+    D  · · X · O · · X 9
+     C  · · · X X · · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:55:27.927 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 73
+19:55:27.927 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 12
+19:55:27.927 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 15
+
+19:56:43.354 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.38 iteration 99; move 203; player BLACK; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · · X_· · · 
+    F  · · · O ·_X · · 
+   E  · · O X O O X X · 
+    D  · · O X · X · · 9
+     C  · · O O O X · 8
+      B  · · · O O · 7
+       A  · · · · X 6
+           1 2 3 4 5
+
+
+19:56:43.354 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 69
+19:56:43.355 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 8
+19:56:43.355 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 23
+
+19:56:35.853 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.39 iteration 99; move 147; player BLACK; score -Infinity; Variant A; board 
+       I  · · · · · 
+      H  · · · · O · 
+     G  · · · O O · · 
+    F  · · · X_·_X X · 
+   E  · · · O X X X O · 
+    D  · · X O O O X · 9
+     C  · · · · O O X 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:56:35.854 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 77
+19:56:35.854 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 5
+19:56:35.854 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 18
+
+19:56:52.195 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.4 iteration 99; move 250; player BLACK; score -1013.4697156363636; Variant B; board 
+       I  · · · · · 
+      H  · · · X · · 
+     G  X_·_· O X · · 
+    F  · X O O O O · · 
+   E  · X O O O O X X · 
+    D  · X · O O X · · 9
+     C  · · · X · · · 8
+      B  · · · · · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:56:52.195 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 72
+19:56:52.195 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 5
+19:56:52.195 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 23
+
+19:57:24.097 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.41 iteration 99; move 152; player BLACK; score -Infinity; Variant B; board 
+       I  · · · · · 
+      H  · · · X_· · 
+     G  · · · ·_· · · 
+    F  · · X O X · · · 
+   E  · · O X X X · · · 
+    D  · · O O · · · · 9
+     C  O O O X O · · 8
+      B  · O O X · · 7
+       A  · X O · · 6
+           1 2 3 4 5
+
+
+19:57:24.097 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 66
+19:57:24.097 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 4
+19:57:24.097 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 30
+
+19:57:23.815 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.42 iteration 99; move 250; player WHITE; score 9.725679999999556; Variant B; board 
+       I  · · · · · 
+      H  · · · · · · 
+     G  · · O · · · · 
+    F  · · X · · · · · 
+   E  · O O_O O ·_· · · 
+    D  X X X X O X · · 9
+     C  · O X O O · · 8
+      B  X · · · X · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:57:23.816 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 69
+19:57:23.816 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 9
+19:57:23.816 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 22
+
+19:57:40.244 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.43 iteration 99; move 250; player BLACK; score -8.014493333333348; Variant B; board 
+       I  · · · · · 
+      H  · · · X · · 
+     G  · · X · X O · 
+    F  · · · O O O X ·_
+   E  · X · O X O X X · 
+    D  · · O O O · X_· 9
+     C  · · X X O · · 8
+      B  X · O O · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+19:57:40.244 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 68
+19:57:40.244 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 10
+19:57:40.244 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 22
+
+
+--
+Depth 2 VS Depth 2 - 100 and 1000 iterations
+--
+
+20:07:09.788 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.41 iteration 99; move 250; player WHITE; score -1.2003299999998944; Variant B; board 
+       I  · · · · · 
+      H  · · · O · · 
+     G  · · · X O X · 
+    F  · · O X X X X · 
+   E  · X O O X X O X · 
+    D  · X O X O O · · 9
+     C  · · ·_O O · · 8
+      B  · · O_· · · 7
+       A  · · · · · 6
+           1 2 3 4 5
+
+
+20:07:09.789 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 3
+20:07:09.789 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 17
+20:07:09.789 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 80
+
+20:58:26.180 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - D1 WORST 1.7976931348623157E308 BEST -1.7976931348623157E308
+20:58:26.180 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - D2 WORST 1.7976931348623157E308 BEST -1.7976931348623157E308
+20:58:26.180 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - filteredOut 0
+20:58:26.180 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - passed      0
+20:58:26.180 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - endgame     46
+20:58:26.181 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - 0.41 iteration 999; move 240; player BLACK; score -Infinity; Variant B; board 
+       I  · · · · · 
+      H  · · · X_· · 
+     G  · · · ·_X · · 
+    F  · · · O O X · · 
+   E  · · X O O O X X · 
+    D  · · · O O X · · 9
+     C  · X O O O · · 8
+      B  · · O O · · 7
+       A  · · X · · 6
+           1 2 3 4 5
+
+
+20:58:26.181 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant B 56
+20:58:26.181 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - Variant A 134
+20:58:26.181 [main] INFO org.nschmidt.abalone.ai.HeuristicAlphaBetaAI - draw 810
