@@ -46,14 +46,16 @@ public class HeuristicAlphaBetaAI {
 
     public Field bestMove(Field board) {
         FUNNEL = new double[][] {{0.0, 0.0},
-            {-1000.0, 1000.0},{-1000.0, 1000.0},{-2000.0, 2000.0},
-            {-2000.0, 2000.0},{-2000.0, 2000.0},{-1000.0, 1000.0},
+            {-1000.0, 1000.0},{-2000.0, 2000.0},{-2000.0, 2000.0},
+            {-3000.0, 3000.0},{-3000.0, 3000.0},{-4000.0, 4000.0},
             {-1.0, 1.0},{0.0, 0.0},{0.0, 0.0}}; 
         
         initialScore = score(board, player, player);
         alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         for (int i = 1; i <= maxDepth; i++) {
             LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
+            WORST[i] = Double.MAX_VALUE;
+            BEST[i] = -Double.MAX_VALUE;
         }
         
         LOGGER.info("filteredOut {}", filteredOut);
@@ -218,21 +220,24 @@ public class HeuristicAlphaBetaAI {
     }
     
     private static Player playGame(Player currentPlayer, Field currentField, int gameNumber) {
-        double moves = 1;
+        int moves = 1;
         Set<Field> previousMoves = new HashSet<>();
         final Player startPlayer = currentPlayer;
         Field previousField = currentField;
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             Field answer;
+            final String variant;
             if (startPlayer == currentPlayer) { // Variant A
-                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
+                variant = "Variant A";
+                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
             } else { // Variant B
-                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
+                variant = "Variant B";
+                answer = doVariation(currentPlayer, currentField, previousMoves, 4);
             }
             
             previousField = currentField;
             currentField = answer;
-            LOGGER.info("{} {}", gameNumber, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
+            LOGGER.info("iteration {}; move {}; player {}; score {}; {}; board {}", gameNumber, moves, currentPlayer, score(currentField, currentPlayer, currentPlayer), variant, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
             currentPlayer = currentPlayer.switchPlayer();
             moves++;
             
@@ -240,8 +245,6 @@ public class HeuristicAlphaBetaAI {
                 break;
             }
         }
-        
-        LOGGER.info("{} {}", gameNumber, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
         
         if (WinningChecker.wins(currentField, currentPlayer)) {
             return currentPlayer;
