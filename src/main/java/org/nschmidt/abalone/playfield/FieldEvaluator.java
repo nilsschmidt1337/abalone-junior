@@ -4,6 +4,7 @@ import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 
+import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.winning.WinningChecker;
 
 public enum FieldEvaluator {
@@ -14,6 +15,9 @@ public enum FieldEvaluator {
     
     private static final double[][] COORDS = createCoords();
     private static final double[] CENTER = COORDS[FIELD_SIZE / 2];
+    
+    public static double wp = 0.2;
+    public static double wc = 0.6;
     
     public static double score(Field state, Player player, Player toMove) {
         final Player opponent = player.switchPlayer();
@@ -49,8 +53,8 @@ public enum FieldEvaluator {
         double referenceX = 0;
         double referenceY = 0;
         
-        referenceX = playerX * 0.2 + opponentX * 0.2 + CENTER[0] * 0.6;
-        referenceY = playerY * 0.2 + opponentY * 0.2 + CENTER[1] * 0.6;
+        referenceX = playerX * wp + opponentX * wp + CENTER[0] * wc;
+        referenceY = playerY * wp + opponentY * wp + CENTER[1] * wc;
         
         double sumPlayer = 0;
         double sumOpponent = 0;
@@ -68,18 +72,28 @@ public enum FieldEvaluator {
         score = sumOpponent - sumPlayer - lostPieces * 1000 + lostOpponentPieces * 1000;
         
         if (player == toMove) {
-            if ((lostPieces + 1) >= Field.PIECE_COUNT_FOR_WIN && WinningChecker.wins(state, opponent)) {
-                return Double.NEGATIVE_INFINITY;
-            }
+            return detectEndgame(state, score, player, opponent, lostPieces, lostOpponentPieces, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         } else {
-            if ((lostOpponentPieces + 1) >= Field.PIECE_COUNT_FOR_WIN && WinningChecker.wins(state, player)) {
-                return Double.POSITIVE_INFINITY;
-            }
+            return detectEndgame(state, score, opponent, player, lostOpponentPieces, lostPieces, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
         }
-
-        return score;
     }
     
+    private static double detectEndgame(Field state, double score, Player playerA, Player playerB, int lostPiecesA, int lostPiecesB, double looseResult, double winResult) {
+        if (lostPiecesA >= Field.PIECE_COUNT_FOR_WIN_MINUS_ONE && WinningChecker.wins(state, playerB)) {
+            return looseResult;
+        } else if (lostPiecesB >= Field.PIECE_COUNT_FOR_WIN_MINUS_ONE && WinningChecker.wins(state, playerA)) {
+            for (Field move : MoveDetector.allMoves(state, playerB)) {
+                if (!WinningChecker.wins(move, playerA)) {
+                    return score;
+                }
+            }
+            
+            return winResult;
+        }
+        
+        return score;
+    }
+
     static double[][] createCoords() {
         double[][] result = new double[FIELD_SIZE][2];
         for (int i = 0; i < FIELD_SIZE; i++) {
