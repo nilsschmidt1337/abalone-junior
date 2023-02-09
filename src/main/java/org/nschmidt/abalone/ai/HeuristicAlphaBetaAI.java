@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
@@ -76,15 +77,16 @@ public class HeuristicAlphaBetaAI {
         
         Field[] moves = allMoves(board, team);
         final int d = depth;
-        moves = new HashSet<>(Arrays.asList(moves)).stream().toList().toArray(new Field[0]);
+        Set<Field> uniqueMoves = new HashSet<>(Arrays.asList(moves));
          
         if (maximize) {
-            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m2, player, team), score(m1, player, team)));
+            Set<Field> sortedMoves = new TreeSet<>((m1, m2) -> Double.compare(score(m2, player, team), score(m1, player, team)));
+            sortedMoves.addAll(uniqueMoves);
             
             Field localBestMove = null;
             int count = 0;
-            for (Field move : moves) {
-                double score = score(move, player, team);
+            for (Field move : sortedMoves) {
+                double score = 0.0; // score(move, player, team);
                 if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
                     score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
                 }
@@ -99,7 +101,7 @@ public class HeuristicAlphaBetaAI {
                 }
                 
                 if (depth == 1) {
-                    // LOGGER.info("Progress {}%", count * 100.0 / moves.length);
+                    LOGGER.info("Progress {}%", count * 100.0 / moves.length);
                     count++;
                 }
             }
@@ -116,21 +118,22 @@ public class HeuristicAlphaBetaAI {
 
             return alpha;
         } else {
-            Arrays.sort(moves, (m1, m2) -> Double.compare(score(m1, player, team), score(m2, player, team)));
+            Set<Field> sortedMoves = new TreeSet<>((m1, m2) -> Double.compare(score(m1, player, team), score(m2, player, team)));
+            sortedMoves.addAll(uniqueMoves);
             
             Field localBestMove = null;
-            final boolean twoMoves = depth == 4;
-            for (Field move : moves) {
+            final boolean twoMoves = depth >= 4;
+            for (Field move : sortedMoves) {
                 Transposition t =  twoMoves ? Transposition.of(depth, move) : null;
                 Double score = twoMoves ? TRANSPOSITION.get(t) : null;
                 if (score == null) {
-                    score = score(move, player, team);
+                    score = 0.0; // score(move, player, team);
                     if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
                         score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
                     }
                     if (twoMoves) TRANSPOSITION.put(new Transposition(depth, move), score);
                 } else {
-                    if (TRANSPOSITION.size() > 100_000) TRANSPOSITION.clear();
+                    if (TRANSPOSITION.size() > 1_000_000) TRANSPOSITION.clear();
                     TRANSPOSITION.remove(t);
                 } 
 
@@ -155,6 +158,9 @@ public class HeuristicAlphaBetaAI {
     }
 
     private boolean between(double dmin, double dmax, double score) {
+        passed++;
+        return true;
+        /*
         if (score < dmax + initialScore && score >= initialScore + dmin) {
             passed++;
             return true;
@@ -165,6 +171,7 @@ public class HeuristicAlphaBetaAI {
             filteredOut++;
             return false;
         }
+        */
     }
     
     public static void main(String[] args) {
@@ -224,18 +231,18 @@ public class HeuristicAlphaBetaAI {
         int moves = 1;
         Set<Field> previousMoves = new HashSet<>();
         final Player startPlayer = currentPlayer;
-        Field previousField = currentField;
+        Field previousField;
         while (!WinningChecker.wins(currentField, currentPlayer)) {
             Field answer;
             final String variant;
             if (startPlayer == currentPlayer) { // Variant A
                 variant = "Variant A";
                 FieldEvaluator.firstBloodPenalty = true;
-                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
             } else { // Variant B
                 variant = "Variant B";
                 FieldEvaluator.firstBloodPenalty = true;
-                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 6);
             }
             
             previousField = currentField;

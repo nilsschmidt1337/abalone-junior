@@ -4,6 +4,9 @@ import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.winning.WinningChecker;
 
@@ -21,7 +24,23 @@ public enum FieldEvaluator {
     
     public static boolean firstBloodPenalty = false;
     
+    private static final Map<ScoreCacheEntry, Double> CACHE = new HashMap<>();
+    
     public static double score(Field state, Player player, Player toMove) {
+        ScoreCacheEntry key = ScoreCacheEntry.of(state, player, toMove);
+        if (CACHE.size() > 10_000_000) {
+            System.err.println("Cache cleared.");
+            CACHE.clear();
+        }
+        Double result = CACHE.get(key);
+        if (result == null) {
+            result = scoreCalc(state, player, toMove);
+            CACHE.put(new ScoreCacheEntry(state, player, toMove), result);
+        }
+        return result;
+    }
+    
+    public static double scoreCalc(Field state, Player player, Player toMove) {
         final Player opponent = player.switchPlayer();
         double score = 0;
         

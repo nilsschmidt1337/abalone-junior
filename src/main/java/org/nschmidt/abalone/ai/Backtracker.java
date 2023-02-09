@@ -7,6 +7,7 @@ import static org.nschmidt.abalone.winning.WinningInTwoMovesChecker.winsInTwoMov
 import java.util.HashMap;
 import java.util.Map;
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.winning.WinningChecker;
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ public enum Backtracker {
         
         
         LOGGER.info("Try to find optimum with AI (alpha-beta)...");
+        FieldEvaluator.firstBloodPenalty = true;
         HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(5, player);
         Field nextGenMove = ai.bestMove(state);
         if (nextGenMove != null && !wins(nextGenMove, opponent)) {

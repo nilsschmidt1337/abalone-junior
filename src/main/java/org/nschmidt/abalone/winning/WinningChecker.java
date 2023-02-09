@@ -50,7 +50,7 @@ public enum WinningChecker {
 
     private static boolean check(Field state, Player player, Player borderPiece, int[] neighbourIndices, int corner1, int corner2) {
         int[] nextNeighbourIndices;
-        return borderPiece != player && borderPiece != EMPTY
+        return borderPiece != EMPTY && borderPiece != player
                 && neighbourIndices[corner1] == -1 
                 && neighbourIndices[corner2] != -1
                 && ((player == lookAtField(state, neighbourIndices[corner2])
