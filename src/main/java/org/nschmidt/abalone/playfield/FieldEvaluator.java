@@ -16,8 +16,10 @@ public enum FieldEvaluator {
     private static final double[][] COORDS = createCoords();
     private static final double[] CENTER = COORDS[FIELD_SIZE / 2];
     
-    public static double CENTER_WEIGHT = 0.41;
-    public static double PLAYER_WEIGHT = (1.0 - FieldEvaluator.CENTER_WEIGHT) / 2.0;
+    private static final double CENTER_WEIGHT = 0.41;
+    private static final double PLAYER_WEIGHT = (1.0 - FieldEvaluator.CENTER_WEIGHT) / 2.0;
+    
+    public static boolean firstBloodPenalty = false;
     
     public static double score(Field state, Player player, Player toMove) {
         final Player opponent = player.switchPlayer();
@@ -69,11 +71,14 @@ public enum FieldEvaluator {
         
         int lostPieces = Field.PIECE_COUNT - playerPieceCount;
         int lostOpponentPieces = Field.PIECE_COUNT - opponentPieceCount;
-        score = sumOpponent - sumPlayer - lostPieces * 1000 + lostOpponentPieces * 1000;
+        int lostDelta = lostOpponentPieces - lostPieces;
+        score = sumOpponent - sumPlayer + lostDelta * 1000;
         
         if (player == toMove) {
+            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, player)) score -= 1000.0;
             return detectEndgame(state, score, player, opponent, lostPieces, lostOpponentPieces, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         } else {
+            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, opponent)) score += 1000.0;
             return detectEndgame(state, score, opponent, player, lostOpponentPieces, lostPieces, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
         }
     }

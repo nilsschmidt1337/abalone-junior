@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.nschmidt.abalone.move.MoveDetector;
 import org.nschmidt.abalone.playfield.Field;
+import org.nschmidt.abalone.playfield.FieldEvaluator;
 import org.nschmidt.abalone.playfield.FieldPrinter;
 import org.nschmidt.abalone.playfield.Player;
 import org.nschmidt.abalone.playfield.Transposition;
@@ -46,8 +47,8 @@ public class HeuristicAlphaBetaAI {
 
     public Field bestMove(Field board) {
         FUNNEL = new double[][] {{0.0, 0.0},
-            {-1000.0, 1000.0},{-2000.0, 2000.0},{-2000.0, 2000.0},
-            {-3000.0, 3000.0},{-3000.0, 3000.0},{-4000.0, 4000.0},
+            {-10000.0, 10000.0},{-20000.0, 20000.0},{-20000.0, 20000.0},
+            {-30000.0, 30000.0},{-30000.0, 30000.0},{-40000.0, 40000.0},
             {-1.0, 1.0},{0.0, 0.0},{0.0, 0.0}}; 
         
         initialScore = score(board, player, player);
@@ -229,10 +230,12 @@ public class HeuristicAlphaBetaAI {
             final String variant;
             if (startPlayer == currentPlayer) { // Variant A
                 variant = "Variant A";
-                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
+                FieldEvaluator.firstBloodPenalty = true;
+                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
             } else { // Variant B
                 variant = "Variant B";
-                answer = doVariation(currentPlayer, currentField, previousMoves, 4);
+                FieldEvaluator.firstBloodPenalty = true;
+                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
             }
             
             previousField = currentField;
