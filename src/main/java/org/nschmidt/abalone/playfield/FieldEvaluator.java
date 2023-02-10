@@ -23,6 +23,7 @@ public enum FieldEvaluator {
     private static final double PLAYER_WEIGHT = (1.0 - FieldEvaluator.CENTER_WEIGHT) / 2.0;
     
     public static boolean firstBloodPenalty = false;
+    public static double pieceValue = 1000;
     
     private static final Map<ScoreCacheEntry, Double> CACHE = new HashMap<>();
     
@@ -91,13 +92,13 @@ public enum FieldEvaluator {
         int lostPieces = Field.PIECE_COUNT - playerPieceCount;
         int lostOpponentPieces = Field.PIECE_COUNT - opponentPieceCount;
         int lostDelta = lostOpponentPieces - lostPieces;
-        score = sumOpponent - sumPlayer + lostDelta * 1000;
+        score = sumOpponent - sumPlayer + lostDelta * pieceValue;
         
         if (player == toMove) {
-            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, player)) score -= 1000.0;
+            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, player)) score -= pieceValue;
             return detectEndgame(state, score, player, opponent, lostPieces, lostOpponentPieces, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         } else {
-            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, opponent)) score += 1000.0;
+            if (firstBloodPenalty && lostDelta == 0 && WinningChecker.gainPiece(state, opponent)) score += pieceValue;
             return detectEndgame(state, score, opponent, player, lostOpponentPieces, lostPieces, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
         }
     }

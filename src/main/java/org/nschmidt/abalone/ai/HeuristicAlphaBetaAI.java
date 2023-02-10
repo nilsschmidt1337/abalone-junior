@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.nschmidt.abalone.move.MoveDetector;
@@ -32,6 +33,7 @@ public class HeuristicAlphaBetaAI {
     private static final Random RND = new Random();
     
     private final int maxDepth;
+    private final int maxDepthMinusTwo;
     private final Player player;
     private Field bestMove;
     private double initialScore = 0;
@@ -42,6 +44,7 @@ public class HeuristicAlphaBetaAI {
 
     public HeuristicAlphaBetaAI(int maxDepth, Player player) {
         this.maxDepth = maxDepth;
+        this.maxDepthMinusTwo = Math.max(0, maxDepth - 2);
         this.bestMove = null;
         this.player = player;
     }
@@ -101,7 +104,7 @@ public class HeuristicAlphaBetaAI {
                 }
                 
                 if (depth == 1) {
-                    LOGGER.info("Progress {}%", count * 100.0 / moves.length);
+                    // LOGGER.info("Progress {}%", count * 100.0 / moves.length);
                     count++;
                 }
             }
@@ -122,7 +125,7 @@ public class HeuristicAlphaBetaAI {
             sortedMoves.addAll(uniqueMoves);
             
             Field localBestMove = null;
-            final boolean twoMoves = depth >= 4;
+            final boolean twoMoves = depth >= 4 && depth < maxDepthMinusTwo;
             for (Field move : sortedMoves) {
                 Transposition t =  twoMoves ? Transposition.of(depth, move) : null;
                 Double score = twoMoves ? TRANSPOSITION.get(t) : null;
@@ -175,60 +178,63 @@ public class HeuristicAlphaBetaAI {
     }
     
     public static void main(String[] args) {
-        Map<String, Integer> wins = new HashMap<>();
+        Map<String, Integer> wins = new TreeMap<>();
         wins.put("Variant A", 0);
         wins.put("Variant B", 0);
         wins.put("draw", 0);
-        for (int i = 0; i < 1; i++) {
-            Player currentPlayer;
-            Field currentField;
-            currentField = Field.INITIAL_FIELD;
-            currentPlayer = Player.BLACK;
-            Field[] allMoves = MoveDetector.allMoves(currentField, currentPlayer);
-            currentField = allMoves[RND.nextInt(allMoves.length)];
-            currentPlayer = Player.WHITE;
-            if (RND.nextBoolean()) {
-                allMoves = MoveDetector.allMoves(currentField, currentPlayer);
-                currentField = allMoves[RND.nextInt(allMoves.length)];
+        for (double pieceValue = 0; pieceValue < 20.0; pieceValue += 0.1)
+            for (int i = 0; i < 20; i++) {
+                Player currentPlayer;
+                Field currentField;
+                currentField = Field.INITIAL_FIELD;
                 currentPlayer = Player.BLACK;
-            }
-            Player start = currentPlayer;
-            Player r = playGame(currentPlayer, currentField, i);
-            
-            if (start == Player.BLACK) {
-                switch (r) {
-                case BLACK:
-                    wins.put("Variant A", wins.get("Variant A") + 1);
-                    break;
-                case WHITE:
-                    wins.put("Variant B", wins.get("Variant B") + 1);
-                    break;
-                case EMPTY:
-                    wins.put("draw", wins.get("draw") + 1);
-                    break;
+                Field[] allMoves = MoveDetector.allMoves(currentField, currentPlayer);
+                currentField = allMoves[RND.nextInt(allMoves.length)];
+                currentPlayer = Player.WHITE;
+                if (RND.nextBoolean()) {
+                    allMoves = MoveDetector.allMoves(currentField, currentPlayer);
+                    currentField = allMoves[RND.nextInt(allMoves.length)];
+                    currentPlayer = Player.BLACK;
                 }
-            } else {
-                switch (r) {
-                case BLACK:
-                    wins.put("Variant B", wins.get("Variant B") + 1);
-                    break;
-                case WHITE:
-                    wins.put("Variant A", wins.get("Variant A") + 1);
-                    break;
-                case EMPTY:
-                    wins.put("draw", wins.get("draw") + 1);
-                    break;
+                Player start = currentPlayer;
+                Player r = playGame(currentPlayer, currentField, i, pieceValue);
+                
+                if (start == Player.BLACK) {
+                    switch (r) {
+                    case BLACK:
+                        wins.put("Variant A "+ pieceValue, wins.getOrDefault("Variant A " + pieceValue, 0) + 1);
+                        break;
+                    case WHITE:
+                        wins.put("Variant B", wins.get("Variant B") + 1);
+                        break;
+                    case EMPTY:
+                        wins.put("draw "+ pieceValue, wins.getOrDefault("draw " + pieceValue, 0) + 1);
+                        break;
+                    }
+                } else {
+                    switch (r) {
+                    case BLACK:
+                        wins.put("Variant B", wins.get("Variant B") + 1);
+                        break;
+                    case WHITE:
+                        wins.put("Variant A "+ pieceValue, wins.getOrDefault("Variant A " + pieceValue, 0) + 1);
+                        break;
+                    case EMPTY:
+                        wins.put("draw "+ pieceValue, wins.getOrDefault("draw " + pieceValue, 0) + 1);
+                        break;
+                    }
                 }
             }
-        }
         
         for (Entry<String, Integer> entry : wins.entrySet()) {
             LOGGER.info("{} {}", entry.getKey(), entry.getValue());
         }
     }
     
-    private static Player playGame(Player currentPlayer, Field currentField, int gameNumber) {
+    private static Player playGame(Player currentPlayer, Field currentField, int gameNumber, double pieceValue) {
         int moves = 1;
+        double penalty = gameNumber / 20.0;
+        FieldEvaluator.firstBloodPenalty = true;
         Set<Field> previousMoves = new HashSet<>();
         final Player startPlayer = currentPlayer;
         Field previousField;
@@ -237,17 +243,17 @@ public class HeuristicAlphaBetaAI {
             final String variant;
             if (startPlayer == currentPlayer) { // Variant A
                 variant = "Variant A";
-                FieldEvaluator.firstBloodPenalty = true;
-                answer = doVariation(currentPlayer, currentField, previousMoves, 5);
+                FieldEvaluator.pieceValue = pieceValue;
+                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
             } else { // Variant B
                 variant = "Variant B";
-                FieldEvaluator.firstBloodPenalty = true;
-                answer = doVariation(currentPlayer, currentField, previousMoves, 6);
+                FieldEvaluator.pieceValue = penalty;
+                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
             }
             
             previousField = currentField;
             currentField = answer;
-            LOGGER.info("iteration {}; move {}; player {}; score {}; {}; board {}", gameNumber, moves, currentPlayer, score(currentField, currentPlayer, currentPlayer), variant, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
+            LOGGER.info("iteration {}; move {}; player {}; score {}; {}; board {}", gameNumber, moves, currentPlayer, score(currentField, currentPlayer, currentPlayer), variant + " " + pieceValue, FieldPrinter.buildStandardFieldDeltaString(currentField, previousField));
             currentPlayer = currentPlayer.switchPlayer();
             moves++;
             

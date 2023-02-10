@@ -12,6 +12,7 @@ public enum Adjacency {
     private static final int[][] adjacencyMatrix = initAdjacency();
     
     public static final int[] BORDER_INDICES = initBorderIndices();
+    public static final int[] CENTER_INDICES = initCenterIndices();
     
     public static final int TOP_LEFT = 0;
     public static final int BOTTOM_RIGHT = 1;
@@ -91,5 +92,17 @@ public enum Adjacency {
         }
         
         return borderIndices;
+    }
+    
+    private static int[] initCenterIndices() {
+        final int[] centerIndices = new int[7];
+        centerIndices[0] = FIELD_SIZE / 2;
+        int i = 1;
+        for (int index : adjacencyMatrix[FIELD_SIZE / 2]) {
+            centerIndices[i] = index;
+            i++;
+        }
+    
+        return centerIndices;
     }
 }
