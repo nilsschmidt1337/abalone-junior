@@ -23,7 +23,7 @@ public enum FieldEvaluator {
     private static final double PLAYER_WEIGHT = (1.0 - FieldEvaluator.CENTER_WEIGHT) / 2.0;
     
     public static boolean firstBloodPenalty = false;
-    public static double pieceValue = 1000;
+    public static double pieceValue = 6.89;
     
     private static final Map<ScoreCacheEntry, Double> CACHE = new HashMap<>();
     
