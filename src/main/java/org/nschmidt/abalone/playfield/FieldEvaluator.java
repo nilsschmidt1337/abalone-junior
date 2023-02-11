@@ -1,6 +1,5 @@
 package org.nschmidt.abalone.playfield;
 
-import static org.nschmidt.abalone.playfield.Adjacency.adjacency;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 
@@ -83,9 +82,9 @@ public enum FieldEvaluator {
         for (int i = 0; i < FIELD_SIZE; i++) {
             final Player currentPiece = lookAtField(state, i);
             if (currentPiece == player) {
-                sumPlayer += Math.abs(referenceX - COORDS[i][0]) + Math.abs(referenceY - COORDS[i][1]);
+                sumPlayer += distance(referenceX, referenceY, COORDS[i][0], COORDS[i][1]);
             } else if (currentPiece == opponent) {
-                sumOpponent += Math.abs(referenceX - COORDS[i][0]) + Math.abs(referenceY - COORDS[i][1]);
+                sumOpponent += distance(referenceX, referenceY, COORDS[i][0], COORDS[i][1]);
             }
         }
         
@@ -118,35 +117,34 @@ public enum FieldEvaluator {
         
         return score;
     }
+    private static double distance(double x0, double y0, double x1, double y1) {
+        double dx = x1 - x0;
+        double dy = y1 - y0;
 
-    static double[][] createCoords() {
-        double[][] result = new double[FIELD_SIZE][2];
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            double x = 0;
-            double y = 0;
-            
-            int j = i;
-            while (adjacency(j)[Adjacency.TOP_RIGHT] != -1) {
-                j = adjacency(j)[Adjacency.TOP_RIGHT];
-                y += 0.866;
-                x -= 0.5;
-            }
-            
-            while (adjacency(j)[Adjacency.TOP_LEFT] != -1) {
-                j = adjacency(j)[Adjacency.TOP_LEFT];
-                y += 0.866;
-                x += 0.5;
-            }
-            
-            while (adjacency(j)[Adjacency.LEFT] != -1) {
-                j = adjacency(j)[Adjacency.LEFT];
-                x += 1;
-            }
-            
-            result[i][0] = x;
-            result[i][1] = y;
+        if (Math.signum(dx) == Math.signum(dy)) {
+            return Math.abs(dx + dy);
         }
         
+        return Math.max(Math.abs(dx), Math.abs(dy));
+    }
+
+    private static double[][] createCoords() {
+        double[][] result = new double[FIELD_SIZE][2];
+        int centerIndex = FIELD_SIZE / 2;
+        createCoords(centerIndex, result, 0.0, 0.0);
         return result;
+    }
+
+    private static void createCoords(int index, double[][] coords, double x, double y) {
+        if (index == -1 || coords[index][0] != 0.0 || coords[index][1] != 0.0) return;
+        coords[index][0] = x;
+        coords[index][1] = y;
+        int[] adjacency = Adjacency.adjacency(index);
+        createCoords(adjacency[Adjacency.LEFT], coords, x - 1.0, y);
+        createCoords(adjacency[Adjacency.RIGHT], coords, x + 1.0, y);
+        createCoords(adjacency[Adjacency.TOP_RIGHT], coords, x, y + 1.0);
+        createCoords(adjacency[Adjacency.BOTTOM_LEFT], coords, x, y - 1.0);
+        createCoords(adjacency[Adjacency.TOP_LEFT], coords, x - 1.0, y + 1.0);
+        createCoords(adjacency[Adjacency.BOTTOM_RIGHT], coords, x + 1.0, y - 1.0);
     }
 }
