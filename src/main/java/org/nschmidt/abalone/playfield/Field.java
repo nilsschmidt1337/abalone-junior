@@ -111,6 +111,19 @@ public class Field {
     
     public static Field move(Field state, Player player, int from, int to) {
         Field result = new Field();
+        if (player == BLACK) {
+            result.black = (state.black | (1L << to)) & ~(1L << from);
+            result.white = state.white;
+        } else {
+            result.black = state.black;
+            result.white = (state.white | (1L << to)) & ~(1L << from);
+        }
+        
+        return result;
+    }
+    
+    public static Field override(Field state, Player player, int from, int to) {
+        Field result = new Field();
         long opTo = 1L << to;
         long opToNeg = ~opTo;
        

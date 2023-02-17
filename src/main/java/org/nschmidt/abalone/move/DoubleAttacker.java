@@ -7,6 +7,7 @@ import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.move;
+import static org.nschmidt.abalone.playfield.Field.override;
 import static org.nschmidt.abalone.playfield.Field.isNotEmpty;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 
@@ -57,7 +58,7 @@ enum DoubleAttacker {
             if (PIECE_COUNT_FOR_WIN > 1) {
                 int lostPieces = PIECE_COUNT - Field.countPieces(state, player.switchPlayer()) + 1;
                 if (lostPieces < PIECE_COUNT_FOR_WIN) {
-                    state = move(state, player, secondMarbleIndex, targetForSecondMarbleIndex);
+                    state = override(state, player, secondMarbleIndex, targetForSecondMarbleIndex);
                     state = move(state, player, from, secondMarbleIndex);
                     tempResult[moveCount] = state;
                     
