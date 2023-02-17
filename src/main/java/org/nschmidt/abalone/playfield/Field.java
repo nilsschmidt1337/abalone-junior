@@ -110,7 +110,19 @@ public class Field {
     }
     
     public static Field move(Field state, Player player, int from, int to) {
-        return populateField(populateField(state, to, player), from, EMPTY);
+        Field result = new Field();
+        long opTo = 1L << to;
+        long opToNeg = ~opTo;
+       
+        if (player == BLACK) {
+            result.black = (state.black | opTo) & ~(1L << from);
+            result.white = state.white & opToNeg;
+        } else {
+            result.white = (state.white | opTo) & ~(1L << from);
+            result.black = state.black & opToNeg;
+        }
+        
+        return result;
     }
     
     public static Player lookAtField(Field state, int fieldIndex) {
@@ -119,6 +131,10 @@ public class Field {
         long opWhite = (1L << fieldIndex) & state.white;
         if (opWhite > 0) return WHITE;
         return EMPTY;
+    }
+    
+    public static boolean isNotEmpty(Field state, int fieldIndex) {
+        return (((1L << fieldIndex) & state.black) | ((1L << fieldIndex) & state.white)) > 0;
     }
     
     public static int countPieces(Field state, Player player) {

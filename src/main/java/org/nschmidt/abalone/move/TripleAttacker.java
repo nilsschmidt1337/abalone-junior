@@ -5,6 +5,7 @@ import static org.nschmidt.abalone.playfield.Field.DIRECTION_COUNT;
 import static org.nschmidt.abalone.playfield.Field.FIELD_SIZE;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
+import static org.nschmidt.abalone.playfield.Field.isNotEmpty;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.move;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
@@ -75,9 +76,9 @@ enum TripleAttacker {
             
             return 0;
         }
-        final Player emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);
+        
         // Das Feld ist nicht leer
-        if (emptyPlaceForOpponentMarble != EMPTY) return 0;
+        if (isNotEmpty(state, emptyPlaceForOpponentMarbleIndex)) return 0;
         
         state = move(state, targetForThirdMarble, targetForThirdMarbleIndex, emptyPlaceForOpponentMarbleIndex);
         state = move(state, player, thirdMarbleIndex, targetForThirdMarbleIndex);

@@ -7,6 +7,7 @@ import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT;
 import static org.nschmidt.abalone.playfield.Field.PIECE_COUNT_FOR_WIN;
 import static org.nschmidt.abalone.playfield.Field.lookAtField;
 import static org.nschmidt.abalone.playfield.Field.move;
+import static org.nschmidt.abalone.playfield.Field.isNotEmpty;
 import static org.nschmidt.abalone.playfield.Player.EMPTY;
 
 import org.nschmidt.abalone.playfield.Field;
@@ -66,9 +67,9 @@ enum DoubleAttacker {
             
             return 0;
         }
-        final Player emptyPlaceForOpponentMarble = lookAtField(state, emptyPlaceForOpponentMarbleIndex);
+        
         // Das Feld ist nicht leer
-        if (emptyPlaceForOpponentMarble != EMPTY) return 0;
+        if (isNotEmpty(state, emptyPlaceForOpponentMarbleIndex)) return 0;
         
         state = move(state, targetForSecondMarble, targetForSecondMarbleIndex, emptyPlaceForOpponentMarbleIndex);
         state = move(state, player, secondMarbleIndex, targetForSecondMarbleIndex);
