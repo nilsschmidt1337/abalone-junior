@@ -28,6 +28,7 @@ public class HeuristicAlphaBetaAI {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeuristicAlphaBetaAI.class);
     private static final Map<Transposition, Double> TRANSPOSITION = new HashMap<>();
     private static double[][] FUNNEL = new double[][] {{-1100.0, 1100.0},{0.0, 1100.0},{0.0, 1100.0},{0.0, 5.0},{0.0, 5.0},{0.0, 2.5},{0.0, 0.25},{0.0, 0.25},{0.0, 0.25},{0.0, 0.25}}; 
+    private static final Double[] INITIAL = new Double[16];
     private static final double[] BEST = new double[16];
     private static final double[] WORST = new double[16];
     private static final Random RND = new Random();
@@ -61,6 +62,7 @@ public class HeuristicAlphaBetaAI {
             LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
             WORST[i] = Double.MAX_VALUE;
             BEST[i] = -Double.MAX_VALUE;
+            INITIAL[i] = null;
         }
         
         LOGGER.info("filteredOut {}", filteredOut);
@@ -115,8 +117,9 @@ public class HeuristicAlphaBetaAI {
             
             if (localBestMove != null) {
                 double s = score(localBestMove, player, team);
-                BEST[depth] = Math.max(BEST[depth], s - initialScore);
-                WORST[depth] = Math.min(WORST[depth], s - initialScore);
+                if (INITIAL[depth] == null) INITIAL[depth] = s;
+                BEST[depth] = Math.max(BEST[depth], s - INITIAL[depth]);
+                WORST[depth] = Math.min(WORST[depth], s - INITIAL[depth]);
             }
 
             return alpha;
@@ -152,8 +155,9 @@ public class HeuristicAlphaBetaAI {
             
             if (localBestMove != null) {
                 double s = score(localBestMove, player, team);
-                BEST[depth] = Math.max(BEST[depth], s - initialScore);
-                WORST[depth] = Math.min(WORST[depth], s - initialScore);
+                if (INITIAL[depth] == null) INITIAL[depth] = s;
+                BEST[depth] = Math.max(BEST[depth], s - INITIAL[depth]);
+                WORST[depth] = Math.min(WORST[depth], s - INITIAL[depth]);
             }
 
             return beta;
