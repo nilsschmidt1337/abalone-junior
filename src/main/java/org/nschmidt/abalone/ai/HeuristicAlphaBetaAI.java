@@ -27,7 +27,11 @@ public class HeuristicAlphaBetaAI {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(HeuristicAlphaBetaAI.class);
     private static final Map<Transposition, Double> TRANSPOSITION = new HashMap<>();
-    private static double[][] FUNNEL = new double[][] {{-1100.0, 1100.0},{0.0, 1100.0},{0.0, 1100.0},{0.0, 5.0},{0.0, 5.0},{0.0, 2.5},{0.0, 0.25},{0.0, 0.25},{0.0, 0.25},{0.0, 0.25}}; 
+    private static final double[][] FUNNEL = new double[][] {{0.0, 0.0},
+        {-10.0, 10.0},{-10.0, 10.0},{-10.0, 10.0},
+        {-9.0, 9.0},{-9.0, 9.0},{-9.0, 9.0},
+        {-8.0, 8.0},{-8.0, 8.0},{-8.0, 8.0}};
+        
     private static final Double[] INITIAL = new Double[16];
     private static final double[] BEST = new double[16];
     private static final double[] WORST = new double[16];
@@ -37,7 +41,6 @@ public class HeuristicAlphaBetaAI {
     private final int maxDepthMinusTwo;
     private final Player player;
     private Field bestMove;
-    private double initialScore = 0;
     
     private long filteredOut = 0;
     private long passed = 0;
@@ -51,12 +54,6 @@ public class HeuristicAlphaBetaAI {
     }
 
     public Field bestMove(Field board) {
-        FUNNEL = new double[][] {{0.0, 0.0},
-            {-10000.0, 10000.0},{-20000.0, 20000.0},{-20000.0, 20000.0},
-            {-30000.0, 30000.0},{-30000.0, 30000.0},{-40000.0, 40000.0},
-            {-1.0, 1.0},{0.0, 0.0},{0.0, 0.0}}; 
-        
-        initialScore = score(board, player, player);
         alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         for (int i = 1; i <= maxDepth; i++) {
             LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
@@ -91,8 +88,8 @@ public class HeuristicAlphaBetaAI {
             Field localBestMove = null;
             int count = 0;
             for (Field move : sortedMoves) {
-                double score = 0.0; // score(move, player, team);
-                if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
+                double score = score(move, player, team);
+                if (between(FUNNEL[d][0], FUNNEL[d][1], INITIAL[depth], score)) {
                     score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
                 }
                 
@@ -133,8 +130,8 @@ public class HeuristicAlphaBetaAI {
                 Transposition t =  twoMoves ? Transposition.of(depth, move) : null;
                 Double score = twoMoves ? TRANSPOSITION.get(t) : null;
                 if (score == null) {
-                    score = 0.0; // score(move, player, team);
-                    if (between(FUNNEL[d][0], FUNNEL[d][1], score)) {
+                    score = score(move, player, team);
+                    if (between(FUNNEL[d][0], FUNNEL[d][1], INITIAL[depth], score)) {
                         score = alphaBetaPruning(move, team.switchPlayer(), alpha, beta, depth);
                     }
                     if (twoMoves) TRANSPOSITION.put(new Transposition(depth, move), score);
@@ -164,10 +161,8 @@ public class HeuristicAlphaBetaAI {
         }
     }
 
-    private boolean between(double dmin, double dmax, double score) {
-        passed++;
-        return true;
-        /*
+    private boolean between(double dmin, double dmax, Double initialScore, double score) {
+        if (initialScore == null) return true;
         if (score < dmax + initialScore && score >= initialScore + dmin) {
             passed++;
             return true;
@@ -178,7 +173,6 @@ public class HeuristicAlphaBetaAI {
             filteredOut++;
             return false;
         }
-        */
     }
     
     public static void main(String[] args) {
@@ -186,8 +180,8 @@ public class HeuristicAlphaBetaAI {
         wins.put("Variant A", 0);
         wins.put("Variant B", 0);
         wins.put("draw", 0);
-        for (double pieceValue = 0; pieceValue < 20.0; pieceValue += 0.1)
-            for (int i = 0; i < 20; i++) {
+        for (double pieceValue = 3; pieceValue < 6; pieceValue += 1.0)
+            for (int i = 3; i < 6; i++) {
                 Player currentPlayer;
                 Field currentField;
                 currentField = Field.INITIAL_FIELD;
@@ -237,7 +231,7 @@ public class HeuristicAlphaBetaAI {
     
     private static Player playGame(Player currentPlayer, Field currentField, int gameNumber, double pieceValue) {
         int moves = 1;
-        double penalty = gameNumber / 20.0;
+        double otherPieceValue = gameNumber;
         FieldEvaluator.firstBloodPenalty = true;
         Set<Field> previousMoves = new HashSet<>();
         final Player startPlayer = currentPlayer;
@@ -248,10 +242,10 @@ public class HeuristicAlphaBetaAI {
             if (startPlayer == currentPlayer) { // Variant A
                 variant = "Variant A";
                 FieldEvaluator.pieceValue = pieceValue;
-                answer = doVariation(currentPlayer, currentField, previousMoves, 2);
+                answer = doVariation(currentPlayer, currentField, previousMoves, 3);
             } else { // Variant B
                 variant = "Variant B";
-                FieldEvaluator.pieceValue = penalty;
+                FieldEvaluator.pieceValue = otherPieceValue;
                 answer = doVariation(currentPlayer, currentField, previousMoves, 2);
             }
             
