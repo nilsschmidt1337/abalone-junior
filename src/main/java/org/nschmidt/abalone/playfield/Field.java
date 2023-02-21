@@ -23,7 +23,7 @@ public class Field {
         return white;
     }
 
-    public static final int FIELD_HEIGHT = 9;
+    public static final int FIELD_HEIGHT = 7;
     public static final int PIECE_COUNT = initPieceCount(FIELD_HEIGHT);
     public static final int FIELD_WIDTH = calculateWidth(FIELD_HEIGHT);
     public static final int FIELD_SIZE = calculateSize(FIELD_HEIGHT);

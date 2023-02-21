@@ -39,7 +39,7 @@ public class TranspositionalAlphaBetaAI {
     public Field bestMove(Field board) {
         alphaBetaPruning(board, player, -Double.MAX_VALUE, Double.MAX_VALUE, 0);
         for (int i = 1; i <= maxDepth; i++) {
-            LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
+            // LOGGER.info("D{} WORST {} BEST {}", i, WORST[i], BEST[i]);
             WORST[i] = Double.MAX_VALUE;
             BEST[i] = -Double.MAX_VALUE;
             INITIAL[i] = null;
@@ -77,7 +77,7 @@ public class TranspositionalAlphaBetaAI {
                 }
                 
                 if (depth == 1) {
-                    LOGGER.info("Progress {}%", count * 100.0 / moves.length);
+                    // LOGGER.info("Progress {}%", count * 100.0 / moves.length);
                     count++;
                 }
             }

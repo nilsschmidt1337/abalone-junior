@@ -55,7 +55,7 @@ public enum Backtracker {
         
         LOGGER.info("Try to find optimum with AI (alpha-beta)...");
         FieldEvaluator.firstBloodPenalty = true;
-        HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(6, player);
+        HeuristicAlphaBetaAI ai = new HeuristicAlphaBetaAI(7, player);
         Field nextGenMove = ai.bestMove(state);
         if (nextGenMove != null && !wins(nextGenMove, opponent)) {
             return nextGenMove ;// addToCache(player, state, nextGenMove);
