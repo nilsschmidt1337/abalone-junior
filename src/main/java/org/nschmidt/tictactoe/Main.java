@@ -38,11 +38,16 @@ public class Main {
         
         INDArray[] inputs = model.getInputs();
         inputs[0] = Nd4j.create(new double[1][5][3][3]);
+        INDArray[] outputs = new INDArray[] {Nd4j.create(new double[1][9]), Nd4j.create(new double[1][1])};
         
+
         
         LOGGER.info(Arrays.toString(inputs));
-        
-        INDArray[] output = model.output(inputs);
-        LOGGER.info(Arrays.toString(output));
+
+        for (int i = 0; i < 100; i++) {
+            model.fit(inputs, outputs);
+            INDArray[] output = model.output(inputs);
+            LOGGER.info(Arrays.toString(output));
+        }
     }
 }
