@@ -12,8 +12,15 @@ public class Main {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     
-    
     public static void main(String[] args) {
+        McNode node = McNode.create();
+        
+        node.simulate();
+        
+        LOGGER.info(node.toString());
+    }
+    
+    public static void main2(String[] args) {
         Board.create()
                 .applyMove(0)
                 .applyMove(1)
@@ -32,15 +39,11 @@ public class Main {
         int residualBlockCount = 20;
         int numPlanes = 5;
         
-        // 1. Aktuelle Position von X 
-        
         ComputationGraph model = DualResnetModel.getModel(fieldSize, residualBlockCount, numPlanes);
         
         INDArray[] inputs = model.getInputs();
         inputs[0] = Nd4j.create(new double[1][5][3][3]);
         INDArray[] outputs = new INDArray[] {Nd4j.create(new double[1][9]), Nd4j.create(new double[1][1])};
-        
-
         
         LOGGER.info(Arrays.toString(inputs));
 

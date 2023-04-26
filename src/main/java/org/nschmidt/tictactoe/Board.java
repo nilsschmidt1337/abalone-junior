@@ -19,7 +19,11 @@ public record Board(boolean[] X, boolean[] O, char currentPlayer, int[] moves) {
     }
     
     public boolean isGameOver() {
-        return moves.length == 0 || wins('X') || wins('O');
+        return isDraw() || wins('X') || wins('O');
+    }
+    
+    public boolean isDraw() {
+        return moves.length == 0;
     }
     
     public boolean wins(char player) {
