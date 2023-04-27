@@ -22,7 +22,7 @@ public enum NetworkInstance {
     // Die fünf Ebenen
     //           /\
     //          / X\
-    //          \X /  Die letzten beiden Zustände für X 
+    //          \X /  Die letzten beiden Zustände für X, der aktuellste steht oben.
     //          \\//
     //           \/
     
@@ -43,11 +43,41 @@ public enum NetworkInstance {
         INDArray[] inputs = model.getInputs();
         inputs[0] = Nd4j.create(inputStack);
 
-        LOGGER.info(Arrays.toString(inputs));
+        // LOGGER.info("Input :\n{}", Arrays.toString(inputs));
         INDArray[] output = model.output(inputs);
-        LOGGER.info(Arrays.toString(output));
+        // LOGGER.info("Output :\n{}", Arrays.toString(output));
         
         return new PredictionResult(output[1].toDoubleVector()[0], output[0].toDoubleVector());
+    }
+    
+    static void retrain(McNode node) {
+        double[][][][] inputStack = createStack(node);
+        INDArray[] inputs = model.getInputs();
+        inputs[0] = Nd4j.create(inputStack);
+        
+        double[][] probabilities = new double[1][10];
+        double[][] value = new double[1][1];
+        
+        value[0][0] = node.W;
+        
+        if (!node.state.isGameOver()) {
+            int[] moves = node.state.moves();
+            if (node.childs.size() != moves.length) return;
+            double parentN = node.N;
+            for (int i = 0; i < moves.length; i++) {
+                double childN = node.childs.get(i).N;
+                double probability = childN / parentN;
+                int move = moves[i];
+                probabilities[0][move] = probability;
+            }
+        } else {
+            // Wir müssen passen, weil das Spiel vorbei ist.
+            probabilities[0][9] = 1.0;
+        }
+        
+        INDArray[] outputs = new INDArray[] {Nd4j.create(probabilities), Nd4j.create(value)};
+        
+        model.fit(inputs, outputs);
     }
 
     static double[][][][] createStack(McNode node) {

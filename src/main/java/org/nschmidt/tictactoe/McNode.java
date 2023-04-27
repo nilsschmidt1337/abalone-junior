@@ -108,8 +108,30 @@ public class McNode {
     
     private void backup(double v) {
         N = N + 1; // Dieser Knoten wurde ein weiteres Mal aufgerufen
-        W = W + v; // 
-        Q = W / N;
+        W = W + v; // Der Wert steigt um den 
+        Q = W / N; // Der durschnittliche Wert dieses Knotens
         if (parent != null) parent.backup(v);
+    }
+    
+    void retrain() {
+        NetworkInstance.retrain(this);
+    }
+    
+    void collect(List<McNode> allNodes) {
+        if (childs.isEmpty()) return;
+        allNodes.addAll(childs);
+        for (McNode child : childs) {
+            child.collect(allNodes);
+        }
+    }
+    
+    int size() {
+        if (childs.isEmpty()) return 1;
+        int result = 0;
+        for (McNode child : childs) {
+            result += child.size();
+        }
+        
+        return result;
     }
 }

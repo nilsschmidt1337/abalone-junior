@@ -1,6 +1,8 @@
 package org.nschmidt.tictactoe;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -15,9 +17,38 @@ public class Main {
     public static void main(String[] args) {
         McNode node = McNode.create();
         
-        node.simulate();
+        for (int i = 0; i < 100; i++) {
+            node.simulate();
+            LOGGER.info("{}", node.size());
+        }
         
-        LOGGER.info(node.toString());
+        List<McNode> allNodes = new ArrayList<>();
+        node.collect(allNodes);
+        
+        for (int i = 0; i < allNodes.size(); i++) {
+            LOGGER.info("Train {}", i);
+            allNodes.get(i).retrain();
+        }
+        
+        McNode game = McNode.create();
+        while (!game.state.isGameOver()) {
+            for (int i = 0; i < 100; i++) {
+                game.simulate();
+            }
+            
+            double maxN = 0;
+            McNode maxNode = game;
+            for (McNode n : game.childs) {
+                if (n.N > maxN) {
+                    maxN = n.N;
+                    maxNode = n;
+                }
+            }
+            
+            String board = maxNode.state.toString();
+            LOGGER.info(board);
+            game = maxNode;
+        }
     }
     
     public static void main2(String[] args) {
@@ -43,7 +74,7 @@ public class Main {
         
         INDArray[] inputs = model.getInputs();
         inputs[0] = Nd4j.create(new double[1][5][3][3]);
-        INDArray[] outputs = new INDArray[] {Nd4j.create(new double[1][9]), Nd4j.create(new double[1][1])};
+        INDArray[] outputs = new INDArray[] {Nd4j.create(new double[1][10]), Nd4j.create(new double[1][1])};
         
         LOGGER.info(Arrays.toString(inputs));
 

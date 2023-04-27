@@ -133,8 +133,7 @@ class TicTacToeZeroBuilder {
         .convolutionMode(convolutionMode).nOut(2).nIn(256).build(), inName);
         conf.addLayer(bnName, new BatchNormalization.Builder().nOut(2).build(), convName);
         conf.addLayer(actName, new ActivationLayer.Builder().activation(Activation.RELU).build(), bnName);
-        conf.addLayer(denseName, new OutputLayer.Builder().nIn(2 * fieldWidthAndHeight * fieldWidthAndHeight).nOut(fieldWidthAndHeight * fieldWidthAndHeight).build(), actName);
-        // conf.addLayer(denseName, new OutputLayer.Builder().nIn(2 * fieldWidthAndHeight * fieldWidthAndHeight).nOut(fieldWidthAndHeight * fieldWidthAndHeight + 1).build(), actName);
+        conf.addLayer(denseName, new OutputLayer.Builder().nIn(2 * fieldWidthAndHeight * fieldWidthAndHeight).nOut(fieldWidthAndHeight * fieldWidthAndHeight + 1).build(), actName);
 
         Map<String, InputPreProcessor> preProcessorMap = new HashMap<>();
         preProcessorMap.put(denseName, new CnnToFeedForwardPreProcessor(fieldWidthAndHeight, fieldWidthAndHeight, 2));
