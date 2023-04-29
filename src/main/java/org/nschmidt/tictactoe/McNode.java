@@ -3,8 +3,11 @@ package org.nschmidt.tictactoe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class McNode {
+    
+    private static final Random RND = new Random(42L);
     
     public static McNode create() {
         return new McNode();
@@ -108,13 +111,47 @@ public class McNode {
     
     private void backup(double v) {
         N = N + 1; // Dieser Knoten wurde ein weiteres Mal aufgerufen
-        W = W + v; // Der Wert steigt um den 
+        W = W + v; // Der Wert steigt um das Ergebnis des Spiels
         Q = W / N; // Der durschnittliche Wert dieses Knotens
         if (parent != null) parent.backup(v);
     }
     
+    double[][] calculateProbabilities() {
+        double[][] probabilities = new double[1][10];
+        if (!state.isGameOver()) {
+            int[] moves = state.moves();
+            if (childs.size() != moves.length) return probabilities;
+            double parentN = N;
+            for (int i = 0; i < moves.length; i++) {
+                double childN = childs.get(i).N;
+                double probability = childN / parentN;
+                int move = moves[i];
+                probabilities[0][move] = probability;
+            }
+        } else {
+            // Wir müssen passen, weil das Spiel vorbei ist.
+            probabilities[0][9] = 1.0;
+        }
+        
+        return probabilities;
+    }
+    
     void retrain() {
         NetworkInstance.retrain(this);
+    }
+    
+    public McNode chooseRandomNode() {
+        double[][] probabilities = calculateProbabilities();
+        double randomChoosing = RND.nextDouble();
+        double sum = 0;
+        for (int i = 0; i < childs.size(); i++) {
+            sum += probabilities[0][state.moves()[i]];
+            if (sum > randomChoosing) {
+                return childs.get(i);
+            }
+        }
+        
+        return this;
     }
     
     void collect(List<McNode> allNodes) {

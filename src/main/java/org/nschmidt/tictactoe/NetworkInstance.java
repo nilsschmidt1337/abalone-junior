@@ -1,7 +1,5 @@
 package org.nschmidt.tictactoe;
 
-import java.util.Arrays;
-
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
@@ -51,29 +49,20 @@ public enum NetworkInstance {
     }
     
     static void retrain(McNode node) {
+        if (!node.state.isGameOver() && node.childs.size() != node.state.moves().length) {
+            return;
+        }
+        
         double[][][][] inputStack = createStack(node);
         INDArray[] inputs = model.getInputs();
         inputs[0] = Nd4j.create(inputStack);
         
-        double[][] probabilities = new double[1][10];
+        double[][] probabilities;
         double[][] value = new double[1][1];
         
-        value[0][0] = node.W;
+        value[0][0] = node.Q;
+        probabilities = node.calculateProbabilities();
         
-        if (!node.state.isGameOver()) {
-            int[] moves = node.state.moves();
-            if (node.childs.size() != moves.length) return;
-            double parentN = node.N;
-            for (int i = 0; i < moves.length; i++) {
-                double childN = node.childs.get(i).N;
-                double probability = childN / parentN;
-                int move = moves[i];
-                probabilities[0][move] = probability;
-            }
-        } else {
-            // Wir müssen passen, weil das Spiel vorbei ist.
-            probabilities[0][9] = 1.0;
-        }
         
         INDArray[] outputs = new INDArray[] {Nd4j.create(probabilities), Nd4j.create(value)};
         
