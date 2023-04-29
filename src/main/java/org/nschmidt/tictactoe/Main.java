@@ -7,6 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
+    
+    /*
+      We subsequently applied our reinforcement learning pipeline to a second instance of AlphaGo Zero
+      using a larger neural network and over a longer duration. Training again started from completely
+      random behaviour and continued for approximately 40 days.
+      Over the course of training, 29 million games of self-play were generated. Parameters were
+      updated from 3.1 million mini-batches of 2,048 positions each. 
+     */
 
     private static final int TOTAL_GAMES_TO_SIMULATE = 10;
     private static final int TOTAL_TRAINING_SESSION_COUNT = 100;
