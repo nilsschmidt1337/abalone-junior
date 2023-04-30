@@ -1,20 +1,58 @@
 package org.nschmidt.tictactoe;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public record Board(boolean[] X, boolean[] O, char currentPlayer, int[] moves) {
+public record Board(boolean[] X, boolean[] O, char currentPlayer, int[] moves, int turn) {
     
     public static Board create() {
-        return new Board(new boolean[9], new boolean[9], 'X', new int[] {0,1,2,3,4,5,6,7,8});
+        return new Board(new boolean[9], new boolean[9], 'X', new int[] {0,1,4}, 0);
     }
     
     public Board applyMove(int move) {
-        int[] nextMoves = Arrays.stream(moves).filter(m -> m != move).toArray();
-        if (this.currentPlayer == 'X') {
-            return new Board(applyMove(X, move), O, 'O', nextMoves);
+        int[] nextMoves = null;
+        if (turn == 0) {
+            if (move == 0) nextMoves = new int[] {1,2,4,5,8};
+            if (move == 1) nextMoves = new int[] {2,4,5,7,8};
+            if (move == 4) nextMoves = new int[] {0,1};
+        } else if (turn == 1) {
+            if (moves.length == 2) {
+                if (move == 0) nextMoves = new int[] {1,2,5,7,8};
+                if (move == 1) nextMoves = new int[] {2,5,7,8};
+            } else {
+                if (moves[0] == 1 && move == 1) nextMoves = new int[] {2,3,4,5,6,7,8};
+                if (moves[0] == 1 && move == 2) nextMoves = new int[] {1,3,4,5,6,7,8};
+                if (moves[0] == 1 && move == 4) nextMoves = new int[] {1,2,5,8};
+                if (moves[0] == 1 && move == 5) nextMoves = new int[] {1,2,3,4,6,7,8};
+                if (moves[0] == 1 && move == 8) nextMoves = new int[] {1,2,4,5};
+                
+                if (moves[0] == 2 && move == 2) nextMoves = new int[] {0,3,4,5,6,7,8};
+                if (moves[0] == 2 && move == 4) nextMoves = new int[] {2,5,7,8};
+                if (moves[0] == 2 && move == 5) nextMoves = new int[] {0,2,3,4,6,7,8};
+                if (moves[0] == 2 && move == 7) nextMoves = new int[] {2,4,5,8};
+                if (moves[0] == 2 && move == 8) nextMoves = new int[] {0,2,3,4,5,6,7};
+            }
+        } else if (turn == 2) {
+            List<Integer> nextMove = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                if (!X[i] && !O[i] && move != i) {
+                    nextMove.add(i);
+                }
+            }
+            
+            nextMoves = nextMove.stream().mapToInt(Integer::intValue).toArray();
         } else {
-            return new Board(X, applyMove(O, move), 'X', nextMoves);
+            nextMoves = Arrays.stream(moves).filter(m -> m != move).toArray();
+        }
+        if (nextMoves == null) {
+            throw new AssertionError();
+        }
+        if (this.currentPlayer == 'X') {
+            return new Board(applyMove(X, move), O, 'O', nextMoves, turn + 1);
+        } else {
+            return new Board(X, applyMove(O, move), 'X', nextMoves, turn + 1);
         }
     }
     
