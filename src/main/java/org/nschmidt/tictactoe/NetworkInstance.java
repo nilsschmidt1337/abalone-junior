@@ -48,7 +48,7 @@ public enum NetworkInstance {
         return new PredictionResult(output[1].toDoubleVector()[0], output[0].toDoubleVector());
     }
     
-    static void retrain(McNode node) {
+    static void retrain(McNode node, McNode resultNode) {
         if (!node.state.isGameOver() && node.childs.size() != node.state.moves().length) {
             return;
         }
@@ -60,7 +60,7 @@ public enum NetworkInstance {
         double[][] probabilities;
         double[][] value = new double[1][1];
         
-        value[0][0] = node.Q;
+        value[0][0] = resultNode.Q;
         probabilities = node.calculateProbabilities();
         
         

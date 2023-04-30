@@ -17,9 +17,11 @@ public class Main {
      */
 
     private static final int TOTAL_GAMES_TO_SIMULATE = 10;
-    private static final int TOTAL_TRAINING_SESSION_COUNT = 100;
+    private static final int TOTAL_TRAINING_SESSION_COUNT = 200;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    
+    private static double drawCounter = 0;
     
     public static void main(String[] args) {
         for (int trainingSessionCounter = 0; trainingSessionCounter < TOTAL_TRAINING_SESSION_COUNT; trainingSessionCounter++) {
@@ -41,11 +43,19 @@ public class Main {
             
             int allNodesSize = allNodes.size();
             for (int i = 0; i < allNodesSize; i++) {
-                LOGGER.info("Session {}: Train {} of {}", trainingSessionCounter + 1, i + 1, allNodesSize);
-                allNodes.get(i).retrain();
+                LOGGER.info("Session {}: Training {} of {}", trainingSessionCounter + 1, i + 1, allNodesSize);
+                allNodes.get(i).retrain(node); // <- 'node' ist der letzte Zustand dieser Partie 
             }
             
             playGame();
+            
+            LOGGER.info("Precentage of draw games: {}%", drawCounter / (trainingSessionCounter + 1) * 100.0);
+            
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -70,10 +80,6 @@ public class Main {
             game = maxNode;
         }
         
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        if (!game.state.wins('X') && !game.state.wins('O')) drawCounter++;
     }
 }

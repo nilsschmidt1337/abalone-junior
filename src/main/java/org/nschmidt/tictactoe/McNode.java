@@ -58,9 +58,9 @@ public class McNode {
     
     public void simulate() {
         if (state.isGameOver()) {
-            if (state.wins('X')) backup(1); 
-            if (state.isDraw()) backup(0);
-            if (state.wins('O')) backup(-1);
+            if      (state.wins('X')) backup(1); 
+            else if (state.wins('O')) backup(-1);
+            else if (state.isDraw()) backup(0);
             return;
         }
         
@@ -136,8 +136,8 @@ public class McNode {
         return probabilities;
     }
     
-    void retrain() {
-        NetworkInstance.retrain(this);
+    void retrain(McNode resultNode) {
+        NetworkInstance.retrain(this, resultNode);
     }
     
     public McNode chooseRandomNode() {
