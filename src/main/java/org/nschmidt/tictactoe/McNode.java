@@ -171,4 +171,15 @@ public class McNode {
         
         return result;
     }
+    
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("\n (action count) N: " + N);
+        sb.append("\n (total value)  W: " + W);
+        sb.append("\n (avg. value)   Q: " + Q);
+        sb.append("\n (probability)  P: " + P);
+        sb.append(state);
+        return sb.toString();
+    }
 }
